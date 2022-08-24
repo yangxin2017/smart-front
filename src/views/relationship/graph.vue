@@ -1,0 +1,408 @@
+<template>
+<div>
+  <div id="graphContainer">
+  </div>
+  <el-slider v-if="readySlider" class="slider-bar" height="300px" v-model="sliderVal" :min="min" :max="max" :marks="marks" vertical @change="handleChange">
+  </el-slider>
+</div>
+</template>
+<script>
+import { GetRelationshiop, GetGraphOne, SaveGraph, UpdateGraph } from "@/api/project"
+import cytoscape from 'cytoscape'
+import cxtmenu from 'cytoscape-cxtmenu'
+import contextMenus from 'cytoscape-context-menus'
+import edgeEditing from 'cytoscape-edge-editing/src/index'
+import konva from 'konva'
+import jquery from 'jquery'
+import { gerFinalNodeAndLine } from '@/utils/nodeLayout'
+import 'cytoscape-context-menus/cytoscape-context-menus.css'
+export default {
+  props: {
+    minJE: {
+      type: Number,
+      default: 0
+    }
+  },
+  data() {
+    return {
+      cyObj: null,
+      sliderVal: 0,
+      stepNum: 10,
+
+      readySlider: false,
+      marks: null,
+      min: 0,
+      max: 100,
+
+      dataArr: [],
+      isUpdate: false
+    }
+  },
+  mounted() {
+    cytoscape.use(cxtmenu)
+    cytoscape.use(contextMenus)
+    window.$ = jquery
+    edgeEditing(cytoscape, jquery, konva)
+
+    let projectId = this.getQueryString('id', this.$route.fullPath)
+
+    GetGraphOne({ projectId: projectId }).then((res) => {
+      if (res.data) {
+        let obj = JSON.parse(res.data.jsonstr)
+        this.dataArr = obj.arr
+        this.sliderVal = obj.val
+        this.isUpdate = true
+      } else {
+        this.dataArr = []
+        this.sliderVal = 10
+        this.isUpdate = false
+      }
+      this.initInfo()
+    })
+    // this.initInfo()
+    
+  },
+  methods: {
+    getQueryString(name, fullpath) {
+      let arr = fullpath.split('?')
+      let params = arr[1].split('&')
+      let res = ''
+      for (let p of params) {
+        let aps = p.split('=')
+        if (aps[0] == name) {
+          res = aps[1]
+        }
+      }
+      return res
+    },
+    async initInfo() {
+      const loading = this.$loading({
+        lock: true,
+        text: "正在加载数据，请稍候...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      })
+      let projectId = this.getQueryString('id', this.$route.fullPath)
+
+      let id = projectId
+      let obj = await GetRelationshiop(id)
+      console.log(obj)
+      
+      let { nodes, lines } = gerFinalNodeAndLine(obj.data, this.minJE)
+
+      // console.log('=====================')
+      console.log(nodes, lines)
+
+      this.initSlideBar(lines)
+
+      let arr = nodes.concat(lines)
+      
+      arr = this.mergeArr(arr)
+      
+      this.drawGraph(arr)
+
+      this.handleChange(this.sliderVal)
+      loading.close()
+    },
+    mergeArr(oldArr) {
+      if (this.dataArr) {
+        for (let o of oldArr) {
+          if (!o.data.source) {
+            for (let ea of this.dataArr) {
+              if (o.data.id == ea.data.id) {
+                o.position = ea.position
+              }
+            }
+          }
+        }
+      }
+      return oldArr
+    },
+    initSlideBar(lines) {
+      let moneys = []
+      for (let l of lines) {
+        let n = Number(l.data.data.name)
+        n = parseInt(Math.abs(n) / 10000)
+        moneys.push(n)
+      }
+      let min = 0  //Math.min(...moneys)
+      let max = Math.max(...moneys)
+      this.min = min
+      this.max = max
+      
+      let count = 5
+      this.stepNum = (max - min) / count
+      let ms = {}
+      for (let i = 0;i < 5;i++) {
+        let inx = parseInt(i * 20 * max / 100) + min
+        ms[inx] = (i * 20 * max / 100 + min) + '万'
+      }
+      ms[max] = max + '万'
+      this.marks = ms
+      setTimeout(() => {
+        this.readySlider = true
+      }, 500)
+      
+    },
+    initCxtMenu(cy) {
+      cy.cxtmenu({
+        selector: 'edge',
+        commands: [
+          {
+            content: '添加点',
+            select: function(ele){
+              console.log('add')
+            }
+          }
+        ]
+      })
+      cy.cxtmenu({
+        selector: '.tempnode',
+        commands: [
+          {
+            content: '删除点',
+            select: function(ele){
+              console.log('delete')
+            }
+          }
+        ]
+      })
+    },
+    initEditLine(cy) {
+      // let options = {
+      //   // A function parameter to get bend point positions, should return positions of bend points
+      //   bendPositionsFunction: function(ele) {
+      //     return ele.data('bendPointPositions');
+      //   },
+      //   // A function parameter to get control point positions, should return positions of control points
+      //   controlPositionsFunction: function(ele) {
+      //     return ele.data('controlPointPositions');
+      //   },
+      //   // A function parameter to set bend point positions
+      //   bendPointPositionsSetterFunction: function(ele, bendPointPositions) {
+      //     ele.data('bendPointPositions', bendPointPositions);
+      //   },
+      //   // A function parameter to set bend point positions
+      //   controlPointPositionsSetterFunction: function(ele, controlPointPositions) {
+      //     ele.data('controlPointPositions', controlPointPositions);
+      //   },
+      //   // whether to initilize bend and control points on creation of this extension automatically
+      //   initAnchorsAutomatically: true,
+      //   // the classes of those edges that should be ignored
+      //   ignoredClasses: [],
+      //   // whether the bend editing operations are undoable (requires cytoscape-undo-redo.js)
+      //   undoable: false,
+      //   // the size of bend and control point shape is obtained by multipling width of edge with this parameter
+      //   anchorShapeSizeFactor: 3,
+      //   // z-index value of the canvas in which bend points are drawn
+      //   zIndex: 999,
+      //   /*An option that controls the distance (in pixels) within which a bend point is considered near the line segment between 
+      //     its two neighbors and will be automatically removed
+      //     min value = 0 , max value = 20 , values less than 0 are set to 0 and values greater than 20 are set to 20
+      //   */
+      //   bendRemovalSensitivity : 8,
+      //   // title of add bend point menu item (User may need to adjust width of menu items according to length of this option)
+      //   addBendMenuItemTitle: "Add Bend Point",
+      //   // title of remove bend point menu item (User may need to adjust width of menu items according to length of this option)
+      //   removeBendMenuItemTitle: "Remove Bend Point",
+      //   // title of remove all bend points menu item
+      //   removeAllBendMenuItemTitle: "Remove All Bend Points",
+      //   // title of add control point menu item (User may need to adjust width of menu items according to length of this option)
+      //   addControlMenuItemTitle: "Add Control Point",
+      //   // title of remove control point menu item (User may need to adjust width of menu items according to length of this option)
+      //   removeControlMenuItemTitle: "Remove Control Point",
+      //   // title of remove all control points menu item
+      //   removeAllControlMenuItemTitle: "Remove All Control Points",
+      //   // whether 'Remove all bend points' and 'Remove all control points' options should be presented to the user
+      //   enableMultipleAnchorRemovalOption: false,
+      //   // whether the bend and control points can be moved by arrows
+      //   moveSelectedAnchorsOnKeyEvents: function () {
+      //       return true;
+      //   },
+      //   // this function handles reconnection of the edge, if undefined simply connect edge to its new source/target 
+      //   // handleReconnectEdge (newSource.id(), newTarget.id(), edge.data())
+      //   handleReconnectEdge: undefined,
+      //   // this function checks validation of the edge and its new source/target
+      //   validateEdge: function (edge, newSource, newTarget) {
+      //     return 'valid';
+      //   },
+      //   // this function is called if reconnected edge is not valid according to validateEdge function
+      //   actOnUnsuccessfulReconnection: undefined,
+      //   // specifically for edge-editing menu items, whether trailing dividers should be used
+      //   useTrailingDividersAfterContextMenuOptions: false,
+      //   // Enable / disable drag creation of anchor points when there is at least one anchor already on the edge
+      //   enableCreateAnchorOnDrag: true
+      // }
+      let instance = cy.edgeEditing({
+        undoable: false,
+					bendRemovalSensitivity: 16,
+					enableMultipleAnchorRemovalOption: true,
+					initAnchorsAutomatically: false,
+					useTrailingDividersAfterContextMenuOptions: false,
+					enableCreateAnchorOnDrag: true
+      })
+      let a = cy.edgeEditing('initialized')
+      cy.style().update()
+      console.log(a)
+    },
+
+    refresh() {
+      this.initInfo()
+    },
+    async save() {
+      let arr = []
+      let nodes = window.CY.nodes()
+      let edges = window.CY.edges()
+
+      for (let c of nodes) {
+        let tmp = c.data()
+        let st = c.style()
+        let tmpstyle = {}
+        if (st['background-image']) {
+          tmpstyle = { 'background-image': st['background-image'] }
+        }
+        arr.push({ data: tmp, style: tmpstyle, position: c.position() })
+      }
+      for (let l of edges) {
+        let tmp = l.data()
+        arr.push({ data: tmp })
+      }
+
+      if (this.isUpdate) {
+        await UpdateGraph({
+          projectId: this.getQueryString('id', this.$route.fullPath),
+          jsonstr: JSON.stringify({
+            val: this.sliderVal,
+            arr: arr
+          })
+        })
+      } else {
+        await SaveGraph({
+          projectId: this.getQueryString('id', this.$route.fullPath),
+          jsonstr: JSON.stringify({
+            val: this.sliderVal,
+            arr: arr
+          })
+        })
+      }
+      this.$message.success('保存成功！')
+    },
+
+    drawGraph(arr) {
+      if (window.CY) {
+        window.CY.destroy()
+      }
+      let person = require("@/assets/gra/pe.png")
+      var cy = cytoscape({
+        container: document.getElementById('graphContainer'),
+        elements: arr,
+        wheelSensitivity: 0.1,
+        layout: {
+          name: 'preset'
+        },
+        style: [
+          {
+            selector: 'node',
+            style: {
+              'width': 100,
+              'height': 100,
+              'background-image': person,
+              'label': 'data(label)',
+              'background-clip': 'none',
+              'background-fit': 'cover',
+              'background-opacity': 0,
+              'color': '#fff',
+              'font-size': 20
+            }
+          },
+          {
+            selector: 'edge',
+            style: {
+              'width': 6,
+              'line-color': '#66b1ff',
+              'target-arrow-color': '#ccc',
+              'target-arrow-shape': 'triangle',
+              'curve-style': 'bezier',
+              'label': 'data(label)',
+              "edge-text-rotation": "autorotate",
+              'color': '#fff',
+              'font-size': 20
+            }
+          },
+          {
+            selector: '.hide',
+            style: {
+              'display': 'none'
+            }
+          }
+        ]
+      })
+      
+      cy.on('click', 'node', (ev) => {
+        let data = ev.target.data()
+        this.$emit('chooseEvent', { type: 'node', data: data.data })
+      })
+      cy.on('click', 'edge', (ev) => {
+        let data = ev.target.data()
+        this.$emit('chooseEvent', { type: 'line', data: data.data })
+      })
+      // this.initCxtMenu(cy)
+      // this.initEditLine(cy)
+
+      window.CY = cy
+    },
+
+    handleChange(ev) {
+      let nodes = window.CY.nodes()
+      let edges = window.CY.edges()
+      let minMoney = ev
+
+      let showLines = []
+      for (let l of edges) {
+        let tmp = l.data()
+        let mon = Number(tmp.data.name)
+        mon = parseInt(Math.abs(mon) / 10000)
+        if (mon > minMoney) {
+          l.toggleClass('hide', false)
+          showLines.push({ source: l.source().id(), target: l.target().id() })
+        } else {
+          l.toggleClass('hide', true)
+        }
+      }
+      for (let n of nodes) {
+        let nid = n.id()
+        let isshow = false
+        for (let l of showLines) {
+          if (nid == l.source || nid == l.target) {
+            isshow = true
+            break
+          }
+        }
+        if (isshow) {
+          n.toggleClass('hide', false)
+        } else {
+          n.toggleClass('hide', true)
+        }
+      }
+
+      console.log(showLines)
+
+    }
+  }
+}
+</script>
+<style lang="scss">
+#graphContainer{
+  position: absolute;
+  width: 100%;height: calc(100% - 100px);
+}
+.slider-bar{
+  position: absolute !important;
+  height: 300px;width: 100px;
+  right: 21px;bottom: 90px;
+
+  .el-slider__marks-text{
+    white-space: nowrap;
+  }
+}
+</style>
