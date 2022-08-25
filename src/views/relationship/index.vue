@@ -1,29 +1,36 @@
 <template>
   <div class="relationship-class">
     <div class="left-list">
-      <div
-        v-for="(item, index) in leftList"
-        :key="index"
-        class="left-list-card"
-        @click="leftClick(item)"
-        :class="leftnow == item.id ? 'left-list-card-click' : ''"
-        v-if="item.user"
-      >
-        <span class="left-list-name">{{ item.user.xm }}</span>
-        <span
-          class="left-list-sex"
-          :style="{ color: item.user.xb == '男' ? '#00C1C1' : '#FF7FBF' }"
+      <template v-for="(item, index) in leftList">
+        <div
+          :key="index"
+          class="left-list-card"
+          @click="leftClick(item)"
+          :class="leftnow == item.id ? 'left-list-card-click' : ''"
+          v-if="item.user"
         >
-          {{ item.user.xb }}
-        </span>
-      </div>
+          <span class="left-list-name">{{ item.user.xm }}</span>
+          <span
+            class="left-list-sex"
+            :style="{ color: item.user.xb == '男' ? '#00C1C1' : '#FF7FBF' }"
+          >
+            {{ item.user.xb }}
+          </span>
+        </div>
+      </template>
     </div>
     <div class="list-right-card" v-if="leftnow != -1">
+      <div class="close-button" @click="leftnow=-1">
+        <i class="el-icon-close"></i>
+      </div>
       <div class="list-right-card-row" style="height: 27%">
         <div class="card-1-1">
           <div class="card-1-1-1">
             <div class="label-class" style="left: 38px; top: 12px">姓名</div>
-            <div class="label-class" style="right: 6px; top: 15px; font-size: 30px">
+            <div
+              class="label-class"
+              style="right: 6px; top: 15px; font-size: 30px"
+            >
               {{ cardData.user.xm }}
             </div>
           </div>
@@ -49,7 +56,11 @@
             </div>
           </div>
           <div class="card-1-1-3">
-            <img src="@/assets/gra/photoin.png" alt="" />
+            <img
+              :src="getPhoto(cardData.user)"
+              alt=""
+              style="width: 100%; height: 100%"
+            />
           </div>
         </div>
         <div class="card-1-2">
@@ -226,31 +237,31 @@
             <div class="card-2-2-1">
               <div class="card-2-row">
                 <span>名称：</span>
-                <span>{{ cardData.company.mc }}</span>
+                <span>{{ cardData.company ? cardData.company.mc : "" }}</span>
               </div>
               <div class="card-2-row">
                 <span>注册资金：</span>
-                <span>{{ cardData.company.zczj }}</span>
+                <span>{{ cardData.company ? cardData.company.zczj : "" }}</span>
               </div>
               <div class="card-2-row">
                 <span>股东：</span>
-                <span>{{ cardData.company.gd }}</span>
+                <span>{{ cardData.company ? cardData.company.gd : "" }}</span>
               </div>
               <div class="card-2-row">
                 <span>实际控制人：</span>
-                <span>{{ cardData.company.xm }}</span>
+                <span>{{ cardData.company ? cardData.company.xm : "" }}</span>
               </div>
               <div class="card-2-row">
                 <span>管理层：</span>
-                <span>{{ cardData.company.glc }}</span>
+                <span>{{ cardData.company ? cardData.company.glc : "" }}</span>
               </div>
               <div class="card-2-row">
-                <span style="width: 70px">地址：</span>
-                <span>{{ cardData.company.jgdz }}</span>
+                <span style="width: 100px">地址：</span>
+                <span>{{ cardData.company ? cardData.company.jgdz : "" }}</span>
               </div>
               <div class="card-2-row">
                 <span>纳税：</span>
-                <span>{{ cardData.company.ns }}</span>
+                <span>{{ cardData.company ? cardData.company.ns : "" }}</span>
               </div>
             </div>
           </div>
@@ -264,29 +275,33 @@
               @click="tabId = 0"
               :style="tabId == 0 ? { color: 'rgb(241, 204, 31)' } : {}"
               style="left: 20px"
-              >财产信息</span
             >
+              财产信息
+            </span>
             <span
               class="tab-class"
               @click="tabId = 1"
               :style="tabId == 1 ? { color: 'rgb(241, 204, 31)' } : {}"
-              style="left: 100px"
-              >活动信息</span
+              style="left: 120px"
             >
+              活动信息
+            </span>
             <span
               class="tab-class"
               @click="tabId = 2"
               :style="tabId == 2 ? { color: 'rgb(241, 204, 31)' } : {}"
-              style="left: 180px"
-              >行为记录</span
+              style="left: 220px"
             >
+              行为记录
+            </span>
             <span
               class="tab-class"
               @click="tabId = 3"
               :style="tabId == 3 ? { color: 'rgb(241, 204, 31)' } : {}"
-              style="left: 260px"
-              >公司信息</span
+              style="left: 320px"
             >
+              公司信息
+            </span>
             <div class="card-3-1-1">
               <p>公司信息</p>
               <p>详细信息</p>
@@ -416,7 +431,11 @@
       保存视图
     </el-button>
 
-    <graph ref="refGraph" @chooseEvent="handleChooseEvent" :minJE="minJE"></graph>
+    <graph
+      ref="refGraph"
+      @chooseEvent="handleChooseEvent"
+      :minJE="minJE"
+    ></graph>
     <detail-dialog ref="dDialog"></detail-dialog>
   </div>
 </template>
@@ -555,17 +574,30 @@ export default {
     this.init();
   },
   methods: {
-    getQueryString(name, fullpath) {
-      let arr = fullpath.split('?')
-      let params = arr[1].split('&')
-      let res = ''
-      for (let p of params) {
-        let aps = p.split('=')
-        if (aps[0] == name) {
-          res = aps[1]
+    getPhoto(user) {
+      if (user.txzp) {
+        return `/ai/webfile/` + user.txzp;
+      } else {
+        if (user.xb == "女") {
+          return require("@/assets/gra/nv.png");
+        } else if (user.xb == "男") {
+          return require("@/assets/gra/nan.png");
+        } else {
+          return require("@/assets/gra/nan.png");
         }
       }
-      return res
+    },
+    getQueryString(name, fullpath) {
+      let arr = fullpath.split("?");
+      let params = arr[1].split("&");
+      let res = "";
+      for (let p of params) {
+        let aps = p.split("=");
+        if (aps[0] == name) {
+          res = aps[1];
+        }
+      }
+      return res;
     },
     retStr(label) {
       return label.splice(" ", "");
@@ -628,7 +660,7 @@ export default {
       // });
 
       // let id = this.getQueryString("id", this.$route.fullPath);
-      let id = this.getQueryString('id', this.$route.fullPath)
+      let id = this.getQueryString("id", this.$route.fullPath);
       GetRelationshiop(id).then((res) => {
         this.leftList = res.data.nodes;
       });
@@ -638,10 +670,14 @@ export default {
       // let chart = this.$refs.chart.chart;
 
       // 获取所有节点及name列表
-      let nodes = this.$refs.chart.chart.getModel().getSeriesByIndex(0).getData()
-        ._itemLayouts;
-      let names = this.$refs.chart.chart.getModel().getSeriesByIndex(0).getData()
-        ._nameList;
+      let nodes = this.$refs.chart.chart
+        .getModel()
+        .getSeriesByIndex(0)
+        .getData()._itemLayouts;
+      let names = this.$refs.chart.chart
+        .getModel()
+        .getSeriesByIndex(0)
+        .getData()._nameList;
 
       for (let i in names) {
         for (let j of this.option.series[0].data) {
@@ -754,7 +790,11 @@ export default {
         if (l.sid == 347 && l.eid == 347) {
           console.log(el);
         }
-        if (l.sid == el.source && l.eid == el.target && el.source != el.target) {
+        if (
+          l.sid == el.source &&
+          l.eid == el.target &&
+          el.source != el.target
+        ) {
           ish = true;
           break;
         }
@@ -873,7 +913,8 @@ export default {
                 color: l.name > 0 ? "#66b1ff" : "#00ffff",
                 // curveness: 0.1,
                 // 设置线粗细
-                width: Math.abs(l.name) / 100000 > 5 ? 5 : Math.abs(l.name) / 100000,
+                width:
+                  Math.abs(l.name) / 100000 > 5 ? 5 : Math.abs(l.name) / 100000,
               },
               dat: l,
             };
@@ -1295,11 +1336,17 @@ export default {
             id: iconList[i].id,
             name: iconList[i].name,
             symbolSize:
-              iconList[i].name == "目标人物" ? 100 : iconList[i].symbolOffset ? 30 : 50,
+              iconList[i].name == "目标人物"
+                ? 100
+                : iconList[i].symbolOffset
+                ? 30
+                : 50,
             isicon: iconList[i].symbolOffset ? true : false,
             x: iconList[i].x,
             y: iconList[i].y,
-            symbolOffset: iconList[i].symbolOffset ? iconList[i].symbolOffset : [0, 0],
+            symbolOffset: iconList[i].symbolOffset
+              ? iconList[i].symbolOffset
+              : [0, 0],
             label: {
               position: "bottom",
               show: true,
@@ -1469,7 +1516,7 @@ export default {
   position: absolute;
   left: 10px;
   top: 100px;
-  width: 200px;
+  width: 240px;
   height: calc(100% - 130px);
   z-index: 50;
   // display: flex;
@@ -1479,7 +1526,7 @@ export default {
   // overflow-x: hidden;
   overflow-y: auto;
   .left-list-card {
-    width: 100%;
+    width: 200px;
     height: 42px;
     display: flex;
     align-items: center;
@@ -1520,11 +1567,19 @@ export default {
   position: absolute;
   left: 240px;
   top: 100px;
-  z-index: 50;
+  z-index: 5000;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
+  .close-button {
+    position: absolute;
+    font-size: 30px;
+    color: #fff;
+    right: 0px;
+    top: -30px;
+    cursor: pointer;
+  }
   .list-right-card-row {
     width: 100%;
     // height: 32%;
@@ -1705,7 +1760,7 @@ export default {
   justify-content: center;
   .card-3-1 {
     width: calc(100% - 20px);
-    height: calc(100% - 20px);
+    height: calc(100% - 40px);
     border: 1px solid #00698c;
     box-shadow: 0 0 10px rgba($color: #00698c, $alpha: 0.7) inset,
       0 0 10px rgba($color: #00698c, $alpha: 0.7);
@@ -1718,10 +1773,11 @@ export default {
       top: -10px;
       color: #fff;
       cursor: pointer;
+      font-size: 20px;
     }
     .card-3-1-1 {
       width: calc(100% - 20px);
-      height: calc(100% - 20px);
+      height: calc(100% - 40px);
       display: flex;
       align-items: center;
       justify-content: center;
