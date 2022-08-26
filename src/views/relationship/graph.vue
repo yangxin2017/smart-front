@@ -86,18 +86,23 @@ export default {
 
       let id = projectId
       let obj = await GetRelationshiop(id)
-      console.log(obj)
       
       let { nodes, lines } = gerFinalNodeAndLine(obj.data, this.minJE)
 
       // console.log('=====================')
-      console.log(nodes, lines)
 
       this.initSlideBar(lines)
 
       let arr = nodes.concat(lines)
       
       arr = this.mergeArr(arr)
+
+      // console.log(arr)
+      // for (let a of arr) {
+      //   if (a.data.source == '1513' || a.data.target == '1513') {
+      //     console.log(a)
+      //   }
+      // }
       
       this.drawGraph(arr)
 
@@ -362,7 +367,7 @@ export default {
         let tmp = l.data()
         let mon = Number(tmp.data.name)
         mon = parseInt(Math.abs(mon) / 10000)
-        if (mon > minMoney) {
+        if (mon >= minMoney) {
           l.toggleClass('hide', false)
           showLines.push({ source: l.source().id(), target: l.target().id() })
         } else {

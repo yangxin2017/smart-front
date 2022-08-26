@@ -19,8 +19,9 @@ export default {
     }
   },
   methods: {
-    _getW(num) {
-      let r = (num / 10000).toFixed(1) + '万'
+    _getW(num, obj) {
+      let ix = obj.change ? -1 : 1
+      let r = (ix * num / 10000).toFixed(1) + '万'
       return r
     },
     show(params) {
@@ -101,7 +102,7 @@ export default {
             <td>${r.bfkh}</td>
             <td>${r.jydfmc}</td>
             <td>${r.jydfzh}</td>
-            <td>${this._getW(r.jyje)}</td>
+            <td>${this._getW(r.jyje, r)}</td>
             <td>${r.jysj}</td>
             <td>${r.jyzy}</td>
           </tr>`

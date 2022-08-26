@@ -181,7 +181,6 @@ export function gerFinalNodeAndLine(graph, minJE) {
 
   nodes = getLayoutNodes(realNodes)
   lines = getLayoutLines(lines, minJE)
-  console.log(minJE)
   return { nodes, lines }
 }
 
@@ -225,7 +224,7 @@ function filterLine(graph) {
   let mergeResult = (arr, l) => {
     let ish = false
     for (let a of arr) {
-      if ((a.sid == l.eid && a.eid == l.sid) || (a.sid == l.sid && a.eid == l.eid)) {
+      if (a.sid == l.sid && a.eid == l.eid) {
         // let m1 = Number(a.name)
         // let m2 = Number(l.name)
         // a.name = m1 + m2
@@ -236,6 +235,39 @@ function filterLine(graph) {
         for (let ar of a.relation) {
           num += Number(ar.jyje)
         }
+        if ((Number(a.name) > 0 && num < 0) || (Number(a.name) < 0 && num > 0)) {
+          let sidtmp = a.sid
+          a.sid = a.eid
+          a.eid = sidtmp
+        }
+        a.name = num
+        break
+      } else if (a.sid == l.eid && a.eid == l.sid) {
+        // console.log('======' + l.sid + "---------" + a.eid)
+        // console.log(l.relation)
+        // console.log(a.relation)
+        let odir = 1
+        for (let al of a.relation) {
+          let ye = Number(al.jyje)
+          odir = ye > 0 ? 1 : -1
+        }
+        for (let al of l.relation) {
+          // 反向变符号
+          let ye = Number(al.jyje)
+          if (odir == 1 && ye > 0) {
+            al.jyje = -ye
+            al.change = true
+          }
+        }
+
+        a.relation = mergeRelation(a.relation, l.relation)
+        ish = true
+        
+        let num = 0.0
+        for (let ar of a.relation) {
+          num += Number(ar.jyje)
+        }
+        
         if ((Number(a.name) > 0 && num < 0) || (Number(a.name) < 0 && num > 0)) {
           let sidtmp = a.sid
           a.sid = a.eid
@@ -265,7 +297,6 @@ function filterLine(graph) {
       }
     }
     sarr = sarr.concat(concat)
-    console.log(sarr)
     return sarr
   }
   //////////
