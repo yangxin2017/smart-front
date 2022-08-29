@@ -12,17 +12,9 @@
           </el-button>
         </el-col>
       </el-row> -->
-      <el-row
-        v-for="(item, index) in upfileList"
-        class="row-class"
-        :key="index"
-      >
+      <el-row v-for="(item, index) in upfileList" class="row-class" :key="index">
         <template v-for="(row, rowindex) in item">
-          <el-col
-            :span="4"
-            align="center"
-            :key="'row0' + index + '_' + rowindex"
-          >
+          <el-col :span="4" align="center" :key="'row0' + index + '_' + rowindex">
             {{ row.title }}
           </el-col>
           <el-col :span="2" :key="'row1' + index + '_' + rowindex">
@@ -33,12 +25,15 @@
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :before-remove="beforeRemove"
+              :on-success="uploadEnd"
+              :on-error="uploadEnd"
               multiple
-              :limit="3"
               :on-exceed="handleExceed"
               :file-list="fileList[row.title]"
               :show-file-list="false"
+              ref="ref_upload"
             >
+              <!-- :limit="1" -->
               <el-button type="primary" size="mini"> 数据导入 </el-button>
             </el-upload>
           </el-col>
@@ -77,12 +72,7 @@
     </template>
 
     <template v-if="dialog == 1">
-      <el-button
-        type="primary"
-        size="mini"
-        class="rest-button"
-        @click="dialog = -1"
-      >
+      <el-button type="primary" size="mini" class="rest-button" @click="dialog = -1">
         返回
       </el-button>
       <tablePublic :tableName="tableName" :headerList="headerList" />
@@ -2012,6 +2002,543 @@ export default {
         ],
         [
           {
+            title: "资产-自然资源部",
+            upfile: true,
+            outfile: true,
+            download: true,
+            alldata: true,
+            downloadUrl: "/ai/zrzyb/export",
+            action: "/ai/zrzyb/upload",
+            bid: 9,
+            template: "/downFile/资产-自然资源部.xlsx",
+            headerList: [
+              {
+                label: "反馈单位",
+                modifiable: true,
+                prop: "fkdw",
+              },
+              {
+                label: "审批表",
+                modifiable: true,
+                prop: "spb",
+              },
+              {
+                label: "名称",
+                modifiable: true,
+                prop: "mc",
+              },
+              {
+                label: "证件类型",
+                modifiable: true,
+                prop: "zjlx",
+              },
+              {
+                label: "是否有财产",
+                modifiable: true,
+                prop: "sfycc",
+              },
+              {
+                label: "查询请求单号",
+                modifiable: true,
+                prop: "cxqqdh",
+              },
+              {
+                label: "查询申请地区",
+                modifiable: true,
+                prop: "cxsqdq",
+              },
+              {
+                label: "查询申请地区号",
+                modifiable: true,
+                prop: "cxsqdqh",
+              },
+              {
+                label: "权利人名称",
+                modifiable: true,
+                prop: "qlrmc",
+              },
+              {
+                label: "权利人证件号码",
+                modifiable: true,
+                prop: "qlrzjhm",
+              },
+              {
+                label: "查询结果数",
+                modifiable: true,
+                prop: "cxjgs",
+              },
+              {
+                label: "权力类型",
+                modifiable: true,
+                prop: "qllx",
+              },
+              {
+                label: "不动产坐落",
+                modifiable: true,
+                prop: "bdczl",
+              },
+              {
+                label: "不动产面积",
+                modifiable: true,
+                prop: "bdcmj",
+              },
+              {
+                label: "规划用途",
+                modifiable: true,
+                prop: "ghyt",
+              },
+              {
+                label: "共有权人名称",
+                modifiable: true,
+                prop: "gyqrmc",
+              },
+              {
+                label: "共用方式",
+                modifiable: true,
+                prop: "gyfs",
+              },
+              {
+                label: "不动产单元号",
+                modifiable: true,
+                prop: "bdcdyh",
+              },
+              {
+                label: "不动产权证号",
+                modifiable: true,
+                prop: "bdcqzh",
+              },
+              {
+                label: "登记时间",
+                modifiable: true,
+                prop: "djsj",
+              },
+              {
+                label: "权属状态",
+                modifiable: true,
+                prop: "qszt",
+              },
+              {
+                label: "是否抵押",
+                modifiable: true,
+                prop: "sfdy",
+              },
+              {
+                label: "是否查封",
+                modifiable: true,
+                prop: "sfcf",
+              },
+              {
+                label: "备注",
+                modifiable: true,
+                prop: "bz",
+              },
+              {
+                label: "查询单位",
+                modifiable: true,
+                prop: "cxdw",
+              },
+            ],
+          },
+          {
+            title: "金融机构-交易流水",
+            upfile: true,
+            outfile: true,
+            download: true,
+            alldata: true,
+            downloadUrl: "/ai/jyls/export",
+            action: "/ai/jyls/upload",
+            bid: 9,
+            template: "/downFile/金融机构-交易流水.xlsx",
+            headerList: [
+              {
+                label: "反馈单位",
+                modifiable: true,
+                prop: "fkdw",
+              },
+              {
+                label: "审批表",
+                modifiable: true,
+                prop: "spb",
+              },
+              {
+                label: "名称",
+                modifiable: true,
+                prop: "mc",
+              },
+              {
+                label: "证件类型",
+                modifiable: true,
+                prop: "zjlx",
+              },
+              {
+                label: "证件号码",
+                modifiable: true,
+                prop: "zjhm",
+              },
+              {
+                label: "查询对象名称",
+                modifiable: true,
+                prop: "cxdxmc",
+              },
+              {
+                label: "查询卡号",
+                modifiable: true,
+                prop: "cxkh",
+              },
+              {
+                label: "查询反馈结果原因",
+                modifiable: true,
+                prop: "cxfkjgyy",
+              },
+              {
+                label: "本方账号",
+                modifiable: true,
+                prop: "bfzh",
+              },
+              {
+                label: "本方卡号",
+                modifiable: true,
+                prop: "bfkh",
+              },
+              {
+                label: "交易类型",
+                modifiable: true,
+                prop: "jylx",
+              },
+              {
+                label: "借贷标志",
+                modifiable: true,
+                prop: "jdbz",
+              },
+              {
+                label: "币种",
+                modifiable: true,
+                prop: "biz",
+              },
+              {
+                label: "交易金额",
+                modifiable: true,
+                prop: "jyje",
+              },
+              {
+                label: "交易余额",
+                modifiable: true,
+                prop: "jyye",
+              },
+              {
+                label: "交易时间",
+                modifiable: true,
+                prop: "jysj",
+              },
+              {
+                label: "交易流水号",
+                modifiable: true,
+                prop: "jylsh",
+              },
+              {
+                label: "交易对方名称",
+                modifiable: true,
+                prop: "jydfmc",
+              },
+              {
+                label: "交易对方账号",
+                modifiable: true,
+                prop: "jydfzh",
+              },
+              {
+                label: "交易对方卡号",
+                modifiable: true,
+                prop: "jydfkh",
+              },
+              {
+                label: "交易摘要",
+                modifiable: true,
+                prop: "jyzy",
+              },
+              {
+                label: "交易网点名称",
+                modifiable: true,
+                prop: "jywdmc",
+              },
+              {
+                label: "交易网点代码",
+                modifiable: true,
+                prop: "jywddm",
+              },
+              {
+                label: "交易柜员号",
+                modifiable: true,
+                prop: "jygyh",
+              },
+              {
+                label: "备注",
+                modifiable: true,
+                prop: "bz",
+              },
+            ],
+          },
+        ],
+        [
+          {
+            title: "金融机构-金融理财",
+            upfile: true,
+            outfile: true,
+            download: true,
+            alldata: true,
+            downloadUrl: "/ai/jrlc/export",
+            action: "/ai/jrlc/upload",
+            bid: 9,
+            template: "/downFile/金融机构-金融理财.xlsx",
+            headerList: [
+              {
+                label: "反馈单位",
+                modifiable: true,
+                prop: "fkdw",
+              },
+              {
+                label: "审批表",
+                modifiable: true,
+                prop: "spb",
+              },
+              {
+                label: "名称",
+                modifiable: true,
+                prop: "mc",
+              },
+              {
+                label: "证件类型",
+                modifiable: true,
+                prop: "zjlx",
+              },
+              {
+                label: "证件号码",
+                modifiable: true,
+                prop: "zjhm",
+              },
+              {
+                label: "查询账户",
+                modifiable: true,
+                prop: "cxzh",
+              },
+              {
+                label: "是否有财产",
+                modifiable: true,
+                prop: "sfycc",
+              },
+              {
+                label: "查询反馈结果原因",
+                modifiable: true,
+                prop: "cxfkjgyy",
+              },
+              {
+                label: "查询卡号",
+                modifiable: true,
+                prop: "cxkh",
+              },
+              {
+                label: "理财卡号",
+                modifiable: true,
+                prop: "lckh",
+              },
+              {
+                label: "理财账号",
+                modifiable: true,
+                prop: "lczh",
+              },
+              {
+                label: "网银账户名称",
+                modifiable: true,
+                prop: "wyzhmc",
+              },
+              {
+                label: "最后登录IP",
+                modifiable: true,
+                prop: "zhdlip",
+              },
+              {
+                label: "最后登录时间",
+                modifiable: true,
+                prop: "zhdlsj",
+              },
+              {
+                label: "账户类别",
+                modifiable: true,
+                prop: "zhlb",
+              },
+              {
+                label: "账户状态",
+                modifiable: true,
+                prop: "zhzt",
+              },
+              {
+                label: "开户网点",
+                modifiable: true,
+                prop: "khyh",
+              },
+              {
+                label: "开户网点代码",
+                modifiable: true,
+                prop: "khyhdm",
+              },
+              {
+                label: "开户日期",
+                modifiable: true,
+                prop: "khrq",
+              },
+              {
+                label: "销户日期",
+                modifiable: true,
+                prop: "xhrq",
+              },
+              {
+                label: "销户网点",
+                modifiable: true,
+                prop: "xhyh",
+              },
+              {
+                label: "币种",
+                modifiable: true,
+                prop: "biz",
+              },
+              {
+                label: "钞汇标志",
+                modifiable: true,
+                prop: "chbz",
+              },
+              {
+                label: "账户余额",
+                modifiable: true,
+                prop: "zhye",
+              },
+              {
+                label: "可用余额",
+                modifiable: true,
+                prop: "kyye",
+              },
+              {
+                label: "最后交易时间",
+                modifiable: true,
+                prop: "zhjysj",
+              },
+              {
+                label: "备注",
+                modifiable: true,
+                prop: "bz",
+              },
+            ],
+          },
+          {
+            title: "中国人民银行-银行账户",
+            upfile: true,
+            outfile: true,
+            download: true,
+            alldata: true,
+            downloadUrl: "/ai/rmyhzh/export",
+            action: "/ai/rmyhzh/upload",
+            bid: 9,
+            template: "/downFile/中国人民银行-银行账户.xlsx",
+            headerList: [
+              {
+                label: "反馈单位",
+                modifiable: true,
+                prop: "fkdw",
+              },
+              {
+                label: "审批表",
+                modifiable: true,
+                prop: "spb",
+              },
+              {
+                label: "名称",
+                modifiable: true,
+                prop: "mc",
+              },
+              {
+                label: "证件类型",
+                modifiable: true,
+                prop: "zjlx",
+              },
+              {
+                label: "证件号码",
+                modifiable: true,
+                prop: "zjhm",
+              },
+              {
+                label: "查询账户",
+                modifiable: true,
+                prop: "cxzh",
+              },
+              {
+                label: "是否有财产",
+                modifiable: true,
+                prop: "sfycc",
+              },
+              {
+                label: "开户银行名称",
+                modifiable: true,
+                prop: "khyhmc",
+              },
+              {
+                label: "帐号",
+                modifiable: true,
+                prop: "zh",
+              },
+              {
+                label: "账户性质",
+                modifiable: true,
+                prop: "zhxz",
+              },
+              {
+                label: "开户时间",
+                modifiable: true,
+                prop: "khsj",
+              },
+              {
+                label: "销户时间",
+                modifiable: true,
+                prop: "xhsj",
+              },
+              {
+                label: "账户状态",
+                modifiable: true,
+                prop: "zhzt",
+              },
+              {
+                label: "银行机构代码",
+                modifiable: true,
+                prop: "yhjgdm",
+              },
+              {
+                label: "账户名称",
+                modifiable: true,
+                prop: "zhmc",
+              },
+              {
+                label: "证照号码",
+                modifiable: true,
+                prop: "zzhm",
+              },
+              {
+                label: "反馈人",
+                modifiable: true,
+                prop: "fkr",
+              },
+              {
+                label: "反馈录入时间",
+                modifiable: true,
+                prop: "fkrsj",
+              },
+              {
+                label: "备注",
+                modifiable: true,
+                prop: "bz",
+              },
+
+            ],
+          },
+        ],
+        [
+          {
             title: "公安数据-亲属关系",
             upfile: false,
             outfile: true,
@@ -2033,13 +2560,19 @@ export default {
       dialog: -1,
       tableName: "",
       headerList: [],
-      projectId: null
+      projectId: null,
     };
   },
   mounted() {
-    this.projectId = this.$route.query.id
+    this.projectId = this.$route.query.id;
   },
   methods: {
+    uploadEnd(res) {
+      console.log(res);
+      this.fileList = {};
+      // this.$refs.ref_upload.clearFiles();
+      this.$message.success("导入成功！");
+    },
     allData(item) {
       this.tableName = item.title;
       this.headerList = item.headerList;

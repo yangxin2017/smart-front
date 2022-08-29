@@ -400,3 +400,105 @@ export function deleteQsgx(params) {
         method: 'post'
     })
 }
+
+// 资产-资源资源部
+// /zrzyb/list
+export function getZrzybList(params) {
+    return request({
+        url: '/zrzyb/list',
+        method: 'get',
+        params: params
+    })
+}
+// /zrzyb/update post
+export function updateZrzyb(params) {
+    return request({
+        url: '/zrzyb/update',
+        method: 'post',
+        data: params
+    })
+}
+// /zrzyb/delete/{id} post
+export function deleteZrzyb(params) {
+    return request({
+        url: '/zrzyb/delete/' + params,
+        method: 'post'
+    })
+}
+
+
+// /ai/jyls/list
+export function getJylsList(params) {
+    return request({
+        url: '/jyls/list',
+        method: 'get',
+        params: params
+    })
+}
+// /jyls/update post
+export function updateJyls(params) {
+    return request({
+        url: '/jyls/update',
+        method: 'post',
+        data: params
+    })
+}
+// /jyls/delete/{id} post
+export function deleteJyls(params) {
+    return request({
+        url: '/jyls/delete/' + params,
+        method: 'post'
+    })
+}
+
+
+// 金融理财
+
+// /ai/jrlc/list
+export function getJrlcList(params) {
+    return request({
+        url: '/jrlc/list',
+        method: 'get',
+        params: params
+    })
+}
+// /jrlc/update post
+export function updateJrlc(params) {
+    return request({
+        url: '/jrlc/update',
+        method: 'post',
+        data: params
+    })
+}
+// /jrlc/delete/{id} post
+export function deleteJrlc(params) {
+    return request({
+        url: '/jrlc/delete/' + params,
+        method: 'post'
+    })
+}
+
+// 人民银行账户
+// /rmyhzh/list
+export function getRmyhzhList(params) {
+    return request({
+        url: '/rmyhzh/list',
+        method: 'get',
+        params: params
+    })
+}
+// /rmyhzh/update post
+export function updateRmyhzh(params) {
+    return request({
+        url: '/rmyhzh/update',
+        method: 'post',
+        data: params
+    })
+}
+// /rmyhzh/delete/{id} post
+export function deleteRmyhzh(params) {
+    return request({
+        url: '/rmyhzh/delete/' + params,
+        method: 'post'
+    })
+}

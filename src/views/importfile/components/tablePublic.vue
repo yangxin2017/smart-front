@@ -1,9 +1,6 @@
 <template>
   <div class="table-public">
-    <el-row
-      style="width: 100%; height: 40px"
-      v-if="tableName == '公安数据-亲属关系'"
-    >
+    <el-row style="width: 100%; height: 40px" v-if="tableName == '公安数据-亲属关系'">
       <el-col :span="2">
         <el-select v-model="form.id1" placeholder="请选择" size="mini">
           <el-option
@@ -17,12 +14,7 @@
       </el-col>
       <el-col :span="2">
         <el-select v-model="form.gx" placeholder="请选择" size="mini">
-          <el-option
-            v-for="item in relationList"
-            :key="item"
-            :label="item"
-            :value="item"
-          >
+          <el-option v-for="item in relationList" :key="item" :label="item" :value="item">
           </el-option>
         </el-select>
       </el-col>
@@ -38,9 +30,7 @@
         </el-select>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" size="mini" @click="addQsgxClick"
-          >新增</el-button
-        >
+        <el-button type="primary" size="mini" @click="addQsgxClick">新增</el-button>
       </el-col>
     </el-row>
     <el-table
@@ -55,11 +45,23 @@
       >
         <template slot-scope="scope">
           <div class="pic-avatar">
-            <el-image v-if="scope.row.txzp" style="width: 60px; height: 60px" :preview-src-list="['/ai/webfile/' + scope.row.txzp]" :src="'/ai/webfile/' + scope.row.txzp"></el-image>
-            <el-upload :before-upload="handleExceed"
+            <el-image
+              v-if="scope.row.txzp"
+              style="width: 60px; height: 60px"
+              :preview-src-list="['/ai/webfile/' + scope.row.txzp]"
+              :src="'/ai/webfile/' + scope.row.txzp"
+            ></el-image>
+            <el-upload
+              :before-upload="handleExceed"
               :action="`/ai/file/upload/?userId=${scope.row.id}`"
-              :on-success="(res) => { return handleSuccess(res, scope.row) }"
-              :limit="1" :show-file-list="false">
+              :on-success="
+                (res) => {
+                  return handleSuccess(res, scope.row);
+                }
+              "
+              :limit="1"
+              :show-file-list="false"
+            >
               <el-button size="mini" type="primary">点击上传</el-button>
             </el-upload>
           </div>
@@ -76,11 +78,7 @@
           <span v-if="setIndex != scope.$index || !item.modifiable">
             {{ scope.row[item.prop] }}
           </span>
-          <el-input
-            v-else
-            v-model="setRowList[item.prop]"
-            size="mini"
-          ></el-input>
+          <el-input v-else v-model="setRowList[item.prop]" size="mini"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="120" fixed="right">
@@ -114,7 +112,9 @@
         v-if="tableName == '公安数据-人员电子档案'"
       >
         <template slot-scope="scope">
-          <el-checkbox v-model="scope.row.sfMbr" @change="handleChangeMBR(scope.row)">设为目标人</el-checkbox>
+          <el-checkbox v-model="scope.row.sfMbr" @change="handleChangeMBR(scope.row)"
+            >设为目标人</el-checkbox
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -183,10 +183,7 @@
             >
               修改
             </el-button>
-            <el-button
-              type="text"
-              @click="companyDeleteRow(scope.row, scope.$index)"
-            >
+            <el-button type="text" @click="companyDeleteRow(scope.row, scope.$index)">
               删除
             </el-button>
           </template>
@@ -267,8 +264,28 @@ import {
   addQsgx,
   updateQsgx,
   deleteQsgx,
+
+  // 16
+  getZrzybList,
+  updateZrzyb,
+  deleteZrzyb,
+
+  // 17
+  getJylsList,
+  updateJyls,
+  deleteJyls,
+
+  // 18
+  getJrlcList,
+  updateJrlc,
+  deleteJrlc,
+
+  // 19
+  getRmyhzhList,
+  updateRmyhzh,
+  deleteRmyhzh,
 } from "@/api/public";
-import { UpdateMBR } from '@/api/project'
+import { UpdateMBR } from "@/api/project";
 export default {
   props: {
     tableName: {
@@ -314,49 +331,57 @@ export default {
       nameList: [],
       // 关系列表
       relationList: [],
+
+      id: -1,
     };
   },
   mounted() {
-    let fullpath = this.$route.fullPath
-    let id = this.getQueryString('id', fullpath)
-      console.log(id)
-    this.init(id)
+    let fullpath = this.$route.fullPath;
+    let id = this.getQueryString("id", fullpath);
+    this.id = id;
+    this.init(id);
   },
   methods: {
     getQueryString(name, fullpath) {
-      let arr = fullpath.split('?')
-      let params = arr[1].split('&')
-      let res = ''
+      let arr = fullpath.split("?");
+      let params = arr[1].split("&");
+      let res = "";
       for (let p of params) {
-        let aps = p.split('=')
+        let aps = p.split("=");
         if (aps[0] == name) {
-          res = aps[1]
+          res = aps[1];
         }
       }
-      return res
+      return res;
     },
     handleExceed(file) {
-      const isJPG = file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png'
+      const isJPG =
+        file.type === "image/jpeg" ||
+        file.type === "image/jpg" ||
+        file.type === "image/png";
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 或者 PNG 格式!')
+        this.$message.error("上传头像图片只能是 JPG 或者 PNG 格式!");
       }
-      return isJPG
+      return isJPG;
     },
     handleSuccess(res, row) {
-      console.log(res, row)
-      this.$message.success('上传成功')
-      row.txzp = res.data
+      console.log(res, row);
+      this.$message.success("上传成功");
+      row.txzp = res.data;
     },
     async handleChangeMBR(row) {
-      await UpdateMBR(row.id, row.sfMbr)
+      await UpdateMBR(row.id, row.sfMbr);
     },
     init(id) {
+      if (!id) {
+        id = this.id;
+      }
       if (this.tableName == "银行数据") {
         getBankList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -364,7 +389,7 @@ export default {
         getMhlgjlList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -372,7 +397,7 @@ export default {
         getRydzdaList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -380,7 +405,7 @@ export default {
         getMhdpjlList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -388,7 +413,7 @@ export default {
         getQgjsrList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -396,7 +421,7 @@ export default {
         getTlspxxList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -404,7 +429,7 @@ export default {
         getQgjdcList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -412,7 +437,7 @@ export default {
         getLkzsxxList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -420,7 +445,7 @@ export default {
         getCrjzjList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -428,7 +453,7 @@ export default {
         getQbgjList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -436,7 +461,7 @@ export default {
         getJgfrxxList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -444,7 +469,7 @@ export default {
         getCrjjlList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -452,7 +477,7 @@ export default {
         getJdcwzList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -460,7 +485,7 @@ export default {
         getYhhcxxList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -475,7 +500,39 @@ export default {
         getQsgxList({
           pageIndex: 1,
           pageSize: 10000,
-          projectId: id
+          projectId: id,
+        }).then((res) => {
+          this.tableList = res.data.records;
+        });
+      } else if (this.tableName == "资产-自然资源部") {
+        getZrzybList({
+          pageIndex: 1,
+          pageSize: 10000,
+          projectId: id,
+        }).then((res) => {
+          this.tableList = res.data.records;
+        });
+      } else if (this.tableName == "金融机构-交易流水") {
+        getJylsList({
+          pageIndex: 1,
+          pageSize: 10000,
+          projectId: id,
+        }).then((res) => {
+          this.tableList = res.data.records;
+        });
+      } else if (this.tableName == "金融机构-金融理财") {
+        getJrlcList({
+          pageIndex: 1,
+          pageSize: 10000,
+          projectId: id,
+        }).then((res) => {
+          this.tableList = res.data.records;
+        });
+      } else if (this.tableName == "中国人民银行-银行账户") {
+        getRmyhzhList({
+          pageIndex: 1,
+          pageSize: 10000,
+          projectId: id,
         }).then((res) => {
           this.tableList = res.data.records;
         });
@@ -524,8 +581,7 @@ export default {
       this.companyDialog.tableList[index] = {
         ...this.companyDialog.setRow,
       };
-      this.tableList[this.companyDialog.index].company =
-        this.companyDialog.tableList;
+      this.tableList[this.companyDialog.index].company = this.companyDialog.tableList;
       this.companyDialog.setIndex = -1;
       this.companyDialog.setRow = {};
     },
@@ -612,6 +668,22 @@ export default {
         updateQsgx(this.setRowList).then((res) => {
           this.init();
         });
+      } else if (this.tableName == "资产-自然资源部") {
+        updateZrzyb(this.setRowList).then((res) => {
+          this.init();
+        });
+      } else if (this.tableName == "金融机构-交易流水") {
+        updateJyls(this.setRowList).then((res) => {
+          this.init();
+        });
+      } else if (this.tableName == "金融机构-金融理财") {
+        updateJrlc(this.setRowList).then((res) => {
+          this.init();
+        });
+      } else if (this.tableName == "中国人民银行-银行账户") {
+        updateRmyhzh(this.setRowList).then((res) => {
+          this.init();
+        });
       }
       this.setIndex = -1;
       this.setRowList = {};
@@ -678,6 +750,22 @@ export default {
         deleteQsgx(row.id).then((res) => {
           this.init();
         });
+      } else if (this.tableName == "资产-自然资源部") {
+        deleteZrzyb(row.id).then((res) => {
+          this.init();
+        });
+      } else if (this.tableName == "金融机构-交易流水") {
+        deleteJyls(row.id).then((res) => {
+          this.init();
+        });
+      } else if (this.tableName == "金融机构-金融理财") {
+        deleteJrlc(row.id).then((res) => {
+          this.init();
+        });
+      } else if (this.tableName == "中国人民银行-银行账户") {
+        deleteRmyhzh(row.id).then((res) => {
+          this.init();
+        });
       }
     },
 
@@ -703,7 +791,7 @@ export default {
     justify-content: flex-end;
   }
 }
-.pic-avatar{
+.pic-avatar {
   display: flex;
   flex-direction: column;
   justify-content: center;

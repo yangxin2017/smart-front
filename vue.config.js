@@ -39,8 +39,8 @@ module.exports = {
     },
     proxy: {
       '/ai': {
-        target: 'http://117.158.219.3:9080',
-        // target: 'http://127.0.0.1:8096',
+        // target: 'http://117.158.219.3:9080',
+        target: 'http://127.0.0.1:8096',
         changeOrigin: true,
         secure: false,
         pathRewrite: { '^/ai': '/ai' }
