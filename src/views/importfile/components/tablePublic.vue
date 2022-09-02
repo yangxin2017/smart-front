@@ -36,7 +36,9 @@
     <el-table
       :data="tableList"
       width="100%"
-      :height="tableName == '公安数据-亲属关系' ? 'calc(100% - 40px)' : '100%'"
+      :height="
+        tableName == '公安数据-亲属关系' ? 'calc(100% - 72px)' : 'calc(100% - 32px)'
+      "
     >
       <el-table-column
         label="头像照片"
@@ -118,6 +120,19 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="page-class">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="1"
+        :page-sizes="pageList.pageSizes"
+        :page-size="pageList.pageSize"
+        layout="sizes, prev, pager, next, jumper"
+        :total="pageList.total"
+      >
+      </el-pagination>
+    </div>
+
     <el-dialog
       title="维护公司参股信息"
       :visible.sync="companyDialog.dialog"
@@ -201,89 +216,10 @@
 
 <script>
 import {
-  // 1
-  getBankList,
-  updateBank,
-  deleteBank,
-  // 2
-  getMhlgjlList,
-  updateMhlgjl,
-  deleteMhlgjl,
-  // 3
-  getRydzdaList,
-  updateRydzda,
-  deleteRydzda,
-  // 4
-  getMhdpjlList,
-  updateMhdpjl,
-  deleteMhdpjl,
-  // 5
-  getQgjsrList,
-  updateQgjsr,
-  deleteQgjsr,
-  // 6
-  getTlspxxList,
-  updateTlspxx,
-  deleteTlspxx,
-  // 7
-  getQgjdcList,
-  updateQgjdc,
-  deleteQgjdc,
-  // 8
-  getLkzsxxList,
-  updateLkzsxx,
-  deleteLkzsxx,
-  // 9
-  getCrjzjList,
-  updateCrjzj,
-  deleteCrjzj,
-  // 10
-  getQbgjList,
-  updateQbgj,
-  deleteQbgj,
-  // 11
-  getJgfrxxList,
-  updateJgfrxx,
-  deleteJgfrxx,
-  // 12
-  getCrjjlList,
-  updateCrjjl,
-  deleteCrjjl,
-  // 13
-  getJdcwzList,
-  updateJdcwz,
-  deleteJdcwz,
-  // 14
-  getYhhcxxList,
-  updateYhhcxx,
-  deleteYhhcxx,
-  // 15
-  getRyDzdaFilters,
-  getDataTypeRelation,
-  getQsgxList,
-  addQsgx,
-  updateQsgx,
-  deleteQsgx,
-
-  // 16
-  getZrzybList,
-  updateZrzyb,
-  deleteZrzyb,
-
-  // 17
-  getJylsList,
-  updateJyls,
-  deleteJyls,
-
-  // 18
-  getJrlcList,
-  updateJrlc,
-  deleteJrlc,
-
-  // 19
-  getRmyhzhList,
-  updateRmyhzh,
-  deleteRmyhzh,
+  // all
+  getList,
+  setList,
+  deleteList,
 } from "@/api/public";
 import { UpdateMBR } from "@/api/project";
 export default {
@@ -296,9 +232,19 @@ export default {
       type: Array,
       default: [],
     },
+    rowList: {
+      type: Object,
+      default: {},
+    },
   },
   data() {
     return {
+      pageList: {
+        pageSizes: [10, 50, 100, 500, 10000],
+        pageSize: 10,
+        pageIndex: 1,
+        total: 0,
+      },
       tableHeader: [
         {
           label: "姓名",
@@ -342,6 +288,14 @@ export default {
     this.init(id);
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageList.pageSize = val;
+      this.init();
+    },
+    handleCurrentChange(val) {
+      this.pageList.pageIndex = val;
+      this.init();
+    },
     getQueryString(name, fullpath) {
       let arr = fullpath.split("?");
       let params = arr[1].split("&");
@@ -377,166 +331,14 @@ export default {
       if (!id) {
         id = this.id;
       }
-      if (this.tableName == "银行数据") {
-        getBankList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-民航离岗记录") {
-        getMhlgjlList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-人员电子档案") {
-        getRydzdaList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-民航订票记录") {
-        getMhdpjlList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-全国驾驶人") {
-        getQgjsrList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-铁路售票信息") {
-        getTlspxxList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-全国机动车") {
-        getQgjdcList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-旅客住宿记录") {
-        getLkzsxxList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-出入境证件") {
-        getCrjzjList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-全部轨迹") {
-        getQbgjList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-机构法人信息") {
-        getJgfrxxList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-出入境记录") {
-        getCrjjlList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-机动车违章") {
-        getJdcwzList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-银行核查信息") {
-        getYhhcxxList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "公安数据-亲属关系") {
-        getRyDzdaFilters().then((res) => {
-          // this.nameList = res.data.records;
-          this.nameList = res.data;
-        });
-        getDataTypeRelation().then((res) => {
-          this.relationList = res.data;
-        });
-        getQsgxList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "资产-自然资源部") {
-        getZrzybList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "金融机构-交易流水") {
-        getJylsList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "金融机构-金融理财") {
-        getJrlcList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      } else if (this.tableName == "中国人民银行-银行账户") {
-        getRmyhzhList({
-          pageIndex: 1,
-          pageSize: 10000,
-          projectId: id,
-        }).then((res) => {
-          this.tableList = res.data.records;
-        });
-      }
+      getList(this.rowList.getUrl, {
+        pageIndex: this.pageList.pageIndex,
+        pageSize: this.pageList.pageSize,
+        projectId: id,
+      }).then((res) => {
+        this.tableList = res.data.records;
+        this.pageList.total = res.data.total;
+      });
     },
     addQsgxClick() {
       let form = this.form;
@@ -608,165 +410,16 @@ export default {
       this.tableList[index] = {
         ...this.setRowList,
       };
-      if (this.tableName == "银行数据") {
-        updateBank(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-民航离岗记录") {
-        updateMhlgjl(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-人员电子档案") {
-        updateRydzda(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-民航订票记录") {
-        updateMhdpjl(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-全国驾驶人") {
-        updateQgjsr(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-铁路售票信息") {
-        updateTlspxx(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-全国机动车") {
-        updateQgjdc(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-旅客住宿记录") {
-        updateLkzsxx(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-出入境证件") {
-        updateCrjzj(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-全部轨迹") {
-        updateQbgj(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-机构法人信息") {
-        updateJgfrxx(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-出入境记录") {
-        updateCrjjl(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-机动车违章") {
-        updateJdcwz(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-银行核查信息") {
-        updateYhhcxx(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-亲属关系") {
-        updateQsgx(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "资产-自然资源部") {
-        updateZrzyb(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "金融机构-交易流水") {
-        updateJyls(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "金融机构-金融理财") {
-        updateJrlc(this.setRowList).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "中国人民银行-银行账户") {
-        updateRmyhzh(this.setRowList).then((res) => {
-          this.init();
-        });
-      }
+      setList(this.rowList.setUrl, this.setRowList).then((res) => {
+        this.init();
+      });
       this.setIndex = -1;
       this.setRowList = {};
     },
     deleteRow(row, index) {
-      // this.tableList.splice(index, 1);
-      if (this.tableName == "银行数据") {
-        deleteBank(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-民航离岗记录") {
-        deleteMhlgjl(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-人员电子档案") {
-        deleteRydzda(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-民航订票记录") {
-        deleteMhdpjl(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-全国驾驶人") {
-        deleteQgjsr(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-铁路售票信息") {
-        deleteTlspxx(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-全国机动车") {
-        deleteQgjdc(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-旅客住宿记录") {
-        deleteLkzsxx(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-出入境证件") {
-        deleteCrjzj(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-全部轨迹") {
-        deleteQbgj(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-机构法人信息") {
-        deleteJgfrxx(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-出入境记录") {
-        deleteCrjjl(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-机动车违章") {
-        deleteJdcwz(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-银行核查信息") {
-        deleteYhhcxx(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "公安数据-亲属关系") {
-        deleteQsgx(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "资产-自然资源部") {
-        deleteZrzyb(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "金融机构-交易流水") {
-        deleteJyls(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "金融机构-金融理财") {
-        deleteJrlc(row.id).then((res) => {
-          this.init();
-        });
-      } else if (this.tableName == "中国人民银行-银行账户") {
-        deleteRmyhzh(row.id).then((res) => {
-          this.init();
-        });
-      }
+      deleteList(this.rowList.deleteUrl, row.id).then((res) => {
+        this.init();
+      });
     },
 
     // 上传照片
@@ -796,5 +449,10 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.page-class {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

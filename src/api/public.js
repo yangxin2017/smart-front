@@ -502,3 +502,27 @@ export function deleteRmyhzh(params) {
         method: 'post'
     })
 }
+
+
+export function getList(url, params) {
+    return request({
+        url: url,
+        method: 'get',
+        params: params
+    })
+}
+
+export function setList(url, params) {
+    return request({
+        url: url,
+        method: 'post',
+        data: params
+    })
+}
+
+export function deleteList(url, params) {
+    return request({
+        url: url + params,
+        method: 'post'
+    })
+}
