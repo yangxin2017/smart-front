@@ -15,30 +15,36 @@
                 "action": "/ai/rydzda/upload",
                 "bid": 4,
                 "template": "/downFile/公安情报信息模块-人员电子档案.xlsx",
+                "detailed": true,
                 "headerList": [
                     {
                         "label": "姓名",
                         "modifiable": true,
+                        "row": true,
                         "prop": "xm"
                     },
                     {
                         "label": "性别",
                         "modifiable": true,
+                        "row": true,
                         "prop": "xb"
                     },
                     {
                         "label": "身份证号码",
                         "modifiable": true,
+                        "row": true,
                         "prop": "sfzh"
                     },
                     {
                         "label": "民族",
                         "modifiable": true,
+                        "row": true,
                         "prop": "mz"
                     },
                     {
                         "label": "出生日期",
                         "modifiable": true,
+                        "row": true,
                         "prop": "csrq"
                     },
                     {
@@ -134,6 +140,7 @@
                     {
                         "label": "行为标签",
                         "modifiable": true,
+                        "row": true,
                         "prop": "xwbq"
                     }
                 ]
@@ -147,6 +154,7 @@
                 "getUrl": "/qsgx/list",
                 "setUrl": "/qsgx/update",
                 "deleteUrl": "/qsgx/delete/",
+                "downloadUrl": "/ai/qsgx/export",
                 "action": "",
                 "bid": 10,
                 "template": "",
@@ -1816,10 +1824,12 @@
                 "action": "/ai/bank/upload",
                 "bid": 1,
                 "template": "/downFile/银行调查交易信息模板.xlsx",
+                "detailed": true,
                 "headerList": [
                     {
                         "label": "反馈单位",
                         "modifiable": true,
+                        "row": true,
                         "prop": "fkdw"
                     },
                     {
@@ -1830,16 +1840,19 @@
                     {
                         "label": "名称",
                         "modifiable": true,
+                        "row": true,
                         "prop": "mc"
                     },
                     {
                         "label": "证件类型",
                         "modifiable": true,
+                        "row": true,
                         "prop": "zjlx"
                     },
                     {
                         "label": "证件号码",
                         "modifiable": true,
+                        "row": true,
                         "prop": "zjhm"
                     },
                     {
@@ -2842,14 +2855,55 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
-                "bid": 55555555555555555555555555555555555555555555555555555555555555555555,
+                "getUrl": "/gsSwjnxx/list",
+                "setUrl": "/gsSwjnxx/update",
+                "deleteUrl": "/gsSwjnxx/delete/",
+                "downloadUrl": "/ai/gsSwjnxx/export",
+                "action": "/ai/gsSwjnxx/upload",
+                "bid": -1,
                 "template": "/downFile/国税-税务缴纳信息.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "姓名",
+                        "modifiable": true,
+                        "prop": "xm"
+                    },
+                    {
+                        "label": "证件号码",
+                        "modifiable": true,
+                        "prop": "zjhm"
+                    },
+                    {
+                        "label": "税款所属期始",
+                        "modifiable": true,
+                        "prop": "skssqs"
+                    },
+                    {
+                        "label": "税款所属期止",
+                        "modifiable": true,
+                        "prop": "skssqz"
+                    },
+                    {
+                        "label": "征收品目代码",
+                        "modifiable": true,
+                        "prop": "zspmdm"
+                    },
+                    {
+                        "label": "征收品目名称",
+                        "modifiable": true,
+                        "prop": "zspmmc"
+                    },
+                    {
+                        "label": "税种名称",
+                        "modifiable": true,
+                        "prop": "szmc"
+                    },
+                    {
+                        "label": "应纳税额",
+                        "modifiable": true,
+                        "prop": "ynse"
+                    }
+                ]
             },
             {
                 "title": "市场监管总局企业登记信息-变更备案信息",
@@ -3579,14 +3633,155 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
+                "getUrl": "/qydjxxZyry/list",
+                "setUrl": "/qydjxxZyry/update",
+                "deleteUrl": "/qydjxxZyry/delete/",
+                "downloadUrl": "/ai/qydjxxZyry/export",
+                "action": "/ai/qydjxxZyry/upload",
                 "bid": 9,
                 "template": "/downFile/市场监管总局企业登记信息-主要人员.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "反馈单位",
+                        "modifiable": true,
+                        "prop": "fkdw"
+                    },
+                    {
+                        "label": "审批表",
+                        "modifiable": true,
+                        "prop": "spb"
+                    },
+                    {
+                        "label": "名称",
+                        "modifiable": true,
+                        "prop": "mc"
+                    },
+                    {
+                        "label": "证件类型",
+                        "modifiable": true,
+                        "prop": "zjlx"
+                    },
+                    {
+                        "label": "证件号码",
+                        "modifiable": true,
+                        "prop": "zjhm"
+                    },
+                    {
+                        "label": "企业（机构）名称",
+                        "modifiable": true,
+                        "prop": "qyjgmc"
+                    },
+                    {
+                        "label": "人员ID",
+                        "modifiable": true,
+                        "prop": "ryid"
+                    },
+                    {
+                        "label": "主体身份代码",
+                        "modifiable": true,
+                        "prop": "ztsfdm"
+                    },
+                    {
+                        "label": "主要人员姓名",
+                        "modifiable": true,
+                        "prop": "zyryxm"
+                    },
+                    {
+                        "label": "性别",
+                        "modifiable": true,
+                        "prop": "xb"
+                    },
+                    {
+                        "label": "出生日期",
+                        "modifiable": true,
+                        "prop": "csrq"
+                    },
+                    {
+                        "label": "主要人员证件类型",
+                        "modifiable": true,
+                        "prop": "zyryzjlx"
+                    },
+                    {
+                        "label": "证件号码/代表证编号",
+                        "modifiable": true,
+                        "prop": "zjhmdbzbh"
+                    },
+                    {
+                        "label": "职务",
+                        "modifiable": true,
+                        "prop": "zw"
+                    },
+                    {
+                        "label": "职务产生方式",
+                        "modifiable": true,
+                        "prop": "zwcsfs"
+                    },
+                    {
+                        "label": "申请前职业状况",
+                        "modifiable": true,
+                        "prop": "sqqzyzk"
+                    },
+                    {
+                        "label": "法定代表人标志/首席代表标志/负责人标识",
+                        "modifiable": true,
+                        "prop": "fddbrbzsxdbbzfzrbs"
+                    },
+                    {
+                        "label": "任命单位/委派方",
+                        "modifiable": true,
+                        "prop": "rmdw"
+                    },
+                    {
+                        "label": "联系电话",
+                        "modifiable": true,
+                        "prop": "lxdh"
+                    },
+                    {
+                        "label": "国别(地区)",
+                        "modifiable": true,
+                        "prop": "gbdq"
+                    },
+                    {
+                        "label": "固定电话",
+                        "modifiable": true,
+                        "prop": "gddh"
+                    },
+                    {
+                        "label": "移动电话",
+                        "modifiable": true,
+                        "prop": "yddh"
+                    },
+                    {
+                        "label": "电子邮箱",
+                        "modifiable": true,
+                        "prop": "dzyx"
+                    },
+                    {
+                        "label": "住址",
+                        "modifiable": true,
+                        "prop": "zz"
+                    },
+                    {
+                        "label": "入境时间",
+                        "modifiable": true,
+                        "prop": "rjsj"
+                    },
+                    {
+                        "label": "代表证期限自/任职起始日期",
+                        "modifiable": true,
+                        "prop": "dbzqxzrzqsrq"
+                    },
+                    {
+                        "label": "代表证期限至/任职截止日期",
+                        "modifiable": true,
+                        "prop": "dbzqxzrzjzrq"
+                    },
+                    {
+                        "label": "邮政编码",
+                        "modifiable": true,
+                        "prop": "yzbm"
+                    }
+                ]
             },
             {
                 "title": "市场监管总局企业登记信息-注销信息",
@@ -3594,14 +3789,125 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
+                "getUrl": "/qydjxxZxxx/list",
+                "setUrl": "/qydjxxZxxx/update",
+                "deleteUrl": "/qydjxxZxxx/delete/",
+                "downloadUrl": "/ai/qydjxxZxxx/export",
+                "action": "/ai/qydjxxZxxx/upload",
                 "bid": 9,
                 "template": "/downFile/市场监管总局企业登记信息-注销信息.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "反馈单位",
+                        "modifiable": true,
+                        "prop": "fkdw"
+                    },
+                    {
+                        "label": "审批表",
+                        "modifiable": true,
+                        "prop": "spb"
+                    },
+                    {
+                        "label": "名称",
+                        "modifiable": true,
+                        "prop": "mc"
+                    },
+                    {
+                        "label": "证件类型",
+                        "modifiable": true,
+                        "prop": "zjlx"
+                    },
+                    {
+                        "label": "证件号码",
+                        "modifiable": true,
+                        "prop": "zjhm"
+                    },
+                    {
+                        "label": "企业（机构）名称",
+                        "modifiable": true,
+                        "prop": "qyjgmc"
+                    },
+                    {
+                        "label": "主体身份代码",
+                        "modifiable": true,
+                        "prop": "ztsfdm"
+                    },
+                    {
+                        "label": "注销日期",
+                        "modifiable": true,
+                        "prop": "zxrq"
+                    },
+                    {
+                        "label": "注销原因",
+                        "modifiable": true,
+                        "prop": "zxyy"
+                    },
+                    {
+                        "label": "对外投资清理完毕标志",
+                        "modifiable": true,
+                        "prop": "dwtzqlwbbz"
+                    },
+                    {
+                        "label": "分公司注销登记情况",
+                        "modifiable": true,
+                        "prop": "fgszxdjqk"
+                    },
+                    {
+                        "label": "债权债务清理完结情况",
+                        "modifiable": true,
+                        "prop": "zqzwqlwjqk"
+                    },
+                    {
+                        "label": "清算组成员备案确认文书编号",
+                        "modifiable": true,
+                        "prop": "qszcybaqrwsbh"
+                    },
+                    {
+                        "label": "公告报纸名称",
+                        "modifiable": true,
+                        "prop": "ggbzmc"
+                    },
+                    {
+                        "label": "公告日期",
+                        "modifiable": true,
+                        "prop": "ggrq"
+                    },
+                    {
+                        "label": "批准机关",
+                        "modifiable": true,
+                        "prop": "pzjg"
+                    },
+                    {
+                        "label": "批准文号",
+                        "modifiable": true,
+                        "prop": "pzwh"
+                    },
+                    {
+                        "label": "批准日期",
+                        "modifiable": true,
+                        "prop": "pzrq"
+                    },
+                    {
+                        "label": "清稅情况",
+                        "modifiable": true,
+                        "prop": "qsqk"
+                    },
+                    {
+                        "label": "批准证书缴销情况",
+                        "modifiable": true,
+                        "prop": "pzzsjxqk"
+                    },
+                    {
+                        "label": "海关手续清缴情况",
+                        "modifiable": true,
+                        "prop": "hgsxqjqk"
+                    },
+                    {
+                        "label": "清理债权债务单位",
+                        "modifiable": true,
+                        "prop": "qlzqzwqy"
+                    }
+                ]
             },
             {
                 "title": "市场监管总局企业登记信息-自然人出资信息",
@@ -3609,14 +3915,175 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
+                "getUrl": "/qydjxxZrrczxx/list",
+                "setUrl": "/qydjxxZrrczxx/update",
+                "deleteUrl": "/qydjxxZrrczxx/delete/",
+                "downloadUrl": "/ai/qydjxxZrrczxx/export",
+                "action": "/ai/qydjxxZrrczxx/upload",
                 "bid": 9,
                 "template": "/downFile/市场监管总局企业登记信息-自然人出资信息.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "反馈单位",
+                        "modifiable": true,
+                        "prop": "fkdw"
+                    },
+                    {
+                        "label": "审批表",
+                        "modifiable": true,
+                        "prop": "spb"
+                    },
+                    {
+                        "label": "名称",
+                        "modifiable": true,
+                        "prop": "mc"
+                    },
+                    {
+                        "label": "证件类型",
+                        "modifiable": true,
+                        "prop": "zjlx"
+                    },
+                    {
+                        "label": "证件号码",
+                        "modifiable": true,
+                        "prop": "zjhm"
+                    },
+                    {
+                        "label": "企业（机构）名称",
+                        "modifiable": true,
+                        "prop": "qyjgmc"
+                    },
+                    {
+                        "label": "投资人身份标识",
+                        "modifiable": true,
+                        "prop": "tzrsfbs"
+                    },
+                    {
+                        "label": "主体身份代码",
+                        "modifiable": true,
+                        "prop": "ztsfdm"
+                    },
+                    {
+                        "label": "自然人姓名",
+                        "modifiable": true,
+                        "prop": "zrrxm"
+                    },
+                    {
+                        "label": "自然人证件类型",
+                        "modifiable": true,
+                        "prop": "zrrzjlx"
+                    },
+                    {
+                        "label": "自然人证件号码",
+                        "modifiable": true,
+                        "prop": "zrrzjhm"
+                    },
+                    {
+                        "label": "认缴出资额（万元）",
+                        "modifiable": true,
+                        "prop": "rjczewy"
+                    },
+                    {
+                        "label": "认缴出资额折万美元（万美元）",
+                        "modifiable": true,
+                        "prop": "rjczezwmywmy"
+                    },
+                    {
+                        "label": "认缴出资方式",
+                        "modifiable": true,
+                        "prop": "rjczfs"
+                    },
+                    {
+                        "label": "认缴出资比例",
+                        "modifiable": true,
+                        "prop": "rjczbl"
+                    },
+                    {
+                        "label": "认缴出资期限",
+                        "modifiable": true,
+                        "prop": "rjczqx"
+                    },
+                    {
+                        "label": "实缴出资额（万元）",
+                        "modifiable": true,
+                        "prop": "sjczewy"
+                    },
+                    {
+                        "label": "实缴出资额折万美元（万美元）",
+                        "modifiable": true,
+                        "prop": "sjczezwmywmy"
+                    },
+                    {
+                        "label": "住址",
+                        "modifiable": true,
+                        "prop": "zz"
+                    },
+                    {
+                        "label": "币种",
+                        "modifiable": true,
+                        "prop": "biz"
+                    },
+                    {
+                        "label": "国别(地区)",
+                        "modifiable": true,
+                        "prop": "gbdq"
+                    },
+                    {
+                        "label": "执行合伙事务标志",
+                        "modifiable": true,
+                        "prop": "zxhhswbz"
+                    },
+                    {
+                        "label": "承担责任方式/责任形式",
+                        "modifiable": true,
+                        "prop": "cdzrfszrxs"
+                    },
+                    {
+                        "label": "出资方式（个独）",
+                        "modifiable": true,
+                        "prop": "czfsgd"
+                    },
+                    {
+                        "label": "性别",
+                        "modifiable": true,
+                        "prop": "xb"
+                    },
+                    {
+                        "label": "民族",
+                        "modifiable": true,
+                        "prop": "mz"
+                    },
+                    {
+                        "label": "出生日期",
+                        "modifiable": true,
+                        "prop": "csrq"
+                    },
+                    {
+                        "label": "文化程度",
+                        "modifiable": true,
+                        "prop": "whcd"
+                    },
+                    {
+                        "label": "政治面貌",
+                        "modifiable": true,
+                        "prop": "zzmm"
+                    },
+                    {
+                        "label": "职业状况",
+                        "modifiable": true,
+                        "prop": "zyzk"
+                    },
+                    {
+                        "label": "邮政编码",
+                        "modifiable": true,
+                        "prop": "yzbm"
+                    },
+                    {
+                        "label": "电话",
+                        "modifiable": true,
+                        "prop": "dh"
+                    }
+                ]
             },
             {
                 "title": "公安数据-机构法人信息",
@@ -3624,9 +4091,9 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
+                "getUrl": "/jgfrxx/list",
+                "setUrl": "/jgfrxx/update",
+                "deleteUrl": "/jgfrxx/delete/",
                 "downloadUrl": "/ai/jgfrxx/export",
                 "action": "/ai/jgfrxx/upload",
                 "bid": 8,
@@ -3735,14 +4202,70 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
+                "getUrl": "/hlwzcxxCylxrxx/list",
+                "setUrl": "/hlwzcxxCylxrxx/update",
+                "deleteUrl": "/hlwzcxxCylxrxx/delete/",
+                "downloadUrl": "/ai/hlwzcxxCylxrxx/export",
+                "action": "/ai/hlwzcxxCylxrxx/upload",
                 "bid": 9,
                 "template": "/downFile/铁路总公司互联网注册信息-常用联系人信息.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "注册序号",
+                        "modifiable": true,
+                        "prop": "zcxh"
+                    },
+                    {
+                        "label": "乘客姓名",
+                        "modifiable": true,
+                        "prop": "ckxm"
+                    },
+                    {
+                        "label": "证件类型",
+                        "modifiable": true,
+                        "prop": "zjlx"
+                    },
+                    {
+                        "label": "证件号码",
+                        "modifiable": true,
+                        "prop": "zjhm"
+                    },
+                    {
+                        "label": "性别",
+                        "modifiable": true,
+                        "prop": "xb"
+                    },
+                    {
+                        "label": "旅客类型",
+                        "modifiable": true,
+                        "prop": "lklx"
+                    },
+                    {
+                        "label": "手机号码",
+                        "modifiable": true,
+                        "prop": "sjhm"
+                    },
+                    {
+                        "label": "固定电话",
+                        "modifiable": true,
+                        "prop": "gddh"
+                    },
+                    {
+                        "label": "电子邮箱",
+                        "modifiable": true,
+                        "prop": "dzyx"
+                    },
+                    {
+                        "label": "邮编",
+                        "modifiable": true,
+                        "prop": "yb"
+                    },
+                    {
+                        "label": "地址",
+                        "modifiable": true,
+                        "prop": "dz"
+                    }
+                ]
             },
             {
                 "title": "铁路总公司互联网注册信息-互联网注册信息",
@@ -3750,14 +4273,80 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
+                "getUrl": "/hlwzcxxHlwzcxx/list",
+                "setUrl": "/hlwzcxxHlwzcxx/update",
+                "deleteUrl": "/hlwzcxxHlwzcxx/delete/",
+                "downloadUrl": "/ai/hlwzcxxHlwzcxx/export",
+                "action": "/ai/hlwzcxxHlwzcxx/upload",
                 "bid": 9,
                 "template": "/downFile/铁路总公司互联网注册信息-互联网注册信息.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "注册序号",
+                        "modifiable": true,
+                        "prop": "zcxh"
+                    },
+                    {
+                        "label": "注册人姓名",
+                        "modifiable": true,
+                        "prop": "zcrxm"
+                    },
+                    {
+                        "label": "证件类型",
+                        "modifiable": true,
+                        "prop": "zjlx"
+                    },
+                    {
+                        "label": "证件号码",
+                        "modifiable": true,
+                        "prop": "zjhm"
+                    },
+                    {
+                        "label": "手机号码",
+                        "modifiable": true,
+                        "prop": "sjhm"
+                    },
+                    {
+                        "label": "旅客类型",
+                        "modifiable": true,
+                        "prop": "lklx"
+                    },
+                    {
+                        "label": "生日",
+                        "modifiable": true,
+                        "prop": "sr"
+                    },
+                    {
+                        "label": "性别",
+                        "modifiable": true,
+                        "prop": "xb"
+                    },
+                    {
+                        "label": "国籍",
+                        "modifiable": true,
+                        "prop": "gj"
+                    },
+                    {
+                        "label": "固定电话",
+                        "modifiable": true,
+                        "prop": "gddh"
+                    },
+                    {
+                        "label": "电子邮箱",
+                        "modifiable": true,
+                        "prop": "dzyx"
+                    },
+                    {
+                        "label": "反馈人",
+                        "modifiable": true,
+                        "prop": "fkr"
+                    },
+                    {
+                        "label": "反馈时间",
+                        "modifiable": true,
+                        "prop": "fksj"
+                    }
+                ]
             },
             {
                 "title": "公安数据-全国机动车",
@@ -3765,9 +4354,9 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
+                "getUrl": "/qgjdc/list",
+                "setUrl": "/qgjdc/update",
+                "deleteUrl": "/qgjdc/delete/",
                 "downloadUrl": "/ai/qgjdc/export",
                 "action": "/ai/qgjdc/upload",
                 "bid": 6,
@@ -3926,9 +4515,9 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
+                "getUrl": "/qgjsr/list",
+                "setUrl": "/qgjsr/update",
+                "deleteUrl": "/qgjsr/delete/",
                 "downloadUrl": "/ai/qgjsr/export",
                 "action": "/ai/qgjsr/upload",
                 "bid": 5,
@@ -4042,14 +4631,85 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
+                "getUrl": "/tltxrTxrykpxx/list",
+                "setUrl": "/tltxrTxrykpxx/update",
+                "deleteUrl": "/tltxrTxrykpxx/delete/",
                 "downloadUrl": "/ai/jyls/export",
                 "action": "/ai/jyls/upload",
                 "bid": 9,
                 "template": "/downFile/铁路总公司同行人信息-同行人员客票信息.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "同行人序号",
+                        "modifiable": true,
+                        "prop": "txrxh"
+                    },
+                    {
+                        "label": "同行人姓名",
+                        "modifiable": true,
+                        "prop": "txrxm"
+                    },
+                    {
+                        "label": "证件号码",
+                        "modifiable": true,
+                        "prop": "zjhm"
+                    },
+                    {
+                        "label": "同行车次",
+                        "modifiable": true,
+                        "prop": "txcc"
+                    },
+                    {
+                        "label": "购票票号",
+                        "modifiable": true,
+                        "prop": "gpph"
+                    },
+                    {
+                        "label": "乘车时间",
+                        "modifiable": true,
+                        "prop": "ccsj"
+                    },
+                    {
+                        "label": "乘车起始站",
+                        "modifiable": true,
+                        "prop": "ccqsz"
+                    },
+                    {
+                        "label": "乘车终止站",
+                        "modifiable": true,
+                        "prop": "cczzz"
+                    },
+                    {
+                        "label": "车厢号",
+                        "modifiable": true,
+                        "prop": "cxh"
+                    },
+                    {
+                        "label": "席别",
+                        "modifiable": true,
+                        "prop": "xb"
+                    },
+                    {
+                        "label": "席位号",
+                        "modifiable": true,
+                        "prop": "xwh"
+                    },
+                    {
+                        "label": "购票人",
+                        "modifiable": true,
+                        "prop": "gpr"
+                    },
+                    {
+                        "label": "购票人证件号码",
+                        "modifiable": true,
+                        "prop": "gprzjhm"
+                    },
+                    {
+                        "label": "购票时间",
+                        "modifiable": true,
+                        "prop": "gpsj"
+                    }
+                ]
             },
             {
                 "title": "铁路总公司同行人信息-同行人员信息",
@@ -4057,14 +4717,70 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
+                "getUrl": "/tltxrTxryxx/list",
+                "setUrl": "/tltxrTxryxx/update",
+                "deleteUrl": "/tltxrTxryxx/delete/",
+                "downloadUrl": "/ai/tltxrTxryxx/export",
+                "action": "/ai/tltxrTxryxx/upload",
                 "bid": 9,
                 "template": "/downFile/铁路总公司同行人信息-同行人员信息.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "同行人序号",
+                        "modifiable": true,
+                        "prop": "txrxh"
+                    },
+                    {
+                        "label": "同行人姓名",
+                        "modifiable": true,
+                        "prop": "txrxm"
+                    },
+                    {
+                        "label": "证件类型",
+                        "modifiable": true,
+                        "prop": "zjlx"
+                    },
+                    {
+                        "label": "证件号码",
+                        "modifiable": true,
+                        "prop": "zjhm"
+                    },
+                    {
+                        "label": "手机号码",
+                        "modifiable": true,
+                        "prop": "sjhm"
+                    },
+                    {
+                        "label": "固定电话",
+                        "modifiable": true,
+                        "prop": "gddh"
+                    },
+                    {
+                        "label": "性别",
+                        "modifiable": true,
+                        "prop": "xb"
+                    },
+                    {
+                        "label": "国籍",
+                        "modifiable": true,
+                        "prop": "gj"
+                    },
+                    {
+                        "label": "电子邮箱",
+                        "modifiable": true,
+                        "prop": "dzyx"
+                    },
+                    {
+                        "label": "旅客类型",
+                        "modifiable": true,
+                        "prop": "lkxl"
+                    },
+                    {
+                        "label": "生日",
+                        "modifiable": true,
+                        "prop": "sr"
+                    }
+                ]
             },
             {
                 "title": "公安数据-机动车违章",
@@ -4072,9 +4788,9 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
+                "getUrl": "/jdcwz/list",
+                "setUrl": "/jdcwz/update",
+                "deleteUrl": "/jdcwz/delete/",
                 "downloadUrl": "/ai/jdcwz/export",
                 "action": "/ai/jdcwz/upload",
                 "bid": 9,
@@ -4138,9 +4854,9 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
+                "getUrl": "/tlspxx/list",
+                "setUrl": "/tlspxx/update",
+                "deleteUrl": "/tlspxx/delete/",
                 "downloadUrl": "/ai/tlspxx/export",
                 "action": "/ai/tlspxx/upload",
                 "bid": 12,
@@ -4254,9 +4970,9 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
+                "getUrl": "/mhlgjl/list",
+                "setUrl": "/mhlgjl/update",
+                "deleteUrl": "/mhlgjl/delete/",
                 "downloadUrl": "/ai/mhlgjl/export",
                 "action": "/ai/mhlgjl/upload",
                 "bid": 2,
@@ -4475,9 +5191,9 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
+                "getUrl": "/mhdpjl/list",
+                "setUrl": "/mhdpjl/update",
+                "deleteUrl": "/mhdpjl/delete/",
                 "downloadUrl": "/ai/mhdpjl/export",
                 "action": "/ai/mhdpjl/upload",
                 "bid": 11,
@@ -4656,14 +5372,95 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
+                "getUrl": "/hbtxrTcscystx/list",
+                "setUrl": "/hbtxrTcscystx/update",
+                "deleteUrl": "/hbtxrTcscystx/delete/",
+                "downloadUrl": "/ai/hbtxrTcscystx/export",
+                "action": "/ai/hbtxrTcscystx/upload",
                 "bid": 9,
                 "template": "/downFile/中航信航班同行人信息-同乘三次以上同行.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "同行人中文名",
+                        "modifiable": true,
+                        "prop": "txrzwm"
+                    },
+                    {
+                        "label": "同行人姓（英文全拼）",
+                        "modifiable": true,
+                        "prop": "txrxywqp"
+                    },
+                    {
+                        "label": "同行人名（英文全拼）",
+                        "modifiable": true,
+                        "prop": "txrmywqp"
+                    },
+                    {
+                        "label": "同行人证件类型",
+                        "modifiable": true,
+                        "prop": "txrzjlx"
+                    },
+                    {
+                        "label": "同行人证件号码",
+                        "modifiable": true,
+                        "prop": "txrzjhm"
+                    },
+                    {
+                        "label": "同行订单号（PNR）",
+                        "modifiable": true,
+                        "prop": "txddhpnr"
+                    },
+                    {
+                        "label": "同行航班号",
+                        "modifiable": true,
+                        "prop": "txhbh"
+                    },
+                    {
+                        "label": "预计起飞日期",
+                        "modifiable": true,
+                        "prop": "yjqfrq"
+                    },
+                    {
+                        "label": "预计起飞时间",
+                        "modifiable": true,
+                        "prop": "yjqfsj"
+                    },
+                    {
+                        "label": "起飞机场",
+                        "modifiable": true,
+                        "prop": "qfjc"
+                    },
+                    {
+                        "label": "到达机场",
+                        "modifiable": true,
+                        "prop": "ddjc"
+                    },
+                    {
+                        "label": "预计到达日期",
+                        "modifiable": true,
+                        "prop": "yjddrq"
+                    },
+                    {
+                        "label": "预计到达时间",
+                        "modifiable": true,
+                        "prop": "yjddsj"
+                    },
+                    {
+                        "label": "同行人座位号",
+                        "modifiable": true,
+                        "prop": "txrzwh"
+                    },
+                    {
+                        "label": "同行人行李总数",
+                        "modifiable": true,
+                        "prop": "txrxlzs"
+                    },
+                    {
+                        "label": "同行人行李总重（kg）",
+                        "modifiable": true,
+                        "prop": "txrxlzzkg"
+                    }
+                ]
             },
             {
                 "title": "中航信航班同行人信息-同订单同行人",
@@ -4671,14 +5468,95 @@
                 "outfile": true,
                 "download": true,
                 "alldata": true,
-                "getUrl": "",
-                "setUrl": "",
-                "deleteUrl": "",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
+                "getUrl": "/hbtxrTddtxr/list",
+                "setUrl": "/hbtxrTddtxr/update",
+                "deleteUrl": "/hbtxrTddtxr/delete/",
+                "downloadUrl": "/ai/hbtxrTddtxr/export",
+                "action": "/ai/hbtxrTddtxr/upload",
                 "bid": 9,
                 "template": "/downFile/中航信航班同行人信息-同订单同行人.xlsx",
-                "headerList": []
+                "headerList": [
+                    {
+                        "label": "同行订单号（PNR）",
+                        "modifiable": true,
+                        "prop": "txddhpnr"
+                    },
+                    {
+                        "label": "同行人中文名",
+                        "modifiable": true,
+                        "prop": "txrzwm"
+                    },
+                    {
+                        "label": "同行人姓（英文全拼）",
+                        "modifiable": true,
+                        "prop": "txrxywqp"
+                    },
+                    {
+                        "label": "同行人名（英文全拼）",
+                        "modifiable": true,
+                        "prop": "txrmywqp"
+                    },
+                    {
+                        "label": "同行人证件类型",
+                        "modifiable": true,
+                        "prop": "txrzjlx"
+                    },
+                    {
+                        "label": "同行人证件号码",
+                        "modifiable": true,
+                        "prop": "txrzjhm"
+                    },
+                    {
+                        "label": "同行航班号",
+                        "modifiable": true,
+                        "prop": "txhbh"
+                    },
+                    {
+                        "label": "预计起飞日期",
+                        "modifiable": true,
+                        "prop": "yjqfrq"
+                    },
+                    {
+                        "label": "预计起飞时间",
+                        "modifiable": true,
+                        "prop": "yjqfsj"
+                    },
+                    {
+                        "label": "起飞机场",
+                        "modifiable": true,
+                        "prop": "qfjc"
+                    },
+                    {
+                        "label": "到达机场",
+                        "modifiable": true,
+                        "prop": "ddjc"
+                    },
+                    {
+                        "label": "预计到达日期",
+                        "modifiable": true,
+                        "prop": "yjddrq"
+                    },
+                    {
+                        "label": "预计到达时间",
+                        "modifiable": true,
+                        "prop": "yjddsj"
+                    },
+                    {
+                        "label": "同行人座位号",
+                        "modifiable": true,
+                        "prop": "txrzwh"
+                    },
+                    {
+                        "label": "同行人行李总数",
+                        "modifiable": true,
+                        "prop": "txrxlzs"
+                    },
+                    {
+                        "label": "同行人行李总重（kg）",
+                        "modifiable": true,
+                        "prop": "txrxlzzkg"
+                    }
+                ]
             }
         ]
     },

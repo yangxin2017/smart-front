@@ -1,6 +1,6 @@
 <template>
   <div class="importfile-class">
-    <template v-if="dialog == -1">
+    <div v-show="dialog == -1">
       <!-- <el-row class="row-class">
         <el-col :offset="23" :span="1">
           <el-button
@@ -88,6 +88,7 @@
 
       <template v-for="(item, index) in upfileList">
         <div
+          :key="index"
           style="
             padding: 10px 0;
             border-bottom: 1px solid #e8e8e8;
@@ -97,14 +98,16 @@
         >
           {{ item.label }}
         </div>
-        <el-row class="row-class">
+        <el-row class="row-class" :key="index+'row'">
           <template v-for="(row, rowindex) in item.list">
-            <el-col :span="4" class="col-class">{{ row.title }}</el-col>
-            <el-col :span="8" class="col-class">
+            <el-col :span="4" class="col-class" :key="rowindex+'col1'">{{ row.title }}</el-col>
+            <el-col :span="8" class="col-class" :key="rowindex+'col2'">
               <el-upload
                 v-if="row.upfile"
                 class="upload-demo"
-                :action="row.action + '?bid=' + row.bid + '&projectId=' + projectId"
+                :action="
+                  row.action + '?bid=' + row.bid + '&projectId=' + projectId
+                "
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :before-remove="beforeRemove"
@@ -143,7 +146,10 @@
               >
                 模板下载
               </el-button>
-              <el-popconfirm title="是否确认永久清空该数据？" @confirm="allDelect(row)">
+              <el-popconfirm
+                title="是否确认永久清空该数据？"
+                @confirm="allDelect(row)"
+              >
                 <el-button
                   type="danger"
                   size="mini"
@@ -168,13 +174,22 @@
           </template>
         </el-row>
       </template>
-    </template>
+    </div>
 
     <template v-if="dialog == 1">
-      <el-button type="primary" size="mini" class="rest-button" @click="dialog = -1">
+      <el-button
+        type="primary"
+        size="mini"
+        class="rest-button"
+        @click="dialog = -1"
+      >
         返回
       </el-button>
-      <tablePublic :tableName="tableName" :headerList="headerList" :rowList="rowList" />
+      <tablePublic
+        :tableName="tableName"
+        :headerList="headerList"
+        :rowList="rowList"
+      />
     </template>
   </div>
 </template>

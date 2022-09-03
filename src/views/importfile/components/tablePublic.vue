@@ -1,6 +1,9 @@
 <template>
   <div class="table-public">
-    <el-row style="width: 100%; height: 40px" v-if="tableName == '公安数据-亲属关系'">
+    <el-row
+      style="width: 100%; height: 40px"
+      v-if="tableName == '公安数据-亲属关系'"
+    >
       <el-col :span="2">
         <el-select v-model="form.id1" placeholder="请选择" size="mini">
           <el-option
@@ -14,7 +17,12 @@
       </el-col>
       <el-col :span="2">
         <el-select v-model="form.gx" placeholder="请选择" size="mini">
-          <el-option v-for="item in relationList" :key="item" :label="item" :value="item">
+          <el-option
+            v-for="item in relationList"
+            :key="item"
+            :label="item"
+            :value="item"
+          >
           </el-option>
         </el-select>
       </el-col>
@@ -30,14 +38,18 @@
         </el-select>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" size="mini" @click="addQsgxClick">新增</el-button>
+        <el-button type="primary" size="mini" @click="addQsgxClick"
+          >新增</el-button
+        >
       </el-col>
     </el-row>
     <el-table
       :data="tableList"
       width="100%"
       :height="
-        tableName == '公安数据-亲属关系' ? 'calc(100% - 72px)' : 'calc(100% - 32px)'
+        tableName == '公安数据-亲属关系'
+          ? 'calc(100% - 72px)'
+          : 'calc(100% - 32px)'
       "
     >
       <el-table-column
@@ -69,22 +81,55 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        v-for="(item, index) in headerList"
-        :key="index"
-        :label="item.label"
-        :prop="item.prop"
-        min-width="200"
-      >
-        <template slot-scope="scope">
-          <span v-if="setIndex != scope.$index || !item.modifiable">
-            {{ scope.row[item.prop] }}
-          </span>
-          <el-input v-else v-model="setRowList[item.prop]" size="mini"></el-input>
+      <template v-if="rowList.detailed">
+        <template v-for="(item, index) in headerList">
+          <el-table-column
+            v-if="item.row"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            min-width="200"
+          >
+            <template slot-scope="scope">
+              <span v-if="setIndex != scope.$index || !item.modifiable">
+                {{ scope.row[item.prop] }}
+              </span>
+              <el-input
+                v-else
+                v-model="setRowList[item.prop]"
+                size="mini"
+              ></el-input>
+            </template>
+          </el-table-column>
         </template>
-      </el-table-column>
+      </template>
+      <template v-if="!rowList.detailed">
+        <template v-for="(item, index) in headerList">
+          <el-table-column
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            min-width="200"
+          >
+            <template slot-scope="scope">
+              <span v-if="setIndex != scope.$index || !item.modifiable">
+                {{ scope.row[item.prop] }}
+              </span>
+              <el-input
+                v-else
+                v-model="setRowList[item.prop]"
+                size="mini"
+              ></el-input>
+            </template>
+          </el-table-column>
+        </template>
+      </template>
       <el-table-column label="操作" width="120" fixed="right">
         <template slot-scope="scope">
+          <el-button type="text" @click="openRow(scope.row, scope.$index)">
+            查看
+          </el-button>
+
           <el-button
             type="text"
             @click="saveRow(scope.row, scope.$index)"
@@ -114,7 +159,9 @@
         v-if="tableName == '公安数据-人员电子档案'"
       >
         <template slot-scope="scope">
-          <el-checkbox v-model="scope.row.sfMbr" @change="handleChangeMBR(scope.row)"
+          <el-checkbox
+            v-model="scope.row.sfMbr"
+            @change="handleChangeMBR(scope.row)"
             >设为目标人</el-checkbox
           >
         </template>
@@ -187,7 +234,6 @@
             <el-button
               type="text"
               @click="companySaveRow(scope.row, scope.$index)"
-              v-if="scope.$index === companyDialog.setIndex"
             >
               保存
             </el-button>
@@ -198,7 +244,10 @@
             >
               修改
             </el-button>
-            <el-button type="text" @click="companyDeleteRow(scope.row, scope.$index)">
+            <el-button
+              type="text"
+              @click="companyDeleteRow(scope.row, scope.$index)"
+            >
               删除
             </el-button>
           </template>
@@ -209,6 +258,38 @@
         <el-button type="primary" @click="companyDialog.dialog = false">
           确 定
         </el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      title="详细信息"
+      :visible.sync="setRowDialog"
+      width="50%"
+      :before-close="handleClose"
+    >
+      <el-row class="dialog-row">
+        <template v-for="(item, index) in headerList">
+          <el-col
+            :key="index + 'col'"
+            :span="4"
+            style="margin: 5px 0"
+            align="right"
+            >{{ item.label }}：</el-col
+          >
+          <el-col :key="index + 'colinput'" :span="8" style="margin: 5px 0">
+            <el-input
+              v-if="item.modifiable"
+              v-model="dialogList[item.prop]"
+              size="mini"
+              style="width: 100%"
+            ></el-input>
+            <span v-else>{{ dialogList[item.prop] }}</span>
+          </el-col>
+        </template>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRowDialog = false">关 闭</el-button>
+        <el-button type="primary" @click="saveRowDialog"> 保 存 </el-button>
       </span>
     </el-dialog>
   </div>
@@ -239,6 +320,7 @@ export default {
   },
   data() {
     return {
+      setRowDialog: false,
       pageList: {
         pageSizes: [10, 50, 100, 500, 10000],
         pageSize: 10,
@@ -279,15 +361,30 @@ export default {
       relationList: [],
 
       id: -1,
+
+      dialogList: {},
     };
   },
   mounted() {
+    console.log(this.headerList);
     let fullpath = this.$route.fullPath;
     let id = this.getQueryString("id", fullpath);
     this.id = id;
     this.init(id);
   },
   methods: {
+    saveRowDialog() {
+      setList(this.rowList.setUrl, this.dialogList).then((res) => {
+        this.init();
+        this.dialogList = {};
+        this.setRowDialog = false;
+        this.$message.success("修改成功！");
+      });
+    },
+    openRow(item, index) {
+      this.dialogList = JSON.parse(JSON.stringify(item));
+      this.setRowDialog = true;
+    },
     handleSizeChange(val) {
       this.pageList.pageSize = val;
       this.init();
@@ -363,6 +460,8 @@ export default {
           this.companyDialog.tableList = [];
           this.companyDialog.setRow = {};
           this.companyDialog.setIndex = -1;
+
+          this.setRowDialog = false;
         })
         .catch((_) => {});
     },
@@ -383,7 +482,8 @@ export default {
       this.companyDialog.tableList[index] = {
         ...this.companyDialog.setRow,
       };
-      this.tableList[this.companyDialog.index].company = this.companyDialog.tableList;
+      this.tableList[this.companyDialog.index].company =
+        this.companyDialog.tableList;
       this.companyDialog.setIndex = -1;
       this.companyDialog.setRow = {};
     },
@@ -454,5 +554,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.dialog-row {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  flex-wrap: wrap;
 }
 </style>
