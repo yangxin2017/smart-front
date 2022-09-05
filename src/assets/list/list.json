@@ -1825,6 +1825,65 @@
                 "bid": 1,
                 "template": "/downFile/银行调查交易信息模板.xlsx",
                 "detailed": true,
+                "form": [
+                    {
+                        "type": "input",
+                        "label": "名称",
+                        "prop": "mc"
+                    },
+                    {
+                        "type": "input",
+                        "label": "证件号码",
+                        "prop": "zjhm"
+                    },
+                    {
+                        "type": "input",
+                        "label": "查询卡号",
+                        "prop": "cxkh"
+                    },
+                    {
+                        "type": "select",
+                        "label": "交易金额",
+                        "prop": "jyje",
+                        "options": [
+                            {
+                                "label": "全部",
+                                "value": null
+                            },
+                            {
+                                "label": "0-10万",
+                                "value": "0-10000"
+                            },
+                            {
+                                "label": "10-100万",
+                                "value": "100000-1000000"
+                            },
+                            {
+                                "label": "100-500万",
+                                "value": "1000000-5000000"
+                            },
+                            {
+                                "label": "500万以上",
+                                "value": "5000000"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "input",
+                        "label": "交易对方名称",
+                        "prop": "jydfmc"
+                    },
+                    {
+                        "type": "input",
+                        "label": "交易对方卡号",
+                        "prop": "jydfkh"
+                    },
+                    {
+                        "type": "input",
+                        "label": "交易对方证件号码",
+                        "prop": "jydfzjhm"
+                    }
+                ],
                 "headerList": [
                     {
                         "label": "反馈单位",
