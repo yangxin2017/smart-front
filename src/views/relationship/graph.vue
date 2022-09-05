@@ -91,7 +91,9 @@ export default {
 
       // console.log('=====================')
 
-      this.initSlideBar(lines)
+      if (lines.length > 0) {
+        this.initSlideBar(lines, nodes)
+      }
 
       let arr = nodes.concat(lines)
       
@@ -123,12 +125,22 @@ export default {
       }
       return oldArr
     },
-    initSlideBar(lines) {
+    initSlideBar(lines, nodes) {
       let moneys = []
+      
+      let nullIds = ''
+      for (let n of nodes) {
+        if (n.data.label == '空') {
+          nullIds += n.data.id + ','
+        }
+      }
+
       for (let l of lines) {
-        let n = Number(l.data.data.name)
-        n = parseInt(Math.abs(n) / 10000)
-        moneys.push(n)
+        if (nullIds.indexOf(l.data.source + ',') < 0 && nullIds.indexOf(l.data.target + ',') < 0) {
+          let n = Number(l.data.data.name)
+          n = parseInt(Math.abs(n) / 10000)
+          moneys.push(n)
+        }
       }
       let min = 0  //Math.min(...moneys)
       let max = Math.max(...moneys)
