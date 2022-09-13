@@ -16,6 +16,18 @@
                 "bid": 4,
                 "template": "/downFile/公安情报信息模块-人员电子档案.xlsx",
                 "detailed": true,
+                "form": [
+                    {
+                        "type": "input",
+                        "label": "姓名",
+                        "prop": "xm"
+                    },
+                    {
+                        "type": "input",
+                        "label": "身份证号码",
+                        "prop": "sfzhm"
+                    }
+                ],
                 "headerList": [
                     {
                         "label": "姓名",
@@ -147,17 +159,17 @@
             },
             {
                 "title": "公安数据-亲属关系",
-                "upfile": false,
+                "upfile": true,
                 "outfile": true,
-                "download": false,
+                "download": true,
                 "alldata": true,
                 "getUrl": "/qsgx/list",
                 "setUrl": "/qsgx/update",
                 "deleteUrl": "/qsgx/delete/",
                 "downloadUrl": "/ai/qsgx/export",
-                "action": "",
+                "action": "/ai/qsgx/upload",
                 "bid": 10,
-                "template": "",
+                "template": "/downFile/亲属关系.xlsx",
                 "headerList": [
                     {
                         "label": "姓名",

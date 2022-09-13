@@ -4,14 +4,12 @@
       项目名称：
       <el-input
         size="mini"
-        v-model="form.title"
+        v-model="params.name"
         placeholder="请输入项目名称"
         style="width: 160px"
       ></el-input>
       <el-button type="primary" size="mini" @click="search">查询</el-button>
-      <el-button type="primary" size="mini" @click="createClick">
-        新建
-      </el-button>
+      <el-button type="primary" size="mini" @click="createClick"> 新建 </el-button>
     </div>
 
     <el-table :data="tableList" width="100%" height="calc(100% - 40px)">
@@ -52,11 +50,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog
-      :title="dialog.title"
-      :visible.sync="dialog.visible"
-      width="30%"
-    >
+    <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="30%">
       <el-form label-width="120px">
         <el-form-item label="项目名称">
           <el-input v-model="project.name"></el-input>
@@ -71,8 +65,8 @@
 </template>
 
 <script>
-import { GetProjectList, AddProject, CalcProject } from '@/api/project'
-import * as dayjs from 'dayjs'
+import { GetProjectList, AddProject, CalcProject } from "@/api/project";
+import * as dayjs from "dayjs";
 export default {
   data() {
     return {
@@ -84,19 +78,19 @@ export default {
       },
       dialogform: {},
       params: {
-        name: '',
+        name: "",
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       project: {
         id: undefined,
-        name: '',
-        persons: ''
-      }
+        name: "",
+        persons: "",
+      },
     };
   },
   mounted() {
-    this.initProject()
+    this.initProject();
     // for (let i = 0; i < 50; i++) {
     //   this.tableList.push({
     //     title: "项目名称",
@@ -111,28 +105,29 @@ export default {
   methods: {
     formatDate(date) {
       if (date) {
-        return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+        return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
       }
-      return '--'
+      return "--";
     },
     async initProject() {
-      let obj = await GetProjectList(this.params)
-      this.tableList = obj.data.data
+      let obj = await GetProjectList(this.params);
+      this.tableList = obj.data.data;
     },
     async handleSave() {
-      await AddProject(this.project)
-      this.dialog.visible = false
-      this.initProject()
+      await AddProject(this.project);
+      this.dialog.visible = false;
+      this.initProject();
     },
     search() {
-      console.log(this.form);
+      // console.log(this.form);
+      this.initProject();
     },
     createClick() {
       this.project = {
         id: undefined,
-        name: '',
-        persons: ''
-      }
+        name: "",
+        persons: "",
+      };
       this.dialog.visible = true;
     },
     handleClose(done) {
@@ -145,32 +140,30 @@ export default {
     async jisuan(row) {
       const loading = this.$loading({
         lock: true,
-        text: '正在计算。。。',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      await CalcProject(row.id)
-      loading.close()
-      this.$message.success('计算完成')
+        text: "正在计算。。。",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      await CalcProject(row.id);
+      loading.close();
+      this.$message.success("计算完成");
     },
     weihu(row) {
-      let query = {
-      }
+      let query = {};
       for (let q in this.$route.query) {
-        if (q != 'id') {
-          query[q] = this.$route.query[q]
+        if (q != "id") {
+          query[q] = this.$route.query[q];
         }
       }
-      query.id = row.id
+      query.id = row.id;
       this.$router.push({ path: "/importfile", query: query });
     },
     fenxi(row) {
-      let query = {
-      }
+      let query = {};
       for (let q in this.$route.query) {
-        query[q] = this.$route.query[q]
+        query[q] = this.$route.query[q];
       }
-      query.id = row.id
+      query.id = row.id;
       this.$router.push({ path: "/relationship", query: query });
     },
   },

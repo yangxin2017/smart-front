@@ -98,16 +98,16 @@
         >
           {{ item.label }}
         </div>
-        <el-row class="row-class" :key="index+'row'">
+        <el-row class="row-class" :key="index + 'row'">
           <template v-for="(row, rowindex) in item.list">
-            <el-col :span="4" class="col-class" :key="rowindex+'col1'">{{ row.title }}</el-col>
-            <el-col :span="8" class="col-class" :key="rowindex+'col2'">
+            <el-col :span="4" class="col-class" :key="rowindex + 'col1'">{{
+              row.title
+            }}</el-col>
+            <el-col :span="8" class="col-class" :key="rowindex + 'col2'">
               <el-upload
                 v-if="row.upfile"
                 class="upload-demo"
-                :action="
-                  row.action + '?bid=' + row.bid + '&projectId=' + projectId
-                "
+                :action="row.action + '?bid=' + row.bid + '&projectId=' + projectId"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :before-remove="beforeRemove"
@@ -146,10 +146,7 @@
               >
                 模板下载
               </el-button>
-              <el-popconfirm
-                title="是否确认永久清空该数据？"
-                @confirm="allDelect(row)"
-              >
+              <el-popconfirm title="是否确认永久清空该数据？" @confirm="allDelect(row)">
                 <el-button
                   type="danger"
                   size="mini"
@@ -177,19 +174,10 @@
     </div>
 
     <template v-if="dialog == 1">
-      <el-button
-        type="primary"
-        size="mini"
-        class="rest-button"
-        @click="dialog = -1"
-      >
+      <el-button type="primary" size="mini" class="rest-button" @click="dialog = -1">
         返回
       </el-button>
-      <tablePublic
-        :tableName="tableName"
-        :headerList="headerList"
-        :rowList="rowList"
-      />
+      <tablePublic :tableName="tableName" :headerList="headerList" :rowList="rowList" />
     </template>
   </div>
 </template>
@@ -218,10 +206,13 @@ export default {
   },
   methods: {
     uploadEnd(res) {
-      console.log(res);
       this.fileList = {};
       // this.$refs.ref_upload.clearFiles();
-      this.$message.success("导入成功！");
+      if (res.msg != "") {
+        this.$message.error(res.msg);
+      } else {
+        this.$message.success("导入成功！");
+      }
     },
     allData(item) {
       this.rowList = item;
