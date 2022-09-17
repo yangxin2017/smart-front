@@ -113,6 +113,7 @@ export default {
         // lines[i].classes = "segments";
         // this.sline.push(lines[i].data.classes);
         // console.log(lines[i].data.source);
+        lines[i].classes = [];
         for (let j of this.dataArr) {
           // console.log(j.data.id, lines[i].data.id);
           if (
@@ -121,9 +122,28 @@ export default {
           ) {
             // lines[i].data.classes=j.data.classes
             // console.log(j.classes[0]);
-            lines[i].classes = j.classes[0] ? j.classes[0] : "";
+            lines[i].classes[0] = j.classes[0] ? j.classes[0] : "";
           }
         }
+        // 取lines[i].data.data.name正数
+        // let num = lines[i].data.data.name;
+        // if (num < 0) {
+        //   num = num * -1;
+        // }
+        // num = num / 10000;
+        // if (num < 10) {
+        //   lines[i].classes.push("edge2");
+        // } else if (num >= 10 && num < 50) {
+        //   lines[i].classes.push("edge3");
+        // } else if (num >= 50 && num < 200) {
+        //   lines[i].classes.push("edge4");
+        // } else if (num >= 200 && num < 500) {
+        //   lines[i].classes.push("edge5");
+        // } else if (num >= 500 && num < 1000) {
+        //   lines[i].classes.push("edge6");
+        // } else if (num >= 1000) {
+        //   lines[i].classes.push("edge7");
+        // }
       }
       // console.log(nodes, lines);
 
@@ -383,6 +403,44 @@ export default {
               "edge-text-rotation": "autorotate",
               color: "#fff",
               "font-size": 20,
+              "source-text-offset": 1000,
+            },
+          },
+
+          {
+            selector: "edge2",
+            style: {
+              width: 2,
+            },
+          },
+          {
+            selector: "edge3",
+            style: {
+              width: 3,
+            },
+          },
+          {
+            selector: "edge4",
+            style: {
+              width: 4,
+            },
+          },
+          {
+            selector: "edge5",
+            style: {
+              width: 5,
+            },
+          },
+          {
+            selector: "edge6",
+            style: {
+              width: 6,
+            },
+          },
+          {
+            selector: "edge7",
+            style: {
+              width: 7,
             },
           },
           {
@@ -522,6 +580,27 @@ export default {
       let showLines = [];
       for (let l of edges) {
         let tmp = l.data();
+
+        let num = tmp.data.name;
+        if (num < 0) {
+          num = num * -1;
+        }
+        num = num / 10000;
+        if (num < 10) {
+          // 修改宽度
+          l.style("width", 2);
+        } else if (num >= 10 && num < 50) {
+          l.style("width", 3);
+        } else if (num >= 50 && num < 200) {
+          l.style("width", 4);
+        } else if (num >= 200 && num < 500) {
+          l.style("width", 5);
+        } else if (num >= 500 && num < 1000) {
+          l.style("width", 6);
+        } else if (num >= 1000) {
+          l.style("width", 7);
+        }
+
         let mon = Number(tmp.data.name);
         mon = parseInt(Math.abs(mon) / 10000);
         if (mon >= minMoney) {
@@ -530,6 +609,16 @@ export default {
         } else {
           l.toggleClass("hide", true);
         }
+
+        // // 获取起始点和终点的坐标
+        // let source = l.source().position();
+        // let target = l.target().position();
+        // let x = (target.x - source.x) * 0.3;
+        // let y = (target.y - source.y) * 0.3;
+
+        // // 设置label偏移
+        // l.style("text-margin-x", x);
+        // l.style("text-margin-y", y);
       }
       for (let n of nodes) {
         let nid = n.id();
