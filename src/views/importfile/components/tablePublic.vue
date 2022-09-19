@@ -2,7 +2,7 @@
   <div class="table-public">
     <el-row style="width: 100%; height: 40px" v-if="tableName == '公安数据-亲属关系'">
       <el-col :span="2">
-        <el-select v-model="form.id1" placeholder="请选择" size="mini">
+        <el-select v-model="form.id1" placeholder="请选择" size="mini" filterable>
           <el-option
             v-for="item in nameList"
             :key="'id1_' + item.id"
@@ -19,7 +19,7 @@
         </el-select>
       </el-col>
       <el-col :span="2">
-        <el-select v-model="form.id2" placeholder="请选择" size="mini">
+        <el-select v-model="form.id2" placeholder="请选择" size="mini" filterable>
           <el-option
             v-for="item in nameList"
             :key="'id2_' + item.id"
@@ -121,12 +121,7 @@
       </template>
       <template v-if="!rowList.detailed">
         <template v-for="(item, index) in headerList">
-          <el-table-column
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            min-width="200"
-          >
+          <el-table-column :label="item.label" :prop="item.prop" min-width="200">
             <template slot-scope="scope">
               <span v-if="setIndex != scope.$index || !item.modifiable">
                 {{ scope.row[item.prop] }}
@@ -279,10 +274,10 @@
     >
       <el-row class="dialog-row">
         <template v-for="(item, index) in headerList">
-          <el-col :key="index + 'col'" :span="4" style="margin: 5px 0" align="right"
+          <el-col :span="4" style="margin: 5px 0" align="right"
             >{{ item.label }}：</el-col
           >
-          <el-col :key="index + 'colinput'" :span="8" style="margin: 5px 0">
+          <el-col :span="8" style="margin: 5px 0">
             <el-input
               v-if="item.modifiable"
               v-model="dialogList[item.prop]"

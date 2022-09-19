@@ -632,6 +632,7 @@ export default {
       this.editMode = true;
     },
     handleChooseEvent(ev) {
+      console.log(ev);
       this.$refs.dDialog.show(ev);
     },
     init() {

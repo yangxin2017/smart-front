@@ -30,12 +30,6 @@
                 ],
                 "headerList": [
                     {
-                        "label": "公民身份证号",
-                        "modifiable": true,
-                        "row": true,
-                        "prop": "sfzh"
-                    },
-                    {
                         "label": "姓名",
                         "modifiable": true,
                         "row": true,
@@ -48,25 +42,16 @@
                         "prop": "xb"
                     },
                     {
+                        "label": "身份证号码",
+                        "modifiable": true,
+                        "row": true,
+                        "prop": "sfzh"
+                    },
+                    {
                         "label": "民族",
                         "modifiable": true,
                         "row": true,
                         "prop": "mz"
-                    },
-                    {
-                        "label": "户籍地",
-                        "modifiable": true,
-                        "prop": "hjd"
-                    },
-                    {
-                        "label": "户籍地区划",
-                        "modifiable": true,
-                        "prop": "hjdqh"
-                    },
-                    {
-                        "label": "户籍地派出所",
-                        "modifiable": true,
-                        "prop": "hjdpcs"
                     },
                     {
                         "label": "出生日期",
@@ -75,19 +60,29 @@
                         "prop": "csrq"
                     },
                     {
+                        "label": "婚姻状况",
+                        "modifiable": true,
+                        "prop": "hyzk"
+                    },
+                    {
+                        "label": "生肖",
+                        "modifiable": true,
+                        "prop": "sx"
+                    },
+                    {
+                        "label": "星座",
+                        "modifiable": true,
+                        "prop": "xz"
+                    },
+                    {
+                        "label": "别名绰号",
+                        "modifiable": true,
+                        "prop": "bmch"
+                    },
+                    {
                         "label": "曾用名",
                         "modifiable": true,
                         "prop": "cym"
-                    },
-                    {
-                        "label": "出生地",
-                        "modifiable": true,
-                        "prop": "csd"
-                    },
-                    {
-                        "label": "籍贯",
-                        "modifiable": true,
-                        "prop": "jg"
                     },
                     {
                         "label": "身高",
@@ -95,29 +90,29 @@
                         "prop": "sg"
                     },
                     {
+                        "label": "血型",
+                        "modifiable": true,
+                        "prop": "xx"
+                    },
+                    {
+                        "label": "最高学历",
+                        "modifiable": true,
+                        "prop": "zgxl"
+                    },
+                    {
+                        "label": "政治面貌",
+                        "modifiable": true,
+                        "prop": "zzmm"
+                    },
+                    {
                         "label": "职业",
                         "modifiable": true,
                         "prop": "zy"
                     },
                     {
-                        "label": "出生地国家",
+                        "label": "从业单位",
                         "modifiable": true,
-                        "prop": "csdgj"
-                    },
-                    {
-                        "label": "出生地区划",
-                        "modifiable": true,
-                        "prop": "csdqh"
-                    },
-                    {
-                        "label": "籍贯国家",
-                        "modifiable": true,
-                        "prop": "jggj"
-                    },
-                    {
-                        "label": "服务处所",
-                        "modifiable": true,
-                        "prop": "fwcs"
+                        "prop": "cydw"
                     },
                     {
                         "label": "兵役状况",
@@ -125,19 +120,40 @@
                         "prop": "byzk"
                     },
                     {
-                        "label": "文化程度",
+                        "label": "体貌特征描述",
                         "modifiable": true,
-                        "prop": "whcd"
+                        "prop": "tmtzms"
                     },
                     {
-                        "label": "婚姻状况",
+                        "label": "出生地区划",
                         "modifiable": true,
-                        "prop": "hyzk"
+                        "prop": "csdqh"
                     },
                     {
-                        "label": "死亡日期",
+                        "label": "籍贯",
                         "modifiable": true,
-                        "prop": "swrq"
+                        "prop": "jg"
+                    },
+                    {
+                        "label": "户籍地区划",
+                        "modifiable": true,
+                        "prop": "hjdqh"
+                    },
+                    {
+                        "label": "户籍地址",
+                        "modifiable": true,
+                        "prop": "hjdz"
+                    },
+                    {
+                        "label": "其他地址",
+                        "modifiable": true,
+                        "prop": "qtdz"
+                    },
+                    {
+                        "label": "行为标签",
+                        "modifiable": true,
+                        "row": true,
+                        "prop": "xwbq"
                     }
                 ]
             },

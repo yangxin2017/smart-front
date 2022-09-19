@@ -16,12 +16,7 @@
   </div>
 </template>
 <script>
-import {
-  GetRelationshiop,
-  GetGraphOne,
-  SaveGraph,
-  UpdateGraph,
-} from "@/api/project";
+import { GetRelationshiop, GetGraphOne, SaveGraph, UpdateGraph } from "@/api/project";
 import cytoscape from "cytoscape";
 import cxtmenu from "cytoscape-cxtmenu";
 import contextMenus from "cytoscape-context-menus";
@@ -104,8 +99,8 @@ export default {
 
       let { nodes, lines } = gerFinalNodeAndLine(obj.data, this.minJE);
 
-      console.log("=====================");
-      console.log(nodes, lines);
+      // console.log("=====================");
+      // console.log(nodes, lines);
       // line新增classes与id相同
       for (let i = 0; i < lines.length; i++) {
         // lines[i].data.classes =
@@ -367,7 +362,6 @@ export default {
       if (window.CY) {
         window.CY.destroy();
       }
-      console.log(arr);
       let person = require("@/assets/gra/pe.png");
       var cy = cytoscape({
         container: document.getElementById("graphContainer"),
@@ -587,7 +581,6 @@ export default {
         }
         num = num / 10000;
         if (num < 10) {
-          // 修改宽度
           l.style("width", 2);
         } else if (num >= 10 && num < 50) {
           l.style("width", 3);
@@ -599,6 +592,50 @@ export default {
           l.style("width", 6);
         } else if (num >= 1000) {
           l.style("width", 7);
+        }
+
+        // console.log(tmp);
+        // console.log(tmp.data.relation);
+        let json = {};
+        let allnum = 0;
+        let nameList = [];
+        for (let i of tmp.data.relation) {
+          if (!json[i.cxdxmc + "-" + i.jydfmc]) {
+            json[i.cxdxmc + "-" + i.jydfmc] = 0;
+            nameList.push(i.cxdxmc + "-" + i.jydfmc);
+          }
+          json[i.cxdxmc + "-" + i.jydfmc] +=
+            parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+          allnum += parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+        }
+        // console.log(json, allnum, json[nameList[0]] / allnum);
+
+        // 取json中最小的值
+        let minnumber = 0;
+        for (let i of nameList) {
+          if (minnumber == 0) {
+            minnumber = json[i];
+          } else {
+            if (json[i] < minnumber) {
+              minnumber = json[i];
+            }
+          }
+        }
+
+        if (nameList.length > 1) {
+          l.style("line-fill", "linear-gradient");
+          l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
+          l.style(
+            "line-gradient-stop-positions",
+            `0% ${(minnumber / allnum) * 100}% ${(minnumber / allnum) * 100}% 100%`
+          );
+        } else {
+          l.style("line-fill", "linear-gradient");
+          l.style("line-gradient-stop-colors", "#66b1ff #66b1ff");
+          l.style(
+            "line-gradient-stop-positions",
+            `0% ${(minnumber / allnum) * 100}% 100%`
+          );
         }
 
         let mon = Number(tmp.data.name);
