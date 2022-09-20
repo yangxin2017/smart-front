@@ -210,6 +210,13 @@ export default {
       // this.$refs.ref_upload.clearFiles();
       if (res.msg != "") {
         this.$message.error(res.msg);
+        // this.$notify({
+        //   title: "错误",
+        //   dangerouslyUseHTMLString: true,
+        //   message: res.msg,
+        //   type: "error",
+        //   duration: 0,
+        // });
       } else {
         this.$message.success("导入成功！");
       }

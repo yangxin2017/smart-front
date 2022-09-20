@@ -16,7 +16,12 @@
   </div>
 </template>
 <script>
-import { GetRelationshiop, GetGraphOne, SaveGraph, UpdateGraph } from "@/api/project";
+import {
+  GetRelationshiop,
+  GetGraphOne,
+  SaveGraph,
+  UpdateGraph,
+} from "@/api/project";
 import cytoscape from "cytoscape";
 import cxtmenu from "cytoscape-cxtmenu";
 import contextMenus from "cytoscape-context-menus";
@@ -47,6 +52,8 @@ export default {
       isUpdate: false,
 
       sline: [],
+
+      nodeBorderColor: {},
     };
   },
   mounted() {
@@ -605,8 +612,13 @@ export default {
             nameList.push(i.cxdxmc + "-" + i.jydfmc);
           }
           json[i.cxdxmc + "-" + i.jydfmc] +=
-            parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
-          allnum += parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+            parseFloat(i.jyje) < 0
+              ? parseFloat(i.jyje) * -1
+              : parseFloat(i.jyje);
+          allnum +=
+            parseFloat(i.jyje) < 0
+              ? parseFloat(i.jyje) * -1
+              : parseFloat(i.jyje);
         }
         // console.log(json, allnum, json[nameList[0]] / allnum);
 
@@ -627,7 +639,9 @@ export default {
           l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
           l.style(
             "line-gradient-stop-positions",
-            `0% ${(minnumber / allnum) * 100}% ${(minnumber / allnum) * 100}% 100%`
+            `0% ${(minnumber / allnum) * 100}% ${
+              (minnumber / allnum) * 100
+            }% 100%`
           );
         } else {
           l.style("line-fill", "linear-gradient");
@@ -671,9 +685,32 @@ export default {
         } else {
           n.toggleClass("hide", true);
         }
+
+        if (n.data().data.nodeGroup != null) {
+          console.log(this.getNodeBorderColor(n.data().data.nodeGroup))
+          n.style("border-color", this.getNodeBorderColor(n.data().data.nodeGroup));
+          n.style("border-width", 5);
+          n.style("text-outline-color", this.getNodeBorderColor(n.data().data.nodeGroup));
+          n.style("text-outline-width", 2);
+        }
       }
 
       console.log(showLines);
+    },
+    getNodeBorderColor(id) {
+      if (!this.nodeBorderColor[id]) {
+        this.nodeBorderColor[id] = this.getRandomColor();
+      }
+      return this.nodeBorderColor[id];
+    },
+    getRandomColor() {
+      // 随机生成一个颜色
+      return (
+        "#" +
+        (function (h) {
+          return new Array(7 - h.length).join("0") + h;
+        })(((Math.random() * 0x1000000) << 0).toString(16))
+      );
     },
   },
 };
