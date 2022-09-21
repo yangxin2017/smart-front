@@ -16,12 +16,7 @@
   </div>
 </template>
 <script>
-import {
-  GetRelationshiop,
-  GetGraphOne,
-  SaveGraph,
-  UpdateGraph,
-} from "@/api/project";
+import { GetRelationshiop, GetGraphOne, SaveGraph, UpdateGraph } from "@/api/project";
 import cytoscape from "cytoscape";
 import cxtmenu from "cytoscape-cxtmenu";
 import contextMenus from "cytoscape-context-menus";
@@ -116,6 +111,12 @@ export default {
         // this.sline.push(lines[i].data.classes);
         // console.log(lines[i].data.source);
         lines[i].classes = [];
+        lines[i].data.label =
+          "金额：" +
+          (lines[i].data.data.name < 0
+            ? ((lines[i].data.data.name * -1) / 10000).toFixed(2)
+            : (lines[i].data.data.name / 10000).toFixed(2)) +
+          "万";
         for (let j of this.dataArr) {
           // console.log(j.data.id, lines[i].data.id);
           if (
@@ -397,8 +398,8 @@ export default {
             style: {
               width: 6,
               "line-color": "#66b1ff",
-              "target-arrow-color": "#ccc",
-              "target-arrow-shape": "triangle",
+              "source-arrow-color": "#ccc",
+              "source-arrow-shape": "triangle",
               "curve-style": "bezier",
               label: "data(label)",
               "edge-text-rotation": "autorotate",
@@ -612,13 +613,8 @@ export default {
             nameList.push(i.cxdxmc + "-" + i.jydfmc);
           }
           json[i.cxdxmc + "-" + i.jydfmc] +=
-            parseFloat(i.jyje) < 0
-              ? parseFloat(i.jyje) * -1
-              : parseFloat(i.jyje);
-          allnum +=
-            parseFloat(i.jyje) < 0
-              ? parseFloat(i.jyje) * -1
-              : parseFloat(i.jyje);
+            parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+          allnum += parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
         }
         // console.log(json, allnum, json[nameList[0]] / allnum);
 
@@ -639,9 +635,7 @@ export default {
           l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
           l.style(
             "line-gradient-stop-positions",
-            `0% ${(minnumber / allnum) * 100}% ${
-              (minnumber / allnum) * 100
-            }% 100%`
+            `0% ${(minnumber / allnum) * 100}% ${(minnumber / allnum) * 100}% 100%`
           );
         } else {
           l.style("line-fill", "linear-gradient");
@@ -687,7 +681,7 @@ export default {
         }
 
         if (n.data().data.nodeGroup != null) {
-          console.log(this.getNodeBorderColor(n.data().data.nodeGroup))
+          console.log(this.getNodeBorderColor(n.data().data.nodeGroup));
           n.style("border-color", this.getNodeBorderColor(n.data().data.nodeGroup));
           n.style("border-width", 5);
           n.style("text-outline-color", this.getNodeBorderColor(n.data().data.nodeGroup));

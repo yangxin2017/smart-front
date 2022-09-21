@@ -39,8 +39,11 @@
           <el-button type="text" size="mini" @click="jisuan(scope.row)">
             数据计算
           </el-button>
-          <el-button type="text" size="mini" @click="weihu(scope.row)">
+          <!-- <el-button type="text" size="mini" @click="weihu(scope.row)">
             数据维护
+          </el-button> -->
+          <el-button type="text" size="mini" @click="mbrxx(scope.row)">
+            目标人信息
           </el-button>
           <!-- 可视分析 -->
           <el-button type="text" size="mini" @click="fenxi(scope.row)">
@@ -165,6 +168,15 @@ export default {
       }
       query.id = row.id;
       this.$router.push({ path: "/relationship", query: query });
+    },
+    mbrxx(row) {
+      console.log(row);
+      let query = {};
+      for (let q in this.$route.query) {
+        query[q] = this.$route.query[q];
+      }
+      query.id = row.id;
+      this.$router.push({ path: "/mbrxx", query: query });
     },
   },
 };
