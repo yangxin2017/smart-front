@@ -184,79 +184,6 @@ export default {
             label: "均价",
             prop: "jj",
           },
-
-          //   {
-          //     label: "反馈单位",
-          //     prop: "fkdw",
-          //   },
-          //   {
-          //     label: "审批表",
-          //     prop: "spb",
-          //   },
-          //   {
-          //     label: "名称",
-          //     prop: "mc",
-          //   },
-          //   {
-          //     label: "证件类型",
-          //     prop: "zjlx",
-          //   },
-          //   {
-          //     label: "证件号码",
-          //     prop: "zjhm",
-          //   },
-          //   {
-          //     label: "规划用途",
-          //     prop: "ghyt",
-          //   },
-          //   {
-          //     label: "房屋性质",
-          //     prop: "fwxz",
-          //   },
-          //   {
-          //     label: "竣工时间",
-          //     prop: "jgsj",
-          //   },
-          //   {
-          //     label: "土地使用起始时间",
-          //     prop: "tdsyqssj",
-          //   },
-          //   {
-          //     label: "土地使用结束时间",
-          //     prop: "tdsyjssj",
-          //   },
-          //   {
-          //     label: "不动产权证号",
-          //     prop: "bdcdzh",
-          //   },
-          //   {
-          //     label: "登记机构",
-          //     prop: "djjg",
-          //   },
-          //   {
-          //     label: "权属状态",
-          //     prop: "qszt",
-          //   },
-          //   {
-          //     label: "登记时间",
-          //     prop: "djsj",
-          //   },
-          //   {
-          //     label: "交易金额（万元）",
-          //     prop: "jyjewy",
-          //   },
-          //   {
-          //     label: "共有人证件号码",
-          //     prop: "gyrzjhm",
-          //   },
-          //   {
-          //     label: "共有人名称",
-          //     prop: "gyrmc",
-          //   },
-          //   {
-          //     label: "共有人证件类型",
-          //     prop: "gyrzjlx",
-          //   },
         ],
         yhk: [
           {
@@ -277,10 +204,6 @@ export default {
           },
         ],
         qsgx: [
-          //   {
-          //     label: "姓名",
-          //     prop: "xm1",
-          //   },
           {
             label: "关系",
             prop: "gx",
@@ -295,10 +218,6 @@ export default {
           },
         ],
         mqr: [
-          //   {
-          //     label: "姓名",
-          //     prop: "xm1",
-          //   },
           {
             label: "关系",
             prop: "gx",
@@ -377,83 +296,6 @@ export default {
             label: "总价值",
             prop: "zjz",
           },
-
-          //   {
-          //     label: "姓名",
-          //     prop: "xm",
-          //   },
-          //   {
-          //     label: "证件类型",
-          //     prop: "zjlx",
-          //   },
-          //   {
-          //     label: "证件号码",
-          //     prop: "zjhm",
-          //   },
-          //   {
-          //     label: "持有日期",
-          //     prop: "cyrq",
-          //   },
-          //   {
-          //     label: "证券账户状态",
-          //     prop: "zqzhzt",
-          //   },
-          //   {
-          //     label: "证券类别",
-          //     prop: "zqlb",
-          //   },
-          //   {
-          //     label: "证券总股本数量",
-          //     prop: "zqzgbsl",
-          //   },
-          //   {
-          //     label: "挂牌年份",
-          //     prop: "gpnf",
-          //   },
-          //   {
-          //     label: "权益编号",
-          //     prop: "qybh",
-          //   },
-          //   {
-          //     label: "权益类别",
-          //     prop: "qylb",
-          //   },
-          //   {
-          //     label: "流通类型",
-          //     prop: "ltlx",
-          //   },
-          //   {
-          //     label: "托管单元",
-          //     prop: "tgdy",
-          //   },
-          //   {
-          //     label: "托管单元名称",
-          //     prop: "tgdymc",
-          //   },
-          //   {
-          //     label: "股份性质",
-          //     prop: "gfxz",
-          //   },
-          //   {
-          //     label: "结算参与人简称",
-          //     prop: "jscyrjc",
-          //   },
-          //   {
-          //     label: "是否支持网络冻结",
-          //     prop: "sfzcwldj",
-          //   },
-          //   {
-          //     label: "最大可网络冻结数量",
-          //     prop: "zdkwldjsl",
-          //   },
-          //   {
-          //     label: "其中冻结数量",
-          //     prop: "qzdjsl",
-          //   },
-          //   {
-          //     label: "交易单元",
-          //     prop: "jydy",
-          //   },
         ],
       },
 
@@ -483,10 +325,10 @@ export default {
       this.$router.push({ path: "/importfile", query: query });
     },
     opendialog(row, id, title) {
-      this.dialogData = row[id];
-      this.$set(this.dialog, "title", title + "详细信息");
-      this.headerData = this.headerDataList[id];
-      this.$set(this.dialog, "show", true);
+    //   this.dialogData = row[id];
+    //   this.$set(this.dialog, "title", title + "详细信息");
+    //   this.headerData = this.headerDataList[id];
+    //   this.$set(this.dialog, "show", true);
     },
     savembr() {
       saveMbrDataMbr({
