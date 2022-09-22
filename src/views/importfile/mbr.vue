@@ -33,12 +33,16 @@
         <el-table-column prop="sfzh" label="身份证号"> </el-table-column>
         <el-table-column label="单位">
           <template slot-scope="scope">
-            <div v-for="item in scope.row.gs" style="height: 20px">{{ item.qyjgmc }}</div>
+            <div v-for="item in scope.row.gs" :key="item.qyjgmc" style="height: 20px">
+              {{ item.qyjgmc }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="职务">
           <template slot-scope="scope">
-            <div v-for="item in scope.row.gs" style="height: 20px">{{ item.zw }}</div>
+            <div v-for="item in scope.row.gs" :key="item.zw" style="height: 20px">
+              {{ item.zw }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="房产">
@@ -132,10 +136,10 @@
       <div class="dialog-table-class">
         <el-table :data="dialogData" style="width: 100%" height="100%">
           <el-table-column
-            min-width="180"
             v-for="(item, index) in headerData"
             :prop="item.prop"
             :label="item.label"
+            :key="index"
           >
           </el-table-column>
         </el-table>
@@ -292,10 +296,10 @@ export default {
             label: "当日收盘价",
             prop: "drspj",
           },
-          {
-            label: "总价值",
-            prop: "zjz",
-          },
+          // {
+          //   label: "总价值",
+          //   prop: "zjz",
+          // },
         ],
       },
 
@@ -305,19 +309,22 @@ export default {
   },
   mounted() {
     this.projectId = this.$route.query.id;
-    getMbrDataList({ projectId: this.projectId }).then((res) => {
-      this.tableData = res.data;
-    });
-    getMbrDataAllPeople({ projectId: this.projectId }).then((res) => {
-      this.allPeople = res.data;
-      for (let i of res.data) {
-        if (i.sfMbr == "1") {
-          this.allSelect.push(i.id);
-        }
-      }
-    });
+    this.init();
   },
   methods: {
+    init() {
+      getMbrDataList({ projectId: this.projectId }).then((res) => {
+        this.tableData = res.data;
+      });
+      getMbrDataAllPeople({ projectId: this.projectId }).then((res) => {
+        this.allPeople = res.data;
+        for (let i of res.data) {
+          if (i.sfMbr == "1") {
+            this.allSelect.push(i.id);
+          }
+        }
+      });
+    },
     weihu() {
       let query = {
         id: this.projectId,
@@ -325,10 +332,10 @@ export default {
       this.$router.push({ path: "/importfile", query: query });
     },
     opendialog(row, id, title) {
-    //   this.dialogData = row[id];
-    //   this.$set(this.dialog, "title", title + "详细信息");
-    //   this.headerData = this.headerDataList[id];
-    //   this.$set(this.dialog, "show", true);
+      this.dialogData = row[id];
+      this.$set(this.dialog, "title", title + "详细信息");
+      this.headerData = this.headerDataList[id];
+      this.$set(this.dialog, "show", true);
     },
     savembr() {
       saveMbrDataMbr({
@@ -336,6 +343,7 @@ export default {
         idLists: this.allSelect,
       }).then((res) => {
         this.$message.success("保存成功");
+        this.init();
       });
     },
     getAge(row) {

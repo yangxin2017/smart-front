@@ -47,7 +47,7 @@ export function getLayout(datas) {
         if (i == 0) {
           nodes.push({ name: datas[i].children[0].name, x: child0pos.x, y: child0pos.y, od: datas[i].children[0].data })
         } else {
-          nodes.push({ name: datas[i].children[0].name, x: child0pos.x, y: child0pos.y + 2 * radius, od: datas[i].children[0].data  })
+          nodes.push({ name: datas[i].children[0].name, x: child0pos.x, y: child0pos.y + 2 * radius, od: datas[i].children[0].data })
         }
 
 
@@ -57,7 +57,7 @@ export function getLayout(datas) {
           let offX = Math.sin(hd) * radius
           let offY = radius - Math.cos(hd) * radius
           datas[i].children[j].pos = { x: child0pos.x - offX, y: child0pos.y + offY }
-          nodes.push({ name: datas[i].children[j].name, x: child0pos.x - offX, y: child0pos.y + offY, od: datas[i].children[j].data  })
+          nodes.push({ name: datas[i].children[j].name, x: child0pos.x - offX, y: child0pos.y + offY, od: datas[i].children[j].data })
           inx++
           lines.push({ source: datas[i].name, target: datas[i].children[j].name, label: { show: false } })
         }
@@ -67,7 +67,7 @@ export function getLayout(datas) {
           let offX = Math.sin(hd) * radius
           let offY = radius - Math.cos(hd) * radius
           datas[i].children[j].pos = { x: child0pos.x + offX, y: child0pos.y + offY }
-          nodes.push({ name: datas[i].children[j].name, x: child0pos.x + offX, y: child0pos.y + offY, od: datas[i].children[j].data  })
+          nodes.push({ name: datas[i].children[j].name, x: child0pos.x + offX, y: child0pos.y + offY, od: datas[i].children[j].data })
           inx++
           lines.push({ source: datas[i].name, target: datas[i].children[j].name, label: { show: false } })
         }
@@ -82,7 +82,7 @@ export function getLayout(datas) {
           let offX = Math.sin(hd) * radius
           let offY = radius - Math.cos(hd) * radius
           datas[i].children[j].pos = { x: child0pos.x - offX, y: child0pos.y + offY }
-          nodes.push({ name: datas[i].children[j].name, x: child0pos.x - offX, y: child0pos.y + offY, od: datas[i].children[j].data  })
+          nodes.push({ name: datas[i].children[j].name, x: child0pos.x - offX, y: child0pos.y + offY, od: datas[i].children[j].data })
           inx++
           lines.push({ source: datas[i].name, target: datas[i].children[j].name, label: { show: false } })
         }
@@ -92,7 +92,7 @@ export function getLayout(datas) {
           let offX = Math.sin(hd) * radius
           let offY = radius - Math.cos(hd) * radius
           datas[i].children[j].pos = { x: child0pos.x + offX, y: child0pos.y + offY }
-          nodes.push({ name: datas[i].children[j].name, x: child0pos.x + offX, y: child0pos.y + offY, od: datas[i].children[j].data  })
+          nodes.push({ name: datas[i].children[j].name, x: child0pos.x + offX, y: child0pos.y + offY, od: datas[i].children[j].data })
           inx++
           lines.push({ source: datas[i].name, target: datas[i].children[j].name, label: { show: false } })
         }
@@ -106,7 +106,7 @@ export function getLayout(datas) {
       let child0pos = { x: x, y: y - radius }
       let childCount = datas[i].children.length
 
-      nodes.push({ name: datas[i].name, x: x, y: y, od: datas[i].data  })
+      nodes.push({ name: datas[i].name, x: x, y: y, od: datas[i].data })
 
       let isJS = childCount % 2 == 1
       if (isJS) {
@@ -122,7 +122,7 @@ export function getLayout(datas) {
           let offX = Math.sin(hd) * radius
           let offY = radius - Math.cos(hd) * radius
           datas[i].children[j].pos = { x: child0pos.x - offX, y: child0pos.y + offY }
-          nodes.push({ name: datas[i].children[j].name, x: child0pos.x - offX, y: child0pos.y + offY, od: datas[i].children[j].data  })
+          nodes.push({ name: datas[i].children[j].name, x: child0pos.x - offX, y: child0pos.y + offY, od: datas[i].children[j].data })
           inx++
           lines.push({ source: datas[i].name, target: datas[i].children[j].name, label: { show: false } })
         }
@@ -132,7 +132,7 @@ export function getLayout(datas) {
           let offX = Math.sin(hd) * radius
           let offY = radius - Math.cos(hd) * radius
           datas[i].children[j].pos = { x: child0pos.x + offX, y: child0pos.y + offY }
-          nodes.push({ name: datas[i].children[j].name, x: child0pos.x + offX, y: child0pos.y + offY, od: datas[i].children[j].data  })
+          nodes.push({ name: datas[i].children[j].name, x: child0pos.x + offX, y: child0pos.y + offY, od: datas[i].children[j].data })
           inx++
           lines.push({ source: datas[i].name, target: datas[i].children[j].name, label: { show: false } })
         }
@@ -147,7 +147,7 @@ export function getLayout(datas) {
           let offX = Math.sin(hd) * radius
           let offY = radius - Math.cos(hd) * radius
           datas[i].children[j].pos = { x: child0pos.x - offX, y: child0pos.y + offY }
-          nodes.push({ name: datas[i].children[j].name, x: child0pos.x - offX, y: child0pos.y + offY, od: datas[i].children[j].data  })
+          nodes.push({ name: datas[i].children[j].name, x: child0pos.x - offX, y: child0pos.y + offY, od: datas[i].children[j].data })
           inx++
           lines.push({ source: datas[i].name, target: datas[i].children[j].name, label: { show: false } })
         }
@@ -157,7 +157,7 @@ export function getLayout(datas) {
           let offX = Math.sin(hd) * radius
           let offY = radius - Math.cos(hd) * radius
           datas[i].children[j].pos = { x: child0pos.x + offX, y: child0pos.y + offY }
-          nodes.push({ name: datas[i].children[j].name, x: child0pos.x + offX, y: child0pos.y + offY, od: datas[i].children[j].data  })
+          nodes.push({ name: datas[i].children[j].name, x: child0pos.x + offX, y: child0pos.y + offY, od: datas[i].children[j].data })
           inx++
           lines.push({ source: datas[i].name, target: datas[i].children[j].name, label: { show: false } })
         }
@@ -187,13 +187,23 @@ export function gerFinalNodeAndLine(graph, minJE) {
 function getLayoutLines(realLines, minJE) {
   let lines = []
   for (let l of realLines) {
-    if (Math.abs(Number(l.name)) >= minJE) {
-      lines.push({ data: { 
-        source: l.sid + '', 
-        target: l.eid + '', 
-        label: `金额：` + _getW(l.name), 
-        data: l
-      }
+    if (l.name == "0") {
+      lines.push({
+        data: {
+          source: l.sid + '',
+          target: l.eid + '',
+          label: `0`,
+          data: l
+        }
+      })
+    } else if (Math.abs(Number(l.name)) >= minJE) {
+      lines.push({
+        data: {
+          source: l.sid + '',
+          target: l.eid + '',
+          label: `金额：` + _getW(l.name),
+          data: l
+        }
       })
     }
   }
@@ -208,7 +218,7 @@ function getLayoutNodes(realNodes) {
     } else {
       style = {}
     }
-    nodes.push({ 
+    nodes.push({
       data: { id: n.od.id + '', data: n.od, label: n.od.nodeName },
       position: { x: n.x, y: n.y },
       style: style
@@ -230,7 +240,7 @@ function filterLine(graph) {
         // a.name = m1 + m2
         a.relation = mergeRelation(a.relation, l.relation)
         ish = true
-        
+
         let num = 0.0
         for (let ar of a.relation) {
           num += Number(ar.jyje)
@@ -262,12 +272,12 @@ function filterLine(graph) {
 
         a.relation = mergeRelation(a.relation, l.relation)
         ish = true
-        
+
         let num = 0.0
         for (let ar of a.relation) {
           num += Number(ar.jyje)
         }
-        
+
         if ((Number(a.name) > 0 && num < 0) || (Number(a.name) < 0 && num > 0)) {
           let sidtmp = a.sid
           a.sid = a.eid
@@ -335,6 +345,37 @@ function getPrepDataObj(nodes, lines, minJE) {
   for (let m of mbr) {
     for (let l of lines) {
       if (Math.abs(Number(l.name)) >= minJE) {
+        if (!_ishLink(l, tmplinks)) {
+          if (l.sid == m.data.id) {
+            let cnode = _getNodeById(nodes, l.eid);
+            if (cnode) {
+              if (!_isRepeat(mbr, tmpNodes, cnode)) {
+                m.children.push({
+                  name: cnode.nodeName,
+                  data: cnode,
+                  line: l,
+                });
+                tmpNodes.push({ name: cnode.nodeName });
+              }
+              tmplinks.push({ source: l.sid + "", target: l.eid + "" });
+            }
+          } else if (l.eid == m.data.id) {
+            let cnode = _getNodeById(nodes, l.sid);
+            if (cnode) {
+              if (!_isRepeat(mbr, tmpNodes, cnode)) {
+                m.children.push({
+                  name: cnode.nodeName,
+                  data: cnode,
+                  line: l,
+                });
+                tmpNodes.push({ name: cnode.nodeName });
+              }
+              tmplinks.push({ source: l.sid + "", target: l.eid + "" });
+            }
+          }
+        }
+      }
+      if (l.name == '0') {
         if (!_ishLink(l, tmplinks)) {
           if (l.sid == m.data.id) {
             let cnode = _getNodeById(nodes, l.eid);

@@ -9,7 +9,13 @@
           :class="leftnow == item.id ? 'left-list-card-click' : ''"
           v-if="item.user"
         >
-          <span class="left-list-name">{{ item.user.xm }}</span>
+          <!-- <span class="left-list-name">{{ item.user.xm }}</span> -->
+          <!-- 鼠标入显示提示文本-->
+          <span class="left-list-name" :title="item.nodeName">
+            {{ item.nodeName }}
+          </span>
+          <!-- <span class="left-list-name">{{ item.nodeName }}</span> -->
+
           <span
             class="left-list-sex"
             :style="{ color: item.user.xb == '男' ? '#00C1C1' : '#FF7FBF' }"
@@ -20,18 +26,16 @@
       </template>
     </div>
     <div class="list-right-card" v-if="leftnow != -1">
-      <div class="close-button" @click="leftnow=-1">
+      <div class="close-button" @click="leftnow = -1">
         <i class="el-icon-close"></i>
       </div>
       <div class="list-right-card-row" style="height: 27%">
         <div class="card-1-1">
           <div class="card-1-1-1">
             <div class="label-class" style="left: 38px; top: 12px">姓名</div>
-            <div
-              class="label-class"
-              style="right: 6px; top: 15px; font-size: 30px"
-            >
-              {{ cardData.user.xm }}
+            <div class="label-class" style="right: 6px; top: 15px; font-size: 30px">
+              <!-- {{ cardData.user.xm }} -->
+              {{ cardData.nodeName }}
             </div>
           </div>
           <div class="card-1-1-2">
@@ -42,12 +46,14 @@
 
             <div class="label-class" style="left: 122px; top: 6px">职务</div>
             <div class="label-class" style="left: 122px; top: 32px">
-              {{ cardData.user.zw }}
+              {{
+                cardData.gs.length > 0 ? cardData.gs[cardData.gs.length - 1].zw : "未知"
+              }}
             </div>
 
             <div class="label-class" style="left: 14px; top: 64px">年龄</div>
             <div class="label-class" style="left: 14px; top: 90px">
-              {{ cardData.user.nl }}
+              {{ getAge(cardData) }}
             </div>
 
             <div class="label-class" style="left: 122px; top: 64px">身份证</div>
@@ -64,14 +70,28 @@
           </div>
         </div>
         <div class="card-1-2">
+          <div class="card-title">房产信息</div>
+          <el-table :data="cardData.fdcq" style="width: 100%" height="calc(100% - 20px)">
+            <el-table-column
+              v-for="(item, index) in headerDataList.fdcq"
+              :prop="item.prop"
+              :label="item.label"
+              :key="index"
+            >
+            </el-table-column>
+          </el-table>
           <!-- <div class="label-card" v-for="(item, index) in cardlist1" :key="index">
             <div class="cardtitlebackground">{{ item.label }}</div>
             <div class="cardvalue">{{ item.value }}</div>
           </div> -->
 
-          <div class="label-card">
+          <!-- <div class="label-card">
             <div class="cardtitlebackground">当前职务</div>
-            <div class="cardvalue">{{ cardData.user.dqzw }}</div>
+            <div class="cardvalue">
+              {{
+                cardData.gs.length > 0 ? cardData.gs[cardData.gs.length - 1].zw : "未知"
+              }}
+            </div>
           </div>
 
           <div class="label-card">
@@ -81,7 +101,7 @@
 
           <div class="label-card">
             <div class="cardtitlebackground">配偶</div>
-            <div class="cardvalue">{{ cardData.user.pou }}</div>
+            <div class="cardvalue">{{ getPo(cardData) }}</div>
           </div>
 
           <div class="label-card">
@@ -106,7 +126,9 @@
 
           <div class="label-card">
             <div class="cardtitlebackground">上一任职务</div>
-            <div class="cardvalue">{{ cardData.user.syrzw }}</div>
+            <div class="cardvalue">
+              {{ cardData.gs.length > 1 ? cardData.gs[cardData.gs.length - 2].zw : "无" }}
+            </div>
           </div>
 
           <div class="label-card">
@@ -116,16 +138,100 @@
 
           <div class="label-card">
             <div class="cardtitlebackground">户口所在地</div>
-            <div class="cardvalue">{{ cardData.user.hkszd }}</div>
+            <div class="cardvalue">{{ cardData.user.hjd }}</div>
           </div>
 
           <div class="label-card">
             <div class="cardtitlebackground">常住地址</div>
             <div class="cardvalue">{{ cardData.user.czdz }}</div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="list-right-card-row" style="height: 35%">
+        <div class="card-class-now">
+          <div class="card-title">累计缴纳保费</div>
+          <el-table :data="cardData.bxbd" style="width: 100%" height="calc(100% - 20px)">
+            <el-table-column
+              v-for="(item, index) in headerDataList.bxbd"
+              :prop="item.prop"
+              :label="item.label"
+              :key="index"
+            >
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="card-class-now">
+          <div class="card-title">银行卡</div>
+          <el-table :data="cardData.yhk" style="width: 100%" height="calc(100% - 20px)">
+            <el-table-column
+              v-for="(item, index) in headerDataList.yhk"
+              :prop="item.prop"
+              :label="item.label"
+              :key="index"
+            >
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="card-class-now">
+          <div class="card-title">抵押贷款</div>
+          <el-table :data="cardData.dyq" style="width: 100%" height="calc(100% - 20px)">
+            <el-table-column
+              v-for="(item, index) in headerDataList.dyq"
+              :prop="item.prop"
+              :label="item.label"
+              :key="index"
+            >
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <div class="list-right-card-row" style="height: 35%">
+        <div class="card-class-now">
+          <div class="card-title">证券信息</div>
+          <el-table :data="cardData.cyxx" style="width: 100%" height="calc(100% - 20px)">
+            <el-table-column
+              v-for="(item, index) in headerDataList.cyxx"
+              :prop="item.prop"
+              :label="item.label"
+              :key="index"
+            >
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="card-class-now">
+          <div class="card-title">亲属关系</div>
+          <el-table :data="cardData.qsgx" style="width: 100%" height="calc(100% - 20px)">
+            <el-table-column
+              v-for="(item, index) in headerDataList.qsgx"
+              :prop="item.prop"
+              :label="item.label"
+              :key="index"
+            >
+              <template slot-scope="scope">
+                <span v-if="item.label != '姓名'">{{ scope.row[item.prop] }}</span>
+                <span v-else>{{ getNoName(scope.row) }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="card-class-now">
+          <div class="card-title">密切人</div>
+          <el-table :data="cardData.mqr" style="width: 100%" height="calc(100% - 20px)">
+            <el-table-column
+              v-for="(item, index) in headerDataList.mqr"
+              :prop="item.prop"
+              :label="item.label"
+              :key="index"
+            >
+              <template slot-scope="scope">
+                <span v-if="item.label != '姓名'">{{ scope.row[item.prop] }}</span>
+                <span v-else>{{ getNoName(scope.row) }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <!-- <div class="list-right-card-row" style="height: 35%">
         <div class="card-2-1 card-2-border">
           <div class="card-2-in-border">
             <div class="title-class">财产信息</div>
@@ -140,11 +246,11 @@
               </div>
               <div class="card-2-row">
                 <span>有价证券：</span>
-                <span>{{ cardData.user.yjzq }}</span>
+                <span>{{ getCyxx(cardData.cyxx) }}</span>
               </div>
               <div class="card-2-row">
                 <span>房产：</span>
-                <span>{{ cardData.user.fc }}</span>
+                <span>{{ cardData.fdcq.length }}套</span>
               </div>
               <div class="card-2-row">
                 <span>车：</span>
@@ -152,7 +258,7 @@
               </div>
               <div class="card-2-row">
                 <span>贷款余额：</span>
-                <span>{{ cardData.user.dk }}</span>
+                <span>{{ getDydk(cardData) }}</span>
               </div>
               <div class="card-2-row">
                 <span>借款：</span>
@@ -249,7 +355,7 @@
               </div>
               <div class="card-2-row">
                 <span>实际控制人：</span>
-                <span>{{ cardData.company ? cardData.company.xm : "" }}</span>
+                <span>{{ cardData.company ? cardData.company.sjkzr : "" }}</span>
               </div>
               <div class="card-2-row">
                 <span>管理层：</span>
@@ -308,7 +414,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <canvas id="canvas" v-show="false"></canvas>
     <div class="title">案情分析</div>
@@ -431,11 +537,7 @@
       保存视图
     </el-button>
 
-    <graph
-      ref="refGraph"
-      @chooseEvent="handleChooseEvent"
-      :minJE="minJE"
-    ></graph>
+    <graph ref="refGraph" @chooseEvent="handleChooseEvent" :minJE="minJE"></graph>
     <detail-dialog ref="dDialog"></detail-dialog>
   </div>
 </template>
@@ -568,6 +670,147 @@ export default {
       cardData: {},
 
       tabId: 0,
+
+      headerDataList: {
+        fdcq: [
+          {
+            label: "不动产单元号",
+            prop: "bdcdyh",
+          },
+          {
+            label: "房地坐落",
+            prop: "fdzl",
+          },
+          {
+            label: "建筑面积(平方米)",
+            prop: "jzmjpfm",
+          },
+          {
+            label: "共有情况",
+            prop: "gyqk",
+          },
+          {
+            label: "房产估值",
+            prop: "fcgz",
+          },
+          {
+            label: "均价",
+            prop: "jj",
+          },
+        ],
+        yhk: [
+          {
+            label: "银行",
+            prop: "fkdw",
+          },
+          {
+            label: "卡号",
+            prop: "kh",
+          },
+          {
+            label: "账号类别",
+            prop: "zhlb",
+          },
+          {
+            label: "可用余额",
+            prop: "kyye",
+          },
+        ],
+        qsgx: [
+          {
+            label: "关系",
+            prop: "gx",
+          },
+          {
+            label: "姓名",
+            prop: "xm2",
+          },
+          {
+            label: "证件号码",
+            prop: "sfzh2",
+          },
+        ],
+        mqr: [
+          {
+            label: "关系",
+            prop: "gx",
+          },
+          {
+            label: "姓名",
+            prop: "xm2",
+          },
+          {
+            label: "证件号码",
+            prop: "sfzh2",
+          },
+        ],
+        dyq: [
+          {
+            label: "抵押类型",
+            prop: "dyfs",
+          },
+          {
+            label: "被担保主债权数额(万元)",
+            prop: "bdbzzqse",
+          },
+          {
+            label: "债务履行起始时间",
+            prop: "zwlxqssj",
+          },
+          {
+            label: "债务履行结束时间",
+            prop: "zwlxjssj",
+          },
+        ],
+        bxbd: [
+          {
+            label: "保险产品名称",
+            prop: "bxcpmc",
+          },
+          {
+            label: "保单号",
+            prop: "bdh",
+          },
+          {
+            label: "保险公司",
+            prop: "bxgsmc",
+          },
+          {
+            label: "累计缴纳保费",
+            prop: "ljjnbf",
+          },
+        ],
+        cyxx: [
+          {
+            label: "市场类型",
+            prop: "sclx",
+          },
+          {
+            label: "证券账户",
+            prop: "zqzh",
+          },
+          {
+            label: "证券代码",
+            prop: "zqdm",
+          },
+          {
+            label: "证券简称",
+            prop: "zqjc",
+          },
+          {
+            label: "持有数量",
+            prop: "cysl",
+          },
+          {
+            label: "当日收盘价",
+            prop: "drspj",
+          },
+          // {
+          //   label: "总价值",
+          //   prop: "zjz",
+          // },
+        ],
+      },
     };
   },
   mounted() {
@@ -607,6 +850,7 @@ export default {
       console.log(nodes, lines);
     },
     leftClick(item) {
+      console.log(item);
       this.leftnow == item.id ? (this.leftnow = -1) : (this.leftnow = item.id);
       this.cardData = item;
       console.log(this.cardData);
@@ -671,14 +915,10 @@ export default {
       // let chart = this.$refs.chart.chart;
 
       // 获取所有节点及name列表
-      let nodes = this.$refs.chart.chart
-        .getModel()
-        .getSeriesByIndex(0)
-        .getData()._itemLayouts;
-      let names = this.$refs.chart.chart
-        .getModel()
-        .getSeriesByIndex(0)
-        .getData()._nameList;
+      let nodes = this.$refs.chart.chart.getModel().getSeriesByIndex(0).getData()
+        ._itemLayouts;
+      let names = this.$refs.chart.chart.getModel().getSeriesByIndex(0).getData()
+        ._nameList;
 
       for (let i in names) {
         for (let j of this.option.series[0].data) {
@@ -791,11 +1031,7 @@ export default {
         if (l.sid == 347 && l.eid == 347) {
           console.log(el);
         }
-        if (
-          l.sid == el.source &&
-          l.eid == el.target &&
-          el.source != el.target
-        ) {
+        if (l.sid == el.source && l.eid == el.target && el.source != el.target) {
           ish = true;
           break;
         }
@@ -914,8 +1150,7 @@ export default {
                 color: l.name > 0 ? "#66b1ff" : "#00ffff",
                 // curveness: 0.1,
                 // 设置线粗细
-                width:
-                  Math.abs(l.name) / 100000 > 5 ? 5 : Math.abs(l.name) / 100000,
+                width: Math.abs(l.name) / 100000 > 5 ? 5 : Math.abs(l.name) / 100000,
               },
               dat: l,
             };
@@ -1337,17 +1572,11 @@ export default {
             id: iconList[i].id,
             name: iconList[i].name,
             symbolSize:
-              iconList[i].name == "目标人物"
-                ? 100
-                : iconList[i].symbolOffset
-                ? 30
-                : 50,
+              iconList[i].name == "目标人物" ? 100 : iconList[i].symbolOffset ? 30 : 50,
             isicon: iconList[i].symbolOffset ? true : false,
             x: iconList[i].x,
             y: iconList[i].y,
-            symbolOffset: iconList[i].symbolOffset
-              ? iconList[i].symbolOffset
-              : [0, 0],
+            symbolOffset: iconList[i].symbolOffset ? iconList[i].symbolOffset : [0, 0],
             label: {
               position: "bottom",
               show: true,
@@ -1396,6 +1625,40 @@ export default {
           });
         }
       }, 100);
+    },
+    getAge(row) {
+      let birth = row.user.csrq;
+      return birth ? new Date().getFullYear() - new Date(birth).getFullYear() : "未知";
+    },
+    getPo(row) {
+      let po = "无";
+      for (let i of row.qsgx) {
+        if (i.gx == "配偶") {
+          return i.xm1 == row.user.xm ? i.xm2 : i.xm1;
+        }
+      }
+      return po;
+    },
+    getCyxx(row) {
+      let money = 0;
+      for (let i of row) {
+        money += i.drspj * i.cysl;
+      }
+      return money;
+    },
+    getDydk(row) {
+      let zqse = 0;
+      for (let i of row.dyq) {
+        zqse += parseFloat(i.bdbzzqse);
+      }
+      return zqse.toFixed(2);
+    },
+    getNoName(row) {
+      if (row.xm1 == this.cardData.nodeName) {
+        return row.xm2;
+      } else {
+        return row.xm1;
+      }
     },
   },
 };
@@ -1541,6 +1804,10 @@ export default {
       text-indent: 1em;
       font-size: 20px;
       color: #fff;
+      // 禁止换行，超出部分显示省略号
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .left-list-sex {
       margin-right: 10px;
@@ -1573,6 +1840,14 @@ export default {
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
+  .card-title {
+    height: 20px;
+    color: #fff;
+    position: absolute;
+    left: 10px;
+    top: -6px;
+    font-weight: 900;
+  }
   .close-button {
     position: absolute;
     font-size: 30px;
@@ -1656,6 +1931,8 @@ export default {
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
+    flex-direction: column;
+    position: relative;
     .label-card {
       width: 15%;
       height: 40%;
@@ -1670,6 +1947,19 @@ export default {
         font-size: 18px;
       }
     }
+  }
+  .card-class-now {
+    width: 32%;
+    height: 100%;
+    border: 1px solid #036a8c;
+    background: #143643;
+    box-shadow: 0 0 10px rgba($color: #000000, $alpha: 0.7) inset;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    position: relative;
+    padding-top: 10px;
   }
 }
 .card-2-border {
@@ -1761,7 +2051,7 @@ export default {
   justify-content: center;
   .card-3-1 {
     width: calc(100% - 20px);
-    height: calc(100% - 40px);
+    height: calc(100% - 20px);
     border: 1px solid #00698c;
     box-shadow: 0 0 10px rgba($color: #00698c, $alpha: 0.7) inset,
       0 0 10px rgba($color: #00698c, $alpha: 0.7);
@@ -1778,7 +2068,7 @@ export default {
     }
     .card-3-1-1 {
       width: calc(100% - 20px);
-      height: calc(100% - 40px);
+      height: calc(100% - 20px);
       display: flex;
       align-items: center;
       justify-content: center;

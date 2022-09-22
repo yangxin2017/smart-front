@@ -99,6 +99,7 @@ export default {
       let id = projectId;
       let obj = await GetRelationshiop(id);
 
+
       let { nodes, lines } = gerFinalNodeAndLine(obj.data, this.minJE);
 
       // console.log("=====================");
@@ -112,11 +113,13 @@ export default {
         // console.log(lines[i].data.source);
         lines[i].classes = [];
         lines[i].data.label =
-          "金额：" +
-          (lines[i].data.data.name < 0
-            ? ((lines[i].data.data.name * -1) / 10000).toFixed(2)
-            : (lines[i].data.data.name / 10000).toFixed(2)) +
-          "万";
+          lines[i].data.data.name == "0"
+            ? "密切人"
+            : "金额：" +
+              (lines[i].data.data.name < 0
+                ? ((lines[i].data.data.name * -1) / 10000).toFixed(2)
+                : (lines[i].data.data.name / 10000).toFixed(2)) +
+              "万";
         for (let j of this.dataArr) {
           // console.log(j.data.id, lines[i].data.id);
           if (
@@ -217,6 +220,7 @@ export default {
         ms[inx] = (i * 20 * max) / 100 + min + "万";
       }
       ms[max] = max + "万";
+
       this.marks = ms;
       setTimeout(() => {
         this.readySlider = true;
@@ -602,48 +606,67 @@ export default {
           l.style("width", 7);
         }
 
-        // console.log(tmp);
-        // console.log(tmp.data.relation);
-        let json = {};
-        let allnum = 0;
-        let nameList = [];
-        for (let i of tmp.data.relation) {
-          if (!json[i.cxdxmc + "-" + i.jydfmc]) {
-            json[i.cxdxmc + "-" + i.jydfmc] = 0;
-            nameList.push(i.cxdxmc + "-" + i.jydfmc);
-          }
-          json[i.cxdxmc + "-" + i.jydfmc] +=
-            parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
-          allnum += parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
-        }
-        // console.log(json, allnum, json[nameList[0]] / allnum);
-
-        // 取json中最小的值
-        let minnumber = 0;
-        for (let i of nameList) {
-          if (minnumber == 0) {
-            minnumber = json[i];
-          } else {
-            if (json[i] < minnumber) {
-              minnumber = json[i];
+        if (tmp.data.name == "密切人") {
+          console.log(l.data())
+          // 设置为虚线
+          l.style("line-style", "dashed");
+        } else {
+          // console.log(tmp);
+          // console.log(tmp.data.relation);
+          let json = {};
+          let allnum = 0;
+          let nameList = [];
+          for (let i of tmp.data.relation) {
+            let ix = i.change ? -1 : 1;
+            if (parseFloat(i.jyje) * ix < 0) {
+              if (!json[i.jydfmc + "-" + i.cxdxmc]) {
+                json[i.jydfmc + "-" + i.cxdxmc] = 0;
+                nameList.push(i.jydfmc + "-" + i.cxdxmc);
+              }
+              json[i.jydfmc + "-" + i.cxdxmc] +=
+                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+              allnum +=
+                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+            } else {
+              if (!json[i.cxdxmc + "-" + i.jydfmc]) {
+                json[i.cxdxmc + "-" + i.jydfmc] = 0;
+                nameList.push(i.cxdxmc + "-" + i.jydfmc);
+              }
+              json[i.cxdxmc + "-" + i.jydfmc] +=
+                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+              allnum +=
+                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
             }
           }
-        }
+          // console.log(json, allnum, json[nameList[0]] / allnum);
 
-        if (nameList.length > 1) {
-          l.style("line-fill", "linear-gradient");
-          l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
-          l.style(
-            "line-gradient-stop-positions",
-            `0% ${(minnumber / allnum) * 100}% ${(minnumber / allnum) * 100}% 100%`
-          );
-        } else {
-          l.style("line-fill", "linear-gradient");
-          l.style("line-gradient-stop-colors", "#66b1ff #66b1ff");
-          l.style(
-            "line-gradient-stop-positions",
-            `0% ${(minnumber / allnum) * 100}% 100%`
-          );
+          // 取json中最小的值
+          let minnumber = 0;
+          for (let i of nameList) {
+            if (minnumber == 0) {
+              minnumber = json[i];
+            } else {
+              if (json[i] < minnumber) {
+                minnumber = json[i];
+              }
+            }
+          }
+
+          if (nameList.length > 1) {
+            l.style("line-fill", "linear-gradient");
+            l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
+            l.style(
+              "line-gradient-stop-positions",
+              `0% ${(minnumber / allnum) * 100}% ${(minnumber / allnum) * 100}% 100%`
+            );
+          } else {
+            l.style("line-fill", "linear-gradient");
+            l.style("line-gradient-stop-colors", "#66b1ff #66b1ff");
+            l.style(
+              "line-gradient-stop-positions",
+              `0% ${(minnumber / allnum) * 100}% 100%`
+            );
+          }
         }
 
         let mon = Number(tmp.data.name);
@@ -674,6 +697,7 @@ export default {
             break;
           }
         }
+        // isshow = true;
         if (isshow) {
           n.toggleClass("hide", false);
         } else {
