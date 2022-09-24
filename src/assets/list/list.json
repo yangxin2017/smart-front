@@ -1824,18 +1824,23 @@
                 "form": [
                     {
                         "type": "input",
-                        "label": "名称",
+                        "label": "本方账号",
+                        "prop": "bfzh"
+                    },
+                    {
+                        "type": "input",
+                        "label": "对方账号",
+                        "prop": "jydfzh"
+                    },
+                    {
+                        "type": "input",
+                        "label": "本方名称",
                         "prop": "mc"
                     },
                     {
                         "type": "input",
-                        "label": "证件号码",
-                        "prop": "zjhm"
-                    },
-                    {
-                        "type": "input",
-                        "label": "查询卡号",
-                        "prop": "cxkh"
+                        "label": "对方名称",
+                        "prop": "jydfmc"
                     },
                     {
                         "type": "select",
@@ -1866,18 +1871,18 @@
                     },
                     {
                         "type": "input",
-                        "label": "交易对方名称",
-                        "prop": "jydfmc"
+                        "label": "交易类型",
+                        "prop": "jylx"
                     },
                     {
                         "type": "input",
-                        "label": "交易对方卡号",
-                        "prop": "jydfkh"
+                        "label": "交易时间",
+                        "prop": "jysj"
                     },
                     {
                         "type": "input",
-                        "label": "交易对方证件号码",
-                        "prop": "jydfzjhm"
+                        "label": "反馈单位",
+                        "prop": "fkdw"
                     }
                 ],
                 "headerList": [

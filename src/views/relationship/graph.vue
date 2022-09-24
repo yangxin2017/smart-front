@@ -16,7 +16,12 @@
   </div>
 </template>
 <script>
-import { GetRelationshiop, GetGraphOne, SaveGraph, UpdateGraph } from "@/api/project";
+import {
+  GetRelationshiop,
+  GetGraphOne,
+  SaveGraph,
+  UpdateGraph,
+} from "@/api/project";
 import cytoscape from "cytoscape";
 import cxtmenu from "cytoscape-cxtmenu";
 import contextMenus from "cytoscape-context-menus";
@@ -99,8 +104,8 @@ export default {
       let id = projectId;
       let obj = await GetRelationshiop(id);
 
-
       let { nodes, lines } = gerFinalNodeAndLine(obj.data, this.minJE);
+      console.log(lines)
 
       // console.log("=====================");
       // console.log(nodes, lines);
@@ -113,7 +118,7 @@ export default {
         // console.log(lines[i].data.source);
         lines[i].classes = [];
         lines[i].data.label =
-          lines[i].data.data.name == "0"
+          lines[i].data.data.name == "密切人"
             ? "密切人"
             : "金额：" +
               (lines[i].data.data.name < 0
@@ -202,9 +207,11 @@ export default {
           nullIds.indexOf(l.data.source + ",") < 0 &&
           nullIds.indexOf(l.data.target + ",") < 0
         ) {
-          let n = Number(l.data.data.name);
-          n = parseInt(Math.abs(n) / 10000);
-          moneys.push(n);
+          if (l.data.data.name != "密切人") {
+            let n = Number(l.data.data.name);
+            n = parseInt(Math.abs(n) / 10000);
+            moneys.push(n);
+          }
         }
       }
       let min = 0; //Math.min(...moneys)
@@ -221,7 +228,9 @@ export default {
       }
       ms[max] = max + "万";
 
+
       this.marks = ms;
+
       setTimeout(() => {
         this.readySlider = true;
       }, 500);
@@ -325,7 +334,6 @@ export default {
       });
       let a = cy.edgeEditing("initialized");
       cy.style().update();
-      console.log(a);
     },
 
     refresh() {
@@ -543,11 +551,12 @@ export default {
       });
       cy.on("click", "edge", (ev) => {
         let data = ev.target.data();
-        this.$emit("chooseEvent", { type: "line", data: data.data });
+        if (data.label != "密切人") {
+          this.$emit("chooseEvent", { type: "line", data: data.data });
+        }
       });
       // 右键点击edge触发
       cy.on("cxttap", "edge", (ev) => {
-        console.log(ev);
         // 修改classes为segments
         let data = ev.target.data();
         let classes = ev.target.classes();
@@ -561,9 +570,7 @@ export default {
         if (!isSegments) {
           ev.target.classes("segments");
         } else {
-          console.log(classes);
           let index = classes[0].split("-")[1] ? classes[0].split("-")[1] : 0;
-          console.log(index);
           if (index == 5) {
             // 移除classes
             ev.target.classes("");
@@ -583,8 +590,19 @@ export default {
       let edges = window.CY.edges();
       let minMoney = ev;
 
+      let mqrid = [];
+
       let showLines = [];
       for (let l of edges) {
+        if (l.data().label == "密切人") {
+          if (mqrid.indexOf(l.data().source) == -1) {
+            mqrid.push(l.data().source);
+          }
+          if (mqrid.indexOf(l.data().target) == -1) {
+            mqrid.push(l.data().target);
+          }
+        }
+
         let tmp = l.data();
 
         let num = tmp.data.name;
@@ -607,9 +625,18 @@ export default {
         }
 
         if (tmp.data.name == "密切人") {
-          console.log(l.data())
           // 设置为虚线
           l.style("line-style", "dashed");
+          l.style("width", 2);
+          // 去掉箭头
+          l.style("source-arrow-shape", "none");
+
+          // 样式改为曲线
+          l.style("curve-style", "unbundled-bezier");
+          l.style("control-point-step-size", 50);
+          l.style("control-point-weights", 0.5);
+
+          
         } else {
           // console.log(tmp);
           // console.log(tmp.data.relation);
@@ -624,18 +651,26 @@ export default {
                 nameList.push(i.jydfmc + "-" + i.cxdxmc);
               }
               json[i.jydfmc + "-" + i.cxdxmc] +=
-                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0
+                  ? parseFloat(i.jyje) * -1
+                  : parseFloat(i.jyje);
               allnum +=
-                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0
+                  ? parseFloat(i.jyje) * -1
+                  : parseFloat(i.jyje);
             } else {
               if (!json[i.cxdxmc + "-" + i.jydfmc]) {
                 json[i.cxdxmc + "-" + i.jydfmc] = 0;
                 nameList.push(i.cxdxmc + "-" + i.jydfmc);
               }
               json[i.cxdxmc + "-" + i.jydfmc] +=
-                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0
+                  ? parseFloat(i.jyje) * -1
+                  : parseFloat(i.jyje);
               allnum +=
-                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0
+                  ? parseFloat(i.jyje) * -1
+                  : parseFloat(i.jyje);
             }
           }
           // console.log(json, allnum, json[nameList[0]] / allnum);
@@ -657,7 +692,9 @@ export default {
             l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
             l.style(
               "line-gradient-stop-positions",
-              `0% ${(minnumber / allnum) * 100}% ${(minnumber / allnum) * 100}% 100%`
+              `0% ${(minnumber / allnum) * 100}% ${
+                (minnumber / allnum) * 100
+              }% 100%`
             );
           } else {
             l.style("line-fill", "linear-gradient");
@@ -669,13 +706,24 @@ export default {
           }
         }
 
-        let mon = Number(tmp.data.name);
-        mon = parseInt(Math.abs(mon) / 10000);
-        if (mon >= minMoney) {
+        if (tmp.data.name == "密切人") {
           l.toggleClass("hide", false);
-          showLines.push({ source: l.source().id(), target: l.target().id() });
+          showLines.push({
+            source: l.source().id(),
+            target: l.target().id(),
+          });
         } else {
-          l.toggleClass("hide", true);
+          let mon = Number(tmp.data.name);
+          mon = parseInt(Math.abs(mon) / 10000);
+          if (mon >= minMoney) {
+            l.toggleClass("hide", false);
+            showLines.push({
+              source: l.source().id(),
+              target: l.target().id(),
+            });
+          } else {
+            l.toggleClass("hide", true);
+          }
         }
 
         // // 获取起始点和终点的坐标
@@ -705,15 +753,22 @@ export default {
         }
 
         if (n.data().data.nodeGroup != null) {
-          console.log(this.getNodeBorderColor(n.data().data.nodeGroup));
-          n.style("border-color", this.getNodeBorderColor(n.data().data.nodeGroup));
+          n.style(
+            "border-color",
+            this.getNodeBorderColor(n.data().data.nodeGroup)
+          );
           n.style("border-width", 5);
-          n.style("text-outline-color", this.getNodeBorderColor(n.data().data.nodeGroup));
+          n.style(
+            "text-outline-color",
+            this.getNodeBorderColor(n.data().data.nodeGroup)
+          );
           n.style("text-outline-width", 2);
+        }
+        if (mqrid.indexOf(nid) != -1) {
+          n.toggleClass("hide", false);
         }
       }
 
-      console.log(showLines);
     },
     getNodeBorderColor(id) {
       if (!this.nodeBorderColor[id]) {

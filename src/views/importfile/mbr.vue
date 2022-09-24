@@ -1,7 +1,9 @@
 <template>
   <div class="mbr-class">
     <div class="top-row">
-      <el-button type="primary" size="mini" @click="weihu()">导入数据</el-button>
+      <el-button type="primary" size="mini" @click="weihu()"
+        >导入数据</el-button
+      >
       <el-select
         v-model="allSelect"
         filterable
@@ -33,14 +35,22 @@
         <el-table-column prop="sfzh" label="身份证号"> </el-table-column>
         <el-table-column label="单位">
           <template slot-scope="scope">
-            <div v-for="item in scope.row.gs" :key="item.qyjgmc" style="height: 20px">
+            <div
+              v-for="item in scope.row.gs"
+              :key="item.qyjgmc"
+              style="height: 20px"
+            >
               {{ item.qyjgmc }}
             </div>
           </template>
         </el-table-column>
         <el-table-column label="职务">
           <template slot-scope="scope">
-            <div v-for="item in scope.row.gs" :key="item.zw" style="height: 20px">
+            <div
+              v-for="item in scope.row.gs"
+              :key="item.zw"
+              style="height: 20px"
+            >
               {{ item.zw }}
             </div>
           </template>
@@ -327,7 +337,7 @@ export default {
     },
     weihu() {
       let query = {
-        id: this.projectId,
+        id: this.$route.query.id,
       };
       this.$router.push({ path: "/importfile", query: query });
     },
@@ -348,7 +358,9 @@ export default {
     },
     getAge(row) {
       let birth = row.csrq;
-      return birth ? new Date().getFullYear() - new Date(birth).getFullYear() : "未知";
+      return birth
+        ? new Date().getFullYear() - new Date(birth).getFullYear()
+        : "未知";
     },
     getDydk(row) {
       let zqse = 0;

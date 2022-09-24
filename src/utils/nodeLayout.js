@@ -187,12 +187,12 @@ export function gerFinalNodeAndLine(graph, minJE) {
 function getLayoutLines(realLines, minJE) {
   let lines = []
   for (let l of realLines) {
-    if (l.name == "0") {
+    if (l.name == "密切人") {
       lines.push({
         data: {
           source: l.sid + '',
           target: l.eid + '',
-          label: `0`,
+          label: `密切人`,
           data: l
         }
       })
@@ -229,67 +229,72 @@ function getLayoutNodes(realNodes) {
 
 function filterLine(graph) {
   let lines = graph.lines
+  console.log(lines)
   let res = []
   ///////////
   let mergeResult = (arr, l) => {
     let ish = false
     for (let a of arr) {
-      if (a.sid == l.sid && a.eid == l.eid) {
-        // let m1 = Number(a.name)
-        // let m2 = Number(l.name)
-        // a.name = m1 + m2
-        a.relation = mergeRelation(a.relation, l.relation)
-        ish = true
+      if (a.name != '密切人' && l.name != '密切人') {
+        if (a.sid == l.sid && a.eid == l.eid) {
+          // let m1 = Number(a.name)
+          // let m2 = Number(l.name)
+          // a.name = m1 + m2
+          a.relation = mergeRelation(a.relation, l.relation)
+          ish = true
 
-        let num = 0.0
-        for (let ar of a.relation) {
-          num += Number(ar.jyje)
-        }
-        if ((Number(a.name) > 0 && num < 0) || (Number(a.name) < 0 && num > 0)) {
-          let sidtmp = a.sid
-          a.sid = a.eid
-          a.eid = sidtmp
-        }
-        a.name = num
-        break
-      } else if (a.sid == l.eid && a.eid == l.sid) {
-        // console.log('======' + l.sid + "---------" + a.eid)
-        // console.log(l.relation)
-        // console.log(a.relation)
-        let odir = 1
-        for (let al of a.relation) {
-          let ye = Number(al.jyje)
-          odir = ye > 0 ? 1 : -1
-        }
-        for (let al of l.relation) {
-          // 反向变符号
-          let ye = Number(al.jyje)
-          if (odir == 1 && ye > 0) {
-            al.jyje = -ye
-            al.change = true
+          let num = 0.0
+          for (let ar of a.relation) {
+            num += Number(ar.jyje)
           }
-        }
+          if ((Number(a.name) > 0 && num < 0) || (Number(a.name) < 0 && num > 0)) {
+            let sidtmp = a.sid
+            a.sid = a.eid
+            a.eid = sidtmp
+          }
+          a.name = num
+          break
+        } else if (a.sid == l.eid && a.eid == l.sid) {
+          // console.log('======' + l.sid + "---------" + a.eid)
+          // console.log(l.relation)
+          // console.log(a.relation)
+          let odir = 1
+          for (let al of a.relation) {
+            let ye = Number(al.jyje)
+            odir = ye > 0 ? 1 : -1
+          }
+          for (let al of l.relation) {
+            // 反向变符号
+            let ye = Number(al.jyje)
+            if (odir == 1 && ye > 0) {
+              al.jyje = -ye
+              al.change = true
+            }
+          }
 
-        a.relation = mergeRelation(a.relation, l.relation)
-        ish = true
+          a.relation = mergeRelation(a.relation, l.relation)
+          ish = true
 
-        let num = 0.0
-        for (let ar of a.relation) {
-          num += Number(ar.jyje)
-        }
+          let num = 0.0
+          for (let ar of a.relation) {
+            num += Number(ar.jyje)
+          }
 
-        if ((Number(a.name) > 0 && num < 0) || (Number(a.name) < 0 && num > 0)) {
-          let sidtmp = a.sid
-          a.sid = a.eid
-          a.eid = sidtmp
+          if ((Number(a.name) > 0 && num < 0) || (Number(a.name) < 0 && num > 0)) {
+            let sidtmp = a.sid
+            a.sid = a.eid
+            a.eid = sidtmp
+          }
+          a.name = num
+          break
         }
-        a.name = num
-        break
       }
+
     }
     if (!ish) {
       arr.push(l)
     }
+    console.log(arr)
     return arr
   }
   let mergeRelation = (sarr, tarr) => {
@@ -375,7 +380,7 @@ function getPrepDataObj(nodes, lines, minJE) {
           }
         }
       }
-      if (l.name == '0') {
+      if (l.name == '密切人') {
         if (!_ishLink(l, tmplinks)) {
           if (l.sid == m.data.id) {
             let cnode = _getNodeById(nodes, l.eid);
