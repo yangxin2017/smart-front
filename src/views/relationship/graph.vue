@@ -105,7 +105,6 @@ export default {
       let obj = await GetRelationshiop(id);
 
       let { nodes, lines } = gerFinalNodeAndLine(obj.data, this.minJE);
-      console.log(lines)
 
       // console.log("=====================");
       // console.log(nodes, lines);

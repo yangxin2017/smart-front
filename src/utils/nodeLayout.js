@@ -180,6 +180,7 @@ export function gerFinalNodeAndLine(graph, minJE) {
   let realNodes = getLayout(mbrarr)
 
   nodes = getLayoutNodes(realNodes)
+
   lines = getLayoutLines(lines, minJE)
   return { nodes, lines }
 }
@@ -294,7 +295,6 @@ function filterLine(graph) {
     if (!ish) {
       arr.push(l)
     }
-    console.log(arr)
     return arr
   }
   let mergeRelation = (sarr, tarr) => {
