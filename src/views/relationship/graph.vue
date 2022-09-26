@@ -395,7 +395,7 @@ export default {
             selector: "edge",
             style: {
               width: 6,
-              "line-color": "#66b1ff",
+              // "line-color": "#66b1ff",
               "target-arrow-color": "#ccc",
               "target-arrow-shape": "triangle",
               "curve-style": "bezier",
@@ -404,6 +404,9 @@ export default {
               color: "#fff",
               "font-size": 20,
               "source-text-offset": 1000,
+              "line-fill": "linear-gradient",
+              "line-gradient-stop-colors": "#ff0000 #ff0000 #00ff00 #00ff00",
+              "line-gradient-stop-positions": "0% 50% 51% 100%"
             },
           },
 
