@@ -4,7 +4,7 @@
     <el-slider
       v-if="readySlider"
       class="slider-bar"
-      height="500px"
+      height="800px"
       v-model="sliderVal"
       :min="min"
       :max="max"
@@ -215,12 +215,20 @@ export default {
       this.min = min;
       this.max = max;
 
+      console.log(max);
+
       let count = 10;
       this.stepNum = (max - min) / count;
       let ms = {};
-      for (let i = 0; i < 10; i++) {
-        let inx = parseInt((i * 10 * max) / 100) + min;
-        ms[inx] = (i * 10 * max) / 100 + min + "万";
+      // for (let i = 0; i < 10; i++) {
+      //   let inx = parseInt((i * 10 * max) / 100) + min;
+      //   ms[inx] = (i * 10 * max) / 100 + min + "万";
+      // }
+      // ms[max] = max + "万";
+
+      for (let i = 0; i < count; i++) {
+        let number = parseInt(this.stepNum * i);
+        ms[number] = this.stepNum * i + "万";
       }
       ms[max] = max + "万";
 
