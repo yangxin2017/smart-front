@@ -28,6 +28,7 @@
                 :before-remove="beforeRemove"
                 :on-success="uploadEnd"
                 :on-error="uploadEnd"
+                :on-progress="handleProgress"
                 multiple
                 :on-exceed="handleExceed"
                 :file-list="fileList[row.title]"
@@ -111,22 +112,34 @@ export default {
       projectId: null,
 
       rowList: {},
+
+      loading: false,
     };
   },
   mounted() {
     this.upfileList = require("@/assets/list/list.json");
-    this.projectId = this.$route.query.id;
-    let id = this.getUrlParam("id");
-    if (this.projectId != id) {
-      this.projectId = id;
-    }
+    // this.projectId = this.$route.query.id;
+    // let id = this.getUrlParam("id");
+    // if (this.projectId != id) {
+    //   this.projectId = id;
+    // }
+    this.projectId = this.getUrlParam("id");
   },
   methods: {
+    handleProgress() {
+      console.log(1);
+      this.loading = this.$loading({
+        lock: true,
+        text: "数据正在导入，请稍等...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+    },
     uploadEnd(res) {
       this.fileList = {};
       // this.$refs.ref_upload.clearFiles();
       if (res.msg != "") {
-        this.$message.error(res.msg);
+        this.$message.error({ message: res.msg, showClose: true });
         // this.$notify({
         //   title: "错误",
         //   dangerouslyUseHTMLString: true,
@@ -134,8 +147,10 @@ export default {
         //   type: "error",
         //   duration: 0,
         // });
+        this.loading.close();
       } else {
-        this.$message.success("导入成功！");
+        this.$message.success({ message: "导入成功！", showClose: true });
+        this.loading.close();
       }
     },
     getUrlParam(name) {
@@ -154,7 +169,7 @@ export default {
       this.dialog = 1;
     },
     allDelect(item) {
-      console.log(item)
+      console.log(item);
       // 气泡确认，点击确定后执行删除操作
       this.$confirm("此操作将永久清空该数据, 是否继续?", "提示", {
         confirmButtonText: "确定",

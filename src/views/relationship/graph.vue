@@ -17,12 +17,7 @@
   </div>
 </template>
 <script>
-import {
-  GetRelationshiop,
-  GetGraphOne,
-  SaveGraph,
-  UpdateGraph,
-} from "@/api/project";
+import { GetRelationshiop, GetGraphOne, SaveGraph, UpdateGraph } from "@/api/project";
 import cytoscape from "cytoscape";
 import cxtmenu from "cytoscape-cxtmenu";
 import contextMenus from "cytoscape-context-menus";
@@ -216,7 +211,7 @@ export default {
       }
       let min = 0; //Math.min(...moneys)
       let max = Math.max(...moneys);
-      max = Math.max(max, 100)
+      max = Math.max(max, 100);
       this.min = min;
       this.max = max;
 
@@ -229,9 +224,8 @@ export default {
       }
       ms[max] = max + "万";
 
-
       this.marks = ms;
-      console.log(ms)
+      console.log(ms);
 
       setTimeout(() => {
         this.readySlider = true;
@@ -421,8 +415,6 @@ export default {
               "font-size": 20,
               "source-text-offset": 1000,
               "line-fill": "linear-gradient",
-              "line-gradient-stop-colors": "#ff0000 #ff0000 #00ff00 #00ff00",
-              "line-gradient-stop-positions": "0% 50% 51% 100%"
             },
           },
 
@@ -561,29 +553,29 @@ export default {
         }
       });
       // 右键点击edge触发
-      cy.on("cxttap", "edge", (ev) => {
-        // 修改classes为segments
-        let data = ev.target.data();
-        let classes = ev.target.classes();
-        // 遍历classes每个元素，如果包含segments
-        let isSegments = false;
-        classes.forEach((item) => {
-          if (item.indexOf("segments") > -1) {
-            isSegments = true;
-          }
-        });
-        if (!isSegments) {
-          ev.target.classes("segments");
-        } else {
-          let index = classes[0].split("-")[1] ? classes[0].split("-")[1] : 0;
-          if (index == 5) {
-            // 移除classes
-            ev.target.classes("");
-          } else {
-            ev.target.classes("segments-" + (parseInt(index) + 1));
-          }
-        }
-      });
+      // cy.on("cxttap", "edge", (ev) => {
+      //   // 修改classes为segments
+      //   let data = ev.target.data();
+      //   let classes = ev.target.classes();
+      //   // 遍历classes每个元素，如果包含segments
+      //   let isSegments = false;
+      //   classes.forEach((item) => {
+      //     if (item.indexOf("segments") > -1) {
+      //       isSegments = true;
+      //     }
+      //   });
+      //   if (!isSegments) {
+      //     ev.target.classes("segments");
+      //   } else {
+      //     let index = classes[0].split("-")[1] ? classes[0].split("-")[1] : 0;
+      //     if (index == 5) {
+      //       // 移除classes
+      //       ev.target.classes("");
+      //     } else {
+      //       ev.target.classes("segments-" + (parseInt(index) + 1));
+      //     }
+      //   }
+      // });
       // this.initCxtMenu(cy)
       // this.initEditLine(cy)
 
@@ -640,8 +632,6 @@ export default {
           l.style("curve-style", "unbundled-bezier");
           l.style("control-point-step-size", 50);
           l.style("control-point-weights", 0.5);
-
-          
         } else {
           console.log(tmp);
           // console.log(tmp.data.relation);
@@ -656,26 +646,18 @@ export default {
                 nameList.push(i.jydfmc + "-" + i.cxdxmc);
               }
               json[i.jydfmc + "-" + i.cxdxmc] +=
-                parseFloat(i.jyje) < 0
-                  ? parseFloat(i.jyje) * -1
-                  : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
               allnum +=
-                parseFloat(i.jyje) < 0
-                  ? parseFloat(i.jyje) * -1
-                  : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
             } else {
               if (!json[i.cxdxmc + "-" + i.jydfmc]) {
                 json[i.cxdxmc + "-" + i.jydfmc] = 0;
                 nameList.push(i.cxdxmc + "-" + i.jydfmc);
               }
               json[i.cxdxmc + "-" + i.jydfmc] +=
-                parseFloat(i.jyje) < 0
-                  ? parseFloat(i.jyje) * -1
-                  : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
               allnum +=
-                parseFloat(i.jyje) < 0
-                  ? parseFloat(i.jyje) * -1
-                  : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
             }
           }
           // console.log(json, allnum, json[nameList[0]] / allnum);
@@ -697,9 +679,7 @@ export default {
             l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
             l.style(
               "line-gradient-stop-positions",
-              `0% ${(minnumber / allnum) * 100}% ${
-                (minnumber / allnum) * 100
-              }% 100%`
+              `0% ${(minnumber / allnum) * 100}% ${(minnumber / allnum) * 100}% 100%`
             );
           } else {
             l.style("line-fill", "linear-gradient");
@@ -758,22 +738,15 @@ export default {
         }
 
         if (n.data().data.nodeGroup != null) {
-          n.style(
-            "border-color",
-            this.getNodeBorderColor(n.data().data.nodeGroup)
-          );
+          n.style("border-color", this.getNodeBorderColor(n.data().data.nodeGroup));
           n.style("border-width", 5);
-          n.style(
-            "text-outline-color",
-            this.getNodeBorderColor(n.data().data.nodeGroup)
-          );
+          n.style("text-outline-color", this.getNodeBorderColor(n.data().data.nodeGroup));
           n.style("text-outline-width", 2);
         }
         if (mqrid.indexOf(nid) != -1) {
           n.toggleClass("hide", false);
         }
       }
-
     },
     getNodeBorderColor(id) {
       if (!this.nodeBorderColor[id]) {

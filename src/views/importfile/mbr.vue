@@ -308,11 +308,12 @@ export default {
     };
   },
   mounted() {
-    this.projectId = this.$route.query.id;
-    let id = this.getUrlParam("id");
-    if (this.projectId != id) {
-      this.projectId = id;
-    }
+    // this.projectId = this.$route.query.id;
+    // let id = this.getUrlParam("id");
+    // if (this.projectId != id) {
+    //   this.projectId = id;
+    // }
+    this.projectId = this.getUrlParam("id");
     this.init();
   },
   methods: {
