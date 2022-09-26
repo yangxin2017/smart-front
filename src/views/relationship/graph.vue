@@ -17,7 +17,12 @@
   </div>
 </template>
 <script>
-import { GetRelationshiop, GetGraphOne, SaveGraph, UpdateGraph } from "@/api/project";
+import {
+  GetRelationshiop,
+  GetGraphOne,
+  SaveGraph,
+  UpdateGraph,
+} from "@/api/project";
 import cytoscape from "cytoscape";
 import cxtmenu from "cytoscape-cxtmenu";
 import contextMenus from "cytoscape-context-menus";
@@ -100,7 +105,33 @@ export default {
       let id = projectId;
       let obj = await GetRelationshiop(id);
 
+      // let objData = JSON.parse(JSON.stringify(obj.data));
+      // let objLines = objData.lines;
+      // console.log(objLines.length);
+      // let numxxx = 0;
+      // let newLines = [];
+      // for (let i of objLines) {
+      //   console.log(numxxx++)
+      //   let newi = JSON.parse(JSON.stringify(i));
+      //   newi.relation = [];
+      //   for (let ax of i.relation) {
+      //     let isin = false;
+      //     for (let bx of newi.relation) {
+      //       if (JSON.stringify(bx) == JSON.stringify(ax)) {
+      //         isin = true;
+      //       }
+      //     }
+
+      //     if (!isin) {
+      //       newi.relation.push(ax);
+      //     }
+      //   }
+      //   newLines.push(newi);
+      // }
+      // objData.lines = objLines;
+
       let { nodes, lines } = gerFinalNodeAndLine(obj.data, this.minJE);
+      // let { nodes, lines } = gerFinalNodeAndLine(objData, this.minJE);
 
       // console.log("=====================");
       // console.log(nodes, lines);
@@ -228,12 +259,11 @@ export default {
 
       for (let i = 0; i < count; i++) {
         let number = parseInt(this.stepNum * i);
-        ms[number] = this.stepNum * i + "万";
+        ms[number] = parseInt(this.stepNum * i) + "万";
       }
       ms[max] = max + "万";
 
       this.marks = ms;
-      console.log(ms);
 
       setTimeout(() => {
         this.readySlider = true;
@@ -641,7 +671,6 @@ export default {
           l.style("control-point-step-size", 50);
           l.style("control-point-weights", 0.5);
         } else {
-          console.log(tmp);
           // console.log(tmp.data.relation);
           let json = {};
           let allnum = 0;
@@ -654,18 +683,26 @@ export default {
                 nameList.push(i.jydfmc + "-" + i.cxdxmc);
               }
               json[i.jydfmc + "-" + i.cxdxmc] +=
-                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0
+                  ? parseFloat(i.jyje) * -1
+                  : parseFloat(i.jyje);
               allnum +=
-                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0
+                  ? parseFloat(i.jyje) * -1
+                  : parseFloat(i.jyje);
             } else {
               if (!json[i.cxdxmc + "-" + i.jydfmc]) {
                 json[i.cxdxmc + "-" + i.jydfmc] = 0;
                 nameList.push(i.cxdxmc + "-" + i.jydfmc);
               }
               json[i.cxdxmc + "-" + i.jydfmc] +=
-                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0
+                  ? parseFloat(i.jyje) * -1
+                  : parseFloat(i.jyje);
               allnum +=
-                parseFloat(i.jyje) < 0 ? parseFloat(i.jyje) * -1 : parseFloat(i.jyje);
+                parseFloat(i.jyje) < 0
+                  ? parseFloat(i.jyje) * -1
+                  : parseFloat(i.jyje);
             }
           }
           // console.log(json, allnum, json[nameList[0]] / allnum);
@@ -687,7 +724,9 @@ export default {
             l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
             l.style(
               "line-gradient-stop-positions",
-              `0% ${(minnumber / allnum) * 100}% ${(minnumber / allnum) * 100}% 100%`
+              `0% ${(minnumber / allnum) * 100}% ${
+                (minnumber / allnum) * 100
+              }% 100%`
             );
           } else {
             l.style("line-fill", "linear-gradient");
@@ -746,9 +785,15 @@ export default {
         }
 
         if (n.data().data.nodeGroup != null) {
-          n.style("border-color", this.getNodeBorderColor(n.data().data.nodeGroup));
+          n.style(
+            "border-color",
+            this.getNodeBorderColor(n.data().data.nodeGroup)
+          );
           n.style("border-width", 5);
-          n.style("text-outline-color", this.getNodeBorderColor(n.data().data.nodeGroup));
+          n.style(
+            "text-outline-color",
+            this.getNodeBorderColor(n.data().data.nodeGroup)
+          );
           n.style("text-outline-width", 2);
         }
         if (mqrid.indexOf(nid) != -1) {
