@@ -54,6 +54,11 @@ export const constantRoutes = [
     component: () => import('@/views/importfile/index')
   },
   {
+    name: 'mbrxx',
+    path: '/mbrxx',
+    component: () => import('@/views/importfile/mbr')
+  },
+  {
     name: 'relationship',
     path: '/relationship',
     component: () => import('@/views/relationship/index')

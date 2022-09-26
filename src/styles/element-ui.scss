@@ -47,3 +47,49 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+.card-class-now,
+.card-1-2 {
+
+  .el-table th,
+  .el-table tr,
+  .el-table {
+    background-color: transparent !important;
+    color: #fff !important;
+  }
+
+  .el-table td,
+  .el-table th.is-leaf {
+    border: none !important;
+  }
+
+  .el-table::before {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+  }
+
+  // 去除鼠标移入高亮
+  .el-table tbody tr:hover>td {
+    background-color: transparent !important;
+  }
+
+
+  /*里面的代码可以根据自己需求去进行更改*/
+  /* 设置滚动条的样式 */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  /* 滚动槽 */
+  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px hsla(195, 96%, 28%, 0);
+  }
+
+  /* 滚动条滑块 */
+  ::-webkit-scrollbar-thumb {
+    background: hsla(195, 96%, 28%, 1);
+    -webkit-box-shadow: inset 0 0 6px hsla(195, 96%, 28%, 1);
+  }
+}

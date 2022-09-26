@@ -1,8 +1,16 @@
 <template>
   <div class="table-public">
-    <el-row style="width: 100%; height: 40px" v-if="tableName == '公安数据-亲属关系'">
+    <el-row
+      style="width: 100%; height: 40px"
+      v-if="tableName == '公安数据-亲属关系'"
+    >
       <el-col :span="2">
-        <el-select v-model="form.id1" placeholder="请选择" size="mini">
+        <el-select
+          v-model="form.id1"
+          placeholder="请选择"
+          size="mini"
+          filterable
+        >
           <el-option
             v-for="item in nameList"
             :key="'id1_' + item.id"
@@ -14,12 +22,22 @@
       </el-col>
       <el-col :span="2">
         <el-select v-model="form.gx" placeholder="请选择" size="mini">
-          <el-option v-for="item in relationList" :key="item" :label="item" :value="item">
+          <el-option
+            v-for="item in relationList"
+            :key="item"
+            :label="item"
+            :value="item"
+          >
           </el-option>
         </el-select>
       </el-col>
       <el-col :span="2">
-        <el-select v-model="form.id2" placeholder="请选择" size="mini">
+        <el-select
+          v-model="form.id2"
+          placeholder="请选择"
+          size="mini"
+          filterable
+        >
           <el-option
             v-for="item in nameList"
             :key="'id2_' + item.id"
@@ -30,7 +48,9 @@
         </el-select>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" size="mini" @click="addQsgxClick">新增</el-button>
+        <el-button type="primary" size="mini" @click="addQsgxClick"
+          >新增</el-button
+        >
       </el-col>
     </el-row>
     <div class="search-class" v-if="formJson.option.length > 0">
@@ -59,7 +79,9 @@
           </el-option>
         </el-select>
       </div>
-      <el-button type="primary" size="mini" @click="init()">查询</el-button>
+      <el-button type="primary" size="mini" @click="initsearch()"
+        >查询</el-button
+      >
     </div>
     <el-table
       :data="tableList"
@@ -68,7 +90,7 @@
         tableName == '公安数据-亲属关系'
           ? 'calc(100% - 72px)'
           : tableName == '银行数据' || tableName == '公安数据-人员电子档案'
-          ? 'calc(100% - 82px)'
+          ? 'calc(100% - 95px)'
           : 'calc(100% - 32px)'
       "
     >
@@ -114,7 +136,11 @@
               <span v-if="setIndex != scope.$index || !item.modifiable">
                 {{ scope.row[item.prop] }}
               </span>
-              <el-input v-else v-model="setRowList[item.prop]" size="mini"></el-input>
+              <el-input
+                v-else
+                v-model="setRowList[item.prop]"
+                size="mini"
+              ></el-input>
             </template>
           </el-table-column>
         </template>
@@ -122,7 +148,6 @@
       <template v-if="!rowList.detailed">
         <template v-for="(item, index) in headerList">
           <el-table-column
-            :key="index"
             :label="item.label"
             :prop="item.prop"
             min-width="200"
@@ -131,7 +156,11 @@
               <span v-if="setIndex != scope.$index || !item.modifiable">
                 {{ scope.row[item.prop] }}
               </span>
-              <el-input v-else v-model="setRowList[item.prop]" size="mini"></el-input>
+              <el-input
+                v-else
+                v-model="setRowList[item.prop]"
+                size="mini"
+              ></el-input>
             </template>
           </el-table-column>
         </template>
@@ -177,7 +206,9 @@
         v-if="tableName == '公安数据-人员电子档案'"
       >
         <template slot-scope="scope">
-          <el-checkbox v-model="scope.row.sfMbr" @change="handleChangeMBR(scope.row)"
+          <el-checkbox
+            v-model="scope.row.sfMbr"
+            @change="handleChangeMBR(scope.row)"
             >设为目标人</el-checkbox
           >
         </template>
@@ -247,7 +278,10 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="companySaveRow(scope.row, scope.$index)">
+            <el-button
+              type="text"
+              @click="companySaveRow(scope.row, scope.$index)"
+            >
               保存
             </el-button>
             <el-button
@@ -257,7 +291,10 @@
             >
               修改
             </el-button>
-            <el-button type="text" @click="companyDeleteRow(scope.row, scope.$index)">
+            <el-button
+              type="text"
+              @click="companyDeleteRow(scope.row, scope.$index)"
+            >
               删除
             </el-button>
           </template>
@@ -279,10 +316,10 @@
     >
       <el-row class="dialog-row">
         <template v-for="(item, index) in headerList">
-          <el-col :key="index + 'col'" :span="4" style="margin: 5px 0" align="right"
+          <el-col :span="4" style="margin: 5px 0" align="right"
             >{{ item.label }}：</el-col
           >
-          <el-col :key="index + 'colinput'" :span="8" style="margin: 5px 0">
+          <el-col :span="8" style="margin: 5px 0">
             <el-input
               v-if="item.modifiable"
               v-model="dialogList[item.prop]"
@@ -311,6 +348,7 @@ import {
   getRyDzdaFilters,
   getDataTypeRelation,
   addQsgx,
+  getRydzdaList,
 } from "@/api/public";
 import { UpdateMBR } from "@/api/project";
 export default {
@@ -396,6 +434,10 @@ export default {
     };
   },
   methods: {
+    initsearch() {
+      this.$set(this.pageList, "pageIndex", 1);
+      this.init();
+    },
     saveRowDialog() {
       setList(this.rowList.setUrl, this.dialogList).then((res) => {
         this.init();
@@ -460,10 +502,13 @@ export default {
         this.pageList.total = res.data.total;
       });
       if (this.tableName == "公安数据-亲属关系") {
-        getRyDzdaFilters().then((res) => {
-          // this.nameList = res.data.records;
-          this.nameList = res.data;
+        getRydzdaList({ projectId: id,pageIndex:1,pageSize:100000*1000 }).then((res) => {
+          this.nameList = res.data.records;
         });
+        // getRyDzdaFilters().then((res) => {
+        //   // this.nameList = res.data.records;
+        //   this.nameList = res.data;
+        // });
         getDataTypeRelation().then((res) => {
           this.relationList = res.data;
         });
@@ -518,7 +563,8 @@ export default {
       this.companyDialog.tableList[index] = {
         ...this.companyDialog.setRow,
       };
-      this.tableList[this.companyDialog.index].company = this.companyDialog.tableList;
+      this.tableList[this.companyDialog.index].company =
+        this.companyDialog.tableList;
       this.companyDialog.setIndex = -1;
       this.companyDialog.setRow = {};
     },
@@ -574,10 +620,12 @@ export default {
   width: 100%;
   height: 100%;
   .search-class {
+    width: calc(100% - 100px);
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    height: 50px;
+    flex-wrap: wrap;
+    height: 70px;
     .col-class {
       margin-right: 10px;
     }
