@@ -73,7 +73,7 @@ export default {
         this.isUpdate = true;
       } else {
         this.dataArr = [];
-        this.sliderVal = 10;
+        this.sliderVal = 0;
         this.isUpdate = false;
       }
       this.initInfo();
@@ -216,6 +216,7 @@ export default {
       }
       let min = 0; //Math.min(...moneys)
       let max = Math.max(...moneys);
+      max = Math.max(max, 100)
       this.min = min;
       this.max = max;
 
@@ -419,6 +420,9 @@ export default {
               color: "#fff",
               "font-size": 20,
               "source-text-offset": 1000,
+              "line-fill": "linear-gradient",
+              "line-gradient-stop-colors": "#ff0000 #ff0000 #00ff00 #00ff00",
+              "line-gradient-stop-positions": "0% 50% 51% 100%"
             },
           },
 
