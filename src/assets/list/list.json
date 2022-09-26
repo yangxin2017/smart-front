@@ -2972,7 +2972,7 @@
                 "downloadUrl": "/ai/gsSwjnxx/export",
                 "action": "/ai/gsSwjnxx/upload",
                 "remove": "/gsSwjnxx/remove",
-                "bid": -1,
+                "bid": 9,
                 "template": "/downFile/国税-税务缴纳信息.xlsx",
                 "headerList": [
                     {
