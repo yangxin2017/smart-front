@@ -4,11 +4,12 @@
     <el-slider
       v-if="readySlider"
       class="slider-bar"
-      height="300px"
+      height="500px"
       v-model="sliderVal"
       :min="min"
       :max="max"
       :marks="marks"
+      :step="1"
       vertical
       @change="handleChange"
     >
@@ -218,17 +219,18 @@ export default {
       this.min = min;
       this.max = max;
 
-      let count = 5;
+      let count = 10;
       this.stepNum = (max - min) / count;
       let ms = {};
-      for (let i = 0; i < 5; i++) {
-        let inx = parseInt((i * 20 * max) / 100) + min;
-        ms[inx] = (i * 20 * max) / 100 + min + "万";
+      for (let i = 0; i < 10; i++) {
+        let inx = parseInt((i * 10 * max) / 100) + min;
+        ms[inx] = (i * 10 * max) / 100 + min + "万";
       }
       ms[max] = max + "万";
 
 
       this.marks = ms;
+      console.log(ms)
 
       setTimeout(() => {
         this.readySlider = true;
@@ -637,7 +639,7 @@ export default {
 
           
         } else {
-          // console.log(tmp);
+          console.log(tmp);
           // console.log(tmp.data.relation);
           let json = {};
           let allnum = 0;
@@ -795,7 +797,7 @@ export default {
 }
 .slider-bar {
   position: absolute !important;
-  height: 300px;
+  // height: 300px;
   width: 100px;
   right: 21px;
   bottom: 90px;

@@ -12,7 +12,7 @@
       <el-button type="primary" size="mini" @click="createClick"> 新建 </el-button>
     </div>
 
-    <el-table :data="tableList" width="100%" height="calc(100% - 40px)">
+    <el-table :data="tableList" width="100%" height="calc(100% - 70px)">
       <el-table-column label="项目名称" prop="name">
         <template slot-scope="scope">
           {{ scope.row.name }}
@@ -53,6 +53,19 @@
       </el-table-column>
     </el-table>
 
+    <div class="page-class">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="1"
+        :page-sizes="pageList.pageSizes"
+        :page-size="pageList.pageSize"
+        layout="sizes, prev, pager, next, jumper"
+        :total="pageList.total"
+      >
+      </el-pagination>
+    </div>
+
     <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="30%">
       <el-form label-width="120px">
         <el-form-item label="项目名称">
@@ -85,6 +98,12 @@ export default {
         pageIndex: 1,
         pageSize: 10,
       },
+      pageList: {
+        pageSizes: [10, 50, 100, 500, 10000],
+        pageSize: 10,
+        pageIndex: 1,
+        total: 0,
+      },
       project: {
         id: undefined,
         name: "",
@@ -106,6 +125,14 @@ export default {
     // console.log(this.tableList);
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageList.pageSize = val;
+      this.initProject();
+    },
+    handleCurrentChange(val) {
+      this.pageList.pageIndex = val;
+      this.initProject();
+    },
     formatDate(date) {
       if (date) {
         return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
@@ -113,7 +140,10 @@ export default {
       return "--";
     },
     async initProject() {
+      this.params.pageIndex = this.pageList.pageIndex;
+      this.params.pageSize = this.pageList.pageSize;
       let obj = await GetProjectList(this.params);
+      this.pageList.total = obj.data.total;
       this.tableList = obj.data.data;
     },
     async handleSave() {
@@ -123,6 +153,7 @@ export default {
     },
     search() {
       // console.log(this.form);
+      this.pageList.pageIndex = 1;
       this.initProject();
     },
     createClick() {
@@ -192,5 +223,11 @@ export default {
     align-items: center;
     height: 40px;
   }
+}
+.page-class {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

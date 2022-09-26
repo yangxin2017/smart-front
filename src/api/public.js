@@ -378,7 +378,7 @@ export function getQsgxList(params) {
     })
 }
 // /qsgx/add post
-export function addQsgx(params,id) {
+export function addQsgx(params, id) {
     return request({
         url: `/qsgx/add?projectId=${id}`,
         method: 'post',
@@ -524,5 +524,13 @@ export function deleteList(url, params) {
     return request({
         url: url + params,
         method: 'post'
+    })
+}
+
+
+export function removeList(url, params) {
+    return request({
+        url: url + "?projectId=" + params,
+        method: 'get',
     })
 }

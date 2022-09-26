@@ -1,91 +1,6 @@
 <template>
   <div class="importfile-class">
     <div v-show="dialog == -1">
-      <!-- <el-row class="row-class">
-        <el-col :offset="23" :span="1">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="$router.push('/itemquery')"
-          >
-            返回
-          </el-button>
-        </el-col>
-      </el-row> -->
-      <!-- <el-row v-for="(item, index) in upfileList" class="row-class" :key="index">
-        <template v-if="item.label">{{ item.label }}</template>
-        <template v-for="(row, rowindex) in item" v-else>
-          <el-col :span="4" align="center" :key="'row0' + index + '_' + rowindex">
-            {{ row.title }}
-          </el-col>
-          <el-col :span="8" :key="'row1' + index + '_' + rowindex" style="display: flex">
-            <el-upload
-              v-if="row.upfile"
-              class="upload-demo"
-              :action="row.action + '?bid=' + row.bid + '&projectId=' + projectId"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :before-remove="beforeRemove"
-              :on-success="uploadEnd"
-              :on-error="uploadEnd"
-              multiple
-              :on-exceed="handleExceed"
-              :file-list="fileList[row.title]"
-              :show-file-list="false"
-              ref="ref_upload"
-            >
-              <el-button
-                type="primary"
-                size="mini"
-                style="margin-right: 10px"
-                icon="el-icon-upload"
-              >
-                数据导入
-              </el-button>
-            </el-upload>
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-download"
-              v-if="row.outfile"
-              @click="downloadFile(row)"
-            >
-              数据导出
-            </el-button>
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-download"
-              v-if="row.download"
-              @click="downlaodTemplate(row)"
-            >
-              模板下载
-            </el-button>
-            <el-popconfirm title="是否确认永久清空该数据？" @confirm="allDelect(row)">
-              <el-button
-                type="danger"
-                size="mini"
-                icon="el-icon-delete-solid"
-                v-if="row.alldata"
-                slot="reference"
-                style="margin: 0 10px"
-              >
-                数据清空
-              </el-button>
-            </el-popconfirm>
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-tickets"
-              v-if="row.alldata"
-              @click="allData(row)"
-            >
-              全部数据
-            </el-button>
-          </el-col>
-        </template>
-      </el-row> -->
-
       <template v-for="(item, index) in upfileList">
         <div
           :key="index"
@@ -146,18 +61,15 @@
               >
                 模板下载
               </el-button>
-              <el-popconfirm title="是否确认永久清空该数据？" @confirm="allDelect(row)">
-                <el-button
-                  type="danger"
-                  size="mini"
-                  icon="el-icon-delete-solid"
-                  v-if="row.alldata"
-                  slot="reference"
-                  style="margin: 0 10px"
-                >
-                  数据清空
-                </el-button>
-              </el-popconfirm>
+              <el-button
+                type="danger"
+                size="mini"
+                icon="el-icon-delete-solid"
+                v-if="row.alldata"
+                @click="allDelect(row)"
+              >
+                数据清空
+              </el-button>
               <el-button
                 type="primary"
                 size="mini"
@@ -184,6 +96,7 @@
 
 <script>
 import tablePublic from "./components/tablePublic";
+import { removeList } from "@/api/public";
 export default {
   components: {
     tablePublic,
@@ -203,6 +116,10 @@ export default {
   mounted() {
     this.upfileList = require("@/assets/list/list.json");
     this.projectId = this.$route.query.id;
+    let id = this.getUrlParam("id");
+    if (this.projectId != id) {
+      this.projectId = id;
+    }
   },
   methods: {
     uploadEnd(res) {
@@ -221,6 +138,15 @@ export default {
         this.$message.success("导入成功！");
       }
     },
+    getUrlParam(name) {
+      console.log(window.location.href);
+      let url = window.location.href;
+      let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+      let r = url.split("?")[1].match(reg);
+      console.log(r);
+      if (r != null) return r[2];
+      return null;
+    },
     allData(item) {
       this.rowList = item;
       this.tableName = item.title;
@@ -228,7 +154,17 @@ export default {
       this.dialog = 1;
     },
     allDelect(item) {
-      console.log(item);
+      console.log(item)
+      // 气泡确认，点击确定后执行删除操作
+      this.$confirm("此操作将永久清空该数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        removeList(item.remove, this.projectId).then((res) => {
+          this.$message.success("清空成功！");
+        });
+      });
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
