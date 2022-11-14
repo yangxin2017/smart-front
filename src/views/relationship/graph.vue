@@ -1,12 +1,41 @@
 <template>
   <div>
+    <div id="test-panel">
+      <div class="line">
+        <span class="lbl">随机生成：</span>
+        <el-switch v-model="layoutOption.randomize" size="mini"></el-switch>
+      </div>
+      <div class="line">
+        <span class="lbl">mass：</span>
+        <el-input v-model="layoutOption.mass" size="mini" type="number" :step="1"></el-input>
+      </div>
+      <div class="line">
+        <span class="lbl">theta：</span>
+        <el-input v-model="layoutOption.theta" size="mini" type="number" :step="0.001"></el-input>
+      </div>
+      <div class="line">
+        <span class="lbl">gravity：</span>
+        <el-input v-model="layoutOption.gravity" size="mini" type="number" :step="0.01"></el-input>
+      </div>
+      <div class="line">
+        <span class="lbl">springLength：</span>
+        <el-input v-model="layoutOption.springLength" size="mini" type="number" :step="1"></el-input>
+      </div>
+      <div class="line">
+        <span class="lbl">convergenceThreshold：</span>
+        <el-input v-model="layoutOption.convergenceThreshold" size="mini" type="number" :step="0.01"></el-input>
+      </div>
+      <div class="line">
+        <el-button size="mini" @click="handleUpdateLayout">更新</el-button>
+      </div>
+    </div>
     <div id="graphContainer"></div>
     <el-slider
       v-if="readySlider"
       class="slider-bar"
       height="800px"
       v-model="sliderVal"
-      :min="min"
+      :min="min" range
       :max="max"
       :marks="marks"
       :step="1"
@@ -14,6 +43,11 @@
       @change="handleChange"
     >
     </el-slider>
+    <div class="inp">
+      <el-input type="text" v-model="v1" size="mini" @blur="handleChangeInpt"></el-input>
+      <span>-</span>
+      <el-input type="text" v-model="v2" size="mini" @blur="handleChangeInpt"></el-input>
+    </div>
   </div>
 </template>
 <script>
@@ -30,6 +64,9 @@ import edgeEditing from "cytoscape-edge-editing/src/index";
 import konva from "konva";
 import jquery from "jquery";
 import { gerFinalNodeAndLine } from "@/utils/nodeLayout";
+import euler from 'cytoscape-euler'
+import cola from 'cytoscape-cola'
+import fcose from 'cytoscape-fcose'
 import "cytoscape-context-menus/cytoscape-context-menus.css";
 export default {
   props: {
@@ -37,11 +74,19 @@ export default {
       type: Number,
       default: 0,
     },
+    simple: {
+      type: Boolean,
+      default: false
+    },
+    pageType: {
+      type: String,
+      default: "SIMPLE"
+    }
   },
   data() {
     return {
       cyObj: null,
-      sliderVal: 0,
+      sliderVal: [0, 100],
       stepNum: 10,
 
       readySlider: false,
@@ -49,15 +94,46 @@ export default {
       min: 0,
       max: 100,
 
+      v1: 0,
+      v2: 0,
+
       dataArr: [],
       isUpdate: false,
 
       sline: [],
 
       nodeBorderColor: {},
+
+      // pageType: 'SIMPLE',
+
+      layoutOption: {
+        name: "fcose",
+        randomize: false,
+        animate: false,
+        nodeSeparation: 120,
+        sampleSize: 10,
+        idealEdgeLength: 100,
+        // randomize: false,
+        // animate: false,
+        // mass: 300,
+        // theta: 0.666,
+        // gravity: -0.02,
+        // springLength: 100,
+
+        nodeDimensionsIncludeLabels: true
+        // convergenceThreshold: 0.01
+      },
+      layoutOptionSIM: {
+        name: 'preset'
+      },
+
+      isFirst: true
     };
   },
   mounted() {
+    cytoscape.use(cola)
+    cytoscape.use(euler)
+    cytoscape.use(fcose)
     cytoscape.use(cxtmenu);
     cytoscape.use(contextMenus);
     window.$ = jquery;
@@ -65,15 +141,15 @@ export default {
 
     let projectId = this.getQueryString("id", this.$route.fullPath);
 
-    GetGraphOne({ projectId: projectId }).then((res) => {
+    GetGraphOne({ projectId: projectId, pageType: this.pageType }).then((res) => {
       if (res.data) {
         let obj = JSON.parse(res.data.jsonstr);
-        this.dataArr = obj.arr;
+        this.dataArr = obj.json;
         this.sliderVal = obj.val;
         this.isUpdate = true;
       } else {
         this.dataArr = [];
-        this.sliderVal = 0;
+        this.sliderVal = [0, 100];
         this.isUpdate = false;
       }
       this.initInfo();
@@ -81,6 +157,14 @@ export default {
     // this.initInfo()
   },
   methods: {
+    handleUpdateLayout() {
+      let layout = window.CY.layout(this.layoutOption)
+      layout.run()
+    },
+    handleChangeInpt() {
+      this.sliderVal = [this.v1, this.v2]
+      this.handleChange(this.sliderVal)
+    },
     getQueryString(name, fullpath) {
       let arr = fullpath.split("?");
       let params = arr[1].split("&");
@@ -105,84 +189,20 @@ export default {
       let id = projectId;
       let obj = await GetRelationshiop(id);
 
-      // let objData = JSON.parse(JSON.stringify(obj.data));
-      // let objLines = objData.lines;
-      // console.log(objLines.length);
-      // let numxxx = 0;
-      // let newLines = [];
-      // for (let i of objLines) {
-      //   console.log(numxxx++)
-      //   let newi = JSON.parse(JSON.stringify(i));
-      //   newi.relation = [];
-      //   for (let ax of i.relation) {
-      //     let isin = false;
-      //     for (let bx of newi.relation) {
-      //       if (JSON.stringify(bx) == JSON.stringify(ax)) {
-      //         isin = true;
-      //       }
-      //     }
+      
+      let { nodes, lines } = gerFinalNodeAndLine(obj.data, this.minJE, this.simple);
+      
 
-      //     if (!isin) {
-      //       newi.relation.push(ax);
-      //     }
-      //   }
-      //   newLines.push(newi);
-      // }
-      // objData.lines = objLines;
-
-      let { nodes, lines } = gerFinalNodeAndLine(obj.data, this.minJE);
-      // let { nodes, lines } = gerFinalNodeAndLine(objData, this.minJE);
-
-      // console.log("=====================");
-      // console.log(nodes, lines);
-      // line新增classes与id相同
       for (let i = 0; i < lines.length; i++) {
-        // lines[i].data.classes =
-        //   lines[i].data.source + "===" + lines[i].data.target;
-        // lines[i].classes = "segments";
-        // this.sline.push(lines[i].data.classes);
-        // console.log(lines[i].data.source);
-        lines[i].classes = [];
-        lines[i].data.label =
-          lines[i].data.data.name == "密切人"
-            ? "密切人"
-            : "金额：" +
-              (lines[i].data.data.name < 0
-                ? ((lines[i].data.data.name * -1) / 10000).toFixed(2)
-                : (lines[i].data.data.name / 10000).toFixed(2)) +
-              "万";
-        for (let j of this.dataArr) {
-          // console.log(j.data.id, lines[i].data.id);
-          if (
-            j.data.source == lines[i].data.source &&
-            j.data.target == lines[i].data.target
-          ) {
-            // lines[i].data.classes=j.data.classes
-            // console.log(j.classes[0]);
-            lines[i].classes[0] = j.classes[0] ? j.classes[0] : "";
-          }
+        lines[i].data.label = ''
+        if (lines[i].data.data.name == "密切人") {
+          lines[i].data.label = '密切人'
+        } else if (lines[i].data.data.name == "公司所有人") {
+          lines[i].data.label = '公司所有人'
+        } else {
+          lines[i].data.label = "金额：" + this._getW(0, lines[i].data.data)
         }
-        // 取lines[i].data.data.name正数
-        // let num = lines[i].data.data.name;
-        // if (num < 0) {
-        //   num = num * -1;
-        // }
-        // num = num / 10000;
-        // if (num < 10) {
-        //   lines[i].classes.push("edge2");
-        // } else if (num >= 10 && num < 50) {
-        //   lines[i].classes.push("edge3");
-        // } else if (num >= 50 && num < 200) {
-        //   lines[i].classes.push("edge4");
-        // } else if (num >= 200 && num < 500) {
-        //   lines[i].classes.push("edge5");
-        // } else if (num >= 500 && num < 1000) {
-        //   lines[i].classes.push("edge6");
-        // } else if (num >= 1000) {
-        //   lines[i].classes.push("edge7");
-        // }
       }
-      // console.log(nodes, lines);
 
       if (lines.length > 0) {
         this.initSlideBar(lines, nodes);
@@ -190,14 +210,7 @@ export default {
 
       let arr = nodes.concat(lines);
 
-      arr = this.mergeArr(arr);
-
-      // console.log(arr)
-      // for (let a of arr) {
-      //   if (a.data.source == '1513' || a.data.target == '1513') {
-      //     console.log(a)
-      //   }
-      // }
+      // arr = this.mergeArr(arr);
 
       this.drawGraph(arr);
 
@@ -233,7 +246,7 @@ export default {
           nullIds.indexOf(l.data.source + ",") < 0 &&
           nullIds.indexOf(l.data.target + ",") < 0
         ) {
-          if (l.data.data.name != "密切人") {
+          if (l.data.data.name != "密切人" && l.data.data.name != "公司所有人") {
             let n = Number(l.data.data.name);
             n = parseInt(Math.abs(n) / 10000);
             moneys.push(n);
@@ -244,9 +257,14 @@ export default {
       let max = Math.max(...moneys);
       max = Math.max(max, 100);
       this.min = min;
-      this.max = max;
+      this.max = max + 10;
 
-      console.log(max);
+      if (!this.isUpdate) {
+        if (!this.simple) {
+          this.sliderVal[0] = this.max * 0.3
+        }
+        this.sliderVal[1] = this.max
+      }
 
       let count = 10;
       this.stepNum = (max - min) / count;
@@ -374,6 +392,30 @@ export default {
       this.initInfo();
     },
     async save() {
+      let json = window.CY.json()
+      
+      if (this.isUpdate) {
+        await UpdateGraph({
+          projectId: this.getQueryString("id", this.$route.fullPath),
+          pageType: this.pageType,
+          jsonstr: JSON.stringify({
+            val: this.sliderVal,
+            json: json,
+          }),
+        });
+      } else {
+        await SaveGraph({
+          projectId: this.getQueryString("id", this.$route.fullPath),
+          pageType: this.pageType,
+          jsonstr: JSON.stringify({
+            val: this.sliderVal,
+            json: json,
+          }),
+        });
+      }
+      this.$message.success("保存成功！")
+    },
+    async save2() {
       let arr = [];
       let nodes = window.CY.nodes();
       let edges = window.CY.edges();
@@ -395,6 +437,7 @@ export default {
       if (this.isUpdate) {
         await UpdateGraph({
           projectId: this.getQueryString("id", this.$route.fullPath),
+          pageType: this.pageType,
           jsonstr: JSON.stringify({
             val: this.sliderVal,
             arr: arr,
@@ -403,6 +446,7 @@ export default {
       } else {
         await SaveGraph({
           projectId: this.getQueryString("id", this.$route.fullPath),
+          pageType: this.pageType,
           jsonstr: JSON.stringify({
             val: this.sliderVal,
             arr: arr,
@@ -417,80 +461,84 @@ export default {
         window.CY.destroy();
       }
       let person = require("@/assets/gra/pe.png");
+      let red = require("@/assets/icon/red.png");
+      let green = require("@/assets/icon/green.png");
+      let blue = require("@/assets/icon/blue.png");
+      let yellow = require("@/assets/icon/yellow.png");
+
       var cy = cytoscape({
         container: document.getElementById("graphContainer"),
         elements: arr,
         wheelSensitivity: 0.1,
-        layout: {
-          name: "preset",
-        },
+        layout: this.layoutOption,
         style: [
           {
             selector: "node",
             style: {
-              width: 100,
-              height: 100,
+              width: 30,
+              height: 30,
               "background-image": person,
               label: "data(label)",
               "background-clip": "none",
               "background-fit": "cover",
               "background-opacity": 0,
               color: "#fff",
-              "font-size": 20,
+              "font-size": 9,
             },
+          },
+          {
+            selector: "node.red",
+            style: {
+              'background-image': red
+            }
+          },
+          {
+            selector: "node.green",
+            style: {
+              'background-image': green
+            }
+          },
+          {
+            selector: "node.blue",
+            style: {
+              'background-image': blue
+            }
+          },
+          {
+            selector: "node.yellow",
+            style: {
+              'background-image': yellow
+            }
           },
           {
             selector: "edge",
             style: {
-              width: 6,
-              "line-color": "#66b1ff",
+              width: 1,
+              "line-color": "#00ffff",
               "source-arrow-color": "#ccc",
-              "source-arrow-shape": "triangle",
-              "curve-style": "bezier",
+              "target-arrow-shape": "triangle",
+              "curve-style": "unbundled-bezier",
               label: "data(label)",
               "edge-text-rotation": "autorotate",
               color: "#fff",
-              "font-size": 20,
-              "source-text-offset": 1000,
-              "line-fill": "linear-gradient",
-            },
-          },
-
-          {
-            selector: "edge2",
-            style: {
-              width: 2,
+              "font-size": 9,
+              "text-margin-x": 8,
+              "text-margin-y": 8,
+              "z-index": 9
+              // "line-fill": "linear-gradient"
             },
           },
           {
-            selector: "edge3",
+            selector: "edge.red",
             style: {
-              width: 3,
-            },
+              'line-color': '#ff0000'
+            }
           },
           {
-            selector: "edge4",
+            selector: "edge.blue",
             style: {
-              width: 4,
-            },
-          },
-          {
-            selector: "edge5",
-            style: {
-              width: 5,
-            },
-          },
-          {
-            selector: "edge6",
-            style: {
-              width: 6,
-            },
-          },
-          {
-            selector: "edge7",
-            style: {
-              width: 7,
-            },
+              'line-color': '#00ffff'
+            }
           },
           {
             selector: ".hide",
@@ -499,84 +547,17 @@ export default {
             },
           },
           {
-            selector: "edge.segments",
+            selector: ".specedge",
             style: {
-              "curve-style": "segments",
-              // "segment-distances": [40, -40],
-              // "segment-weights": [0.25, 0.75],
-              "segment-distances": [20],
-              "segment-weights": [0.5],
-            },
-          },
-          {
-            selector: "edge.segments-0",
-            style: {
-              "curve-style": "segments",
-              // "segment-distances": [40, -40],
-              // "segment-weights": [0.25, 0.75],
-              "segment-distances": [20],
-              "segment-weights": [0.5],
-            },
-          },
-          {
-            selector: "edge.segments-1",
-            style: {
-              "curve-style": "segments",
-              // "segment-distances": [40, -40],
-              // "segment-weights": [0.25, 0.75],
-              "segment-distances": [30],
-              "segment-weights": [0.5],
-            },
-          },
-          {
-            selector: "edge.segments-2",
-            style: {
-              "curve-style": "segments",
-              // "segment-distances": [40, -40],
-              // "segment-weights": [0.25, 0.75],
-              "segment-distances": [40],
-              "segment-weights": [0.5],
-            },
-          },
-          {
-            selector: "edge.segments-3",
-            style: {
-              "curve-style": "segments",
-              // "segment-distances": [40, -40],
-              // "segment-weights": [0.25, 0.75],
-              "segment-distances": [20, 20],
-              "segment-weights": [0.25, 0.75],
-            },
-          },
-          {
-            selector: "edge.segments-4",
-            style: {
-              "curve-style": "segments",
-              // "segment-distances": [40, -40],
-              // "segment-weights": [0.25, 0.75],
-              "segment-distances": [30, 30],
-              "segment-weights": [0.25, 0.75],
-            },
-          },
-          {
-            selector: "edge.segments-5",
-            style: {
-              "curve-style": "segments",
-              // "segment-distances": [40, -40],
-              // "segment-weights": [0.25, 0.75],
-              "segment-distances": [40, 40],
-              "segment-weights": [0.25, 0.75],
-            },
-          },
-          // this.sline.forEach((item) => {
-          //   return {
-          //     data: {
-          //       source: item.split("===")[0],
-          //       target: item.split("===")[1],
-          //     },
-          //     classes: item,
-          //   };
-          // }),
+              'line-style': 'dashed',
+              'line-color': '#cccccc',
+              'width': 2,
+              'source-arrow-shape': 'none',
+              'curve-style': 'unbundled-bezier',
+              'control-point-step-size': 50,
+              'control-point-weights': 0.5
+            }
+          }
         ],
       });
 
@@ -586,7 +567,7 @@ export default {
       });
       cy.on("click", "edge", (ev) => {
         let data = ev.target.data();
-        if (data.label != "密切人") {
+        if (data.label != "密切人" && data.label != "公司所有人") {
           this.$emit("chooseEvent", { type: "line", data: data.data });
         }
       });
@@ -621,9 +602,12 @@ export default {
     },
 
     handleChange(ev) {
+      this.v1 = ev[0]
+      this.v2 = ev[1]
       let nodes = window.CY.nodes();
       let edges = window.CY.edges();
-      let minMoney = ev;
+      let minMoney = ev[0];
+      let maxMoney = ev[1]
 
       let mqrid = [];
 
@@ -659,15 +643,17 @@ export default {
           l.style("width", 7);
         }
 
-        if (tmp.data.name == "密切人") {
-          // 设置为虚线
+        if (tmp.data.name == "密切人" || tmp.data.name == '公司所有人') {
+          // l.toggleClass('specedge', true)
+          // // 设置为虚线
           l.style("line-style", "dashed");
+          l.style("line-color", "#cccccc");
           l.style("width", 2);
           // 去掉箭头
           l.style("source-arrow-shape", "none");
 
           // 样式改为曲线
-          l.style("curve-style", "unbundled-bezier");
+          l.style("curve-style", "straight");
           l.style("control-point-step-size", 50);
           l.style("control-point-weights", 0.5);
         } else {
@@ -678,11 +664,11 @@ export default {
           for (let i of tmp.data.relation) {
             let ix = i.change ? -1 : 1;
             if (parseFloat(i.jyje) * ix < 0) {
-              if (!json[i.jydfmc + "-" + i.cxdxmc]) {
-                json[i.jydfmc + "-" + i.cxdxmc] = 0;
-                nameList.push(i.jydfmc + "-" + i.cxdxmc);
+              if (!json[i.jydfmc + "-" + i.mc]) {
+                json[i.jydfmc + "-" + i.mc] = 0;
+                nameList.push(i.jydfmc + "-" + i.mc);
               }
-              json[i.jydfmc + "-" + i.cxdxmc] +=
+              json[i.jydfmc + "-" + i.mc] +=
                 parseFloat(i.jyje) < 0
                   ? parseFloat(i.jyje) * -1
                   : parseFloat(i.jyje);
@@ -691,11 +677,11 @@ export default {
                   ? parseFloat(i.jyje) * -1
                   : parseFloat(i.jyje);
             } else {
-              if (!json[i.cxdxmc + "-" + i.jydfmc]) {
-                json[i.cxdxmc + "-" + i.jydfmc] = 0;
-                nameList.push(i.cxdxmc + "-" + i.jydfmc);
+              if (!json[i.mc + "-" + i.jydfmc]) {
+                json[i.mc + "-" + i.jydfmc] = 0;
+                nameList.push(i.mc + "-" + i.jydfmc);
               }
-              json[i.cxdxmc + "-" + i.jydfmc] +=
+              json[i.mc + "-" + i.jydfmc] +=
                 parseFloat(i.jyje) < 0
                   ? parseFloat(i.jyje) * -1
                   : parseFloat(i.jyje);
@@ -720,25 +706,25 @@ export default {
           }
 
           if (nameList.length > 1) {
-            l.style("line-fill", "linear-gradient");
-            l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
-            l.style(
-              "line-gradient-stop-positions",
-              `0% ${(minnumber / allnum) * 100}% ${
-                (minnumber / allnum) * 100
-              }% 100%`
-            );
+            // l.style("line-fill", "linear-gradient");
+            // l.style("line-gradient-stop-colors", "#66b1ff #66b1ff #0f0 #0f0");
+            // l.style(
+            //   "line-gradient-stop-positions",
+            //   `0% ${(minnumber / allnum) * 100}% ${
+            //     (minnumber / allnum) * 100
+            //   }% 100%`
+            // );
           } else {
-            l.style("line-fill", "linear-gradient");
-            l.style("line-gradient-stop-colors", "#66b1ff #66b1ff");
-            l.style(
-              "line-gradient-stop-positions",
-              `0% ${(minnumber / allnum) * 100}% 100%`
-            );
+            // l.style("line-fill", "linear-gradient");
+            // l.style("line-gradient-stop-colors", "#66b1ff #66b1ff");
+            // l.style(
+            //   "line-gradient-stop-positions",
+            //   `0% ${(minnumber / allnum) * 100}% 100%`
+            // );
           }
         }
 
-        if (tmp.data.name == "密切人") {
+        if (tmp.data.name == "密切人" || tmp.data.name == '公司所有人') {
           l.toggleClass("hide", false);
           showLines.push({
             source: l.source().id(),
@@ -746,8 +732,8 @@ export default {
           });
         } else {
           let mon = Number(tmp.data.name);
-          mon = parseInt(Math.abs(mon) / 10000);
-          if (mon >= minMoney) {
+          mon = Number(Math.abs(mon) / 10000);
+          if (mon >= minMoney && mon <= maxMoney) {
             l.toggleClass("hide", false);
             showLines.push({
               source: l.source().id(),
@@ -757,6 +743,8 @@ export default {
             l.toggleClass("hide", true);
           }
         }
+
+        // window.CY.run()
 
         // // 获取起始点和终点的坐标
         // let source = l.source().position();
@@ -789,16 +777,31 @@ export default {
             "border-color",
             this.getNodeBorderColor(n.data().data.nodeGroup)
           );
-          n.style("border-width", 5);
+          n.style("border-width", 3);
           n.style(
             "text-outline-color",
             this.getNodeBorderColor(n.data().data.nodeGroup)
           );
-          n.style("text-outline-width", 2);
+          n.style("text-outline-width", 1);
         }
         if (mqrid.indexOf(nid) != -1) {
           n.toggleClass("hide", false);
         }
+      }
+
+      if (this.isUpdate) {
+        if (this.isFirst) {
+          window.CY.json(this.dataArr)
+          this.isFirst = false
+          this.handleChange(this.sliderVal)
+        } else {
+          let layout = window.CY.layout(this.layoutOptionSIM)
+          layout.run()
+        }
+        
+      } else {
+        let layout = window.CY.layout(this.layoutOption)
+        layout.run()
       }
     },
     getNodeBorderColor(id) {
@@ -816,10 +819,60 @@ export default {
         })(((Math.random() * 0x1000000) << 0).toString(16))
       );
     },
+    _getW(num, l) {
+      let moneyData = {}
+      for(let r of l.relation) {
+        let money = parseFloat(r.jyje)
+        let name = r.mc + "-" + r.jydfmc
+
+        if (money < 0) {
+          name = r.jydfmc + "-" + r.mc
+          money = money * -1
+        }
+        moneyData[name] = moneyData[name] ? moneyData[name] + money : money;
+      }
+      let rnum = 0
+      for (let k in moneyData) {
+        if (rnum == 0) {
+          rnum = moneyData[k]
+        } else {
+          rnum = rnum - moneyData[k]
+        }
+      }
+      rnum = Math.abs(rnum)
+
+      let r = (num / 10000).toFixed(1) + "万"
+
+      return (rnum / 10000).toFixed(1) + "万"
+    }
   },
 };
 </script>
 <style lang="scss">
+#test-panel{
+  display: none;
+  position: absolute;
+  left: 30px;top: 30px;
+  z-index: 9999;
+  background: #0ff;
+  padding: 20px;
+  .line{
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    .lbl{
+      width: 100px;
+    }
+  }
+}
+.inp{
+  display: flex;
+  justify-content: space-between;
+  position: absolute !important;
+  width: 125px;
+  bottom: 45px;
+  right: 39px;
+}
 #graphContainer {
   position: absolute;
   width: 100%;

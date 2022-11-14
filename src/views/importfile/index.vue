@@ -28,7 +28,7 @@
                 :before-remove="beforeRemove"
                 :on-success="uploadEnd"
                 :on-error="uploadEnd"
-                :on-progress="handleProgress"
+                :before-upload="handleProgress"
                 multiple
                 :on-exceed="handleExceed"
                 :file-list="fileList[row.title]"
@@ -127,7 +127,6 @@ export default {
   },
   methods: {
     handleProgress() {
-      console.log(1);
       this.loading = this.$loading({
         lock: true,
         text: "数据正在导入，请稍等...",
@@ -154,7 +153,6 @@ export default {
       }
     },
     getUrlParam(name) {
-      console.log(window.location.href);
       let url = window.location.href;
       let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
       let r = url.split("?")[1].match(reg);
@@ -163,6 +161,7 @@ export default {
       return null;
     },
     allData(item) {
+      console.log(item)
       this.rowList = item;
       this.tableName = item.title;
       this.headerList = item.headerList;
@@ -176,7 +175,14 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
+        const loading = this.$loading({
+          lock: true,
+          text: "数据正在删除，请稍等...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
         removeList(item.remove, this.projectId).then((res) => {
+          loading.close()
           this.$message.success("清空成功！");
         });
       });

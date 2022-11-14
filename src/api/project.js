@@ -30,12 +30,19 @@ export function GetRelationshiop(projectId) {
   })
 }
 
+export function GetSELFRelationshiop(projectId, userId) {
+  return request({
+    url: '/calc/selfresults?projectId=' + projectId + '&userId=' + userId,
+    method: 'get',
+  })
+}
 
-export function UpdateMBR(id, isMBR) {
+
+export function UpdateMBR(id, isMBR, isFxdx) {
   return request({
     url: '/rydzda/updatembr',
     method: 'post',
-    params: { id, isMBR }
+    params: { id, isMBR, isFxdx }
   })
 }
 

@@ -1979,7 +1979,8 @@
                     {
                         "label": "交易时间",
                         "modifiable": true,
-                        "prop": "jysj"
+                        "prop": "jysj",
+                        "type": "time"
                     },
                     {
                         "label": "交易流水号",

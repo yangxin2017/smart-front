@@ -1860,13 +1860,13 @@
                 "form": [
                     {
                         "type": "input",
-                        "label": "本方账号",
-                        "prop": "bfzh"
+                        "label": "本方卡号",
+                        "prop": "bfkh"
                     },
                     {
                         "type": "input",
-                        "label": "对方账号",
-                        "prop": "jydfzh"
+                        "label": "对方卡号",
+                        "prop": "jydfkh"
                     },
                     {
                         "type": "input",
@@ -1911,9 +1911,14 @@
                         "prop": "jylx"
                     },
                     {
-                        "type": "input",
-                        "label": "交易时间",
-                        "prop": "jysj"
+                        "type": "input-date",
+                        "label": "交易起始时间",
+                        "prop": "sjysj"
+                    },
+                    {
+                        "type": "input-date",
+                        "label": "交易结束时间",
+                        "prop": "ejysj"
                     },
                     {
                         "type": "input",
@@ -1942,7 +1947,6 @@
                     {
                         "label": "证件类型",
                         "modifiable": true,
-                        "row": true,
                         "prop": "zjlx"
                     },
                     {
@@ -1953,6 +1957,7 @@
                     },
                     {
                         "label": "查询对象名称",
+                        "row": true,
                         "modifiable": true,
                         "prop": "cxdxmc"
                     },
@@ -1974,6 +1979,7 @@
                     {
                         "label": "本方卡号",
                         "modifiable": true,
+                        "row": true,
                         "prop": "bfkh"
                     },
                     {
@@ -1993,6 +1999,7 @@
                     },
                     {
                         "label": "交易金额",
+                        "row": true,
                         "modifiable": true,
                         "prop": "jyje"
                     },
@@ -2004,7 +2011,10 @@
                     {
                         "label": "交易时间",
                         "modifiable": true,
-                        "prop": "jysj"
+                        "row": true,
+                        "prop": "jysj",
+                        "type": "time",
+                        "sortable": true
                     },
                     {
                         "label": "交易流水号",
@@ -2014,6 +2024,7 @@
                     {
                         "label": "交易对方名称",
                         "modifiable": true,
+                        "row": true,
                         "prop": "jydfmc"
                     },
                     {
@@ -2024,6 +2035,7 @@
                     {
                         "label": "交易对方卡号",
                         "modifiable": true,
+                        "row": true,
                         "prop": "jydfkh"
                     },
                     {
@@ -4777,9 +4789,9 @@
                 "getUrl": "/tltxrTxrykpxx/list",
                 "setUrl": "/tltxrTxrykpxx/update",
                 "deleteUrl": "/tltxrTxrykpxx/delete/",
-                "downloadUrl": "/ai/jyls/export",
-                "action": "/ai/jyls/upload",
-                "remove": "/jyls/remove",
+                "downloadUrl": "/ai/tltxrTxrykpxx/export",
+                "action": "/ai/tltxrTxrykpxx/upload",
+                "remove": "/tltxrTxrykpxx/remove",
                 "bid": 9,
                 "template": "/downFile/铁路总公司同行人信息-同行人员客票信息.xlsx",
                 "headerList": [

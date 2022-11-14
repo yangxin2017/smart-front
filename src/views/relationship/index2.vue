@@ -82,71 +82,7 @@
               >
               </el-table-column>
             </el-table>
-            <!-- <div class="label-card" v-for="(item, index) in cardlist1" :key="index">
-              <div class="cardtitlebackground">{{ item.label }}</div>
-              <div class="cardvalue">{{ item.value }}</div>
-            </div> -->
 
-            <!-- <div class="label-card">
-              <div class="cardtitlebackground">当前职务</div>
-              <div class="cardvalue">
-                {{
-                  cardData.gs.length > 0 ? cardData.gs[cardData.gs.length - 1].zw : "未知"
-                }}
-              </div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">出生日期</div>
-              <div class="cardvalue">{{ cardData.user.csrq }}</div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">配偶</div>
-              <div class="cardvalue">{{ getPo(cardData) }}</div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">学历</div>
-              <div class="cardvalue">{{ cardData.user.xl }}</div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">民族</div>
-              <div class="cardvalue">{{ cardData.user.mz }}</div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">驾驶证</div>
-              <div class="cardvalue">{{ cardData.user.jsz }}</div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">籍贯</div>
-              <div class="cardvalue">{{ cardData.user.jg }}</div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">上一任职务</div>
-              <div class="cardvalue">
-                {{ cardData.gs.length > 1 ? cardData.gs[cardData.gs.length - 2].zw : "无" }}
-              </div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">毕业院校</div>
-              <div class="cardvalue">{{ cardData.user.byyx }}</div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">户口所在地</div>
-              <div class="cardvalue">{{ cardData.user.hjd }}</div>
-            </div>
-
-            <div class="label-card">
-              <div class="cardtitlebackground">常住地址</div>
-              <div class="cardvalue">{{ cardData.user.czdz }}</div>
-            </div> -->
           </div>
         </div>
         <div class="list-right-card-row" style="height: 35%">
@@ -546,7 +482,7 @@
       保存视图
     </el-button>
 
-    <graph ref="refGraph" :pageType="'NORMAL'" @chooseEvent="handleChooseEvent" :minJE="minJE"></graph>
+    <graph ref="refGraph" @chooseEvent="handleChooseEvent" :pageType="'SIMPLE'" :minJE="minJE" :simple="true"></graph>
     <detail-dialog ref="dDialog"></detail-dialog>
   </div>
 </template>
@@ -829,7 +765,7 @@ export default {
   methods: {
     handleToggleGraph() {
       this.simpleGraph = !this.simpleGraph
-
+      
     },
     getPhoto(user) {
       if (user.txzp) {

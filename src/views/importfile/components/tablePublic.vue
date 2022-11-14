@@ -54,7 +54,7 @@
       </el-col>
     </el-row>
     <div class="search-class" v-if="formJson.option.length > 0">
-      <div v-for="(item, index) in formJson.option" class="col-class">
+      <div v-for="(item, index) in formJson.option" :key="index" class="col-class">
         {{ item.label }}：
         <el-input
           v-if="item.type == 'input'"
@@ -63,6 +63,13 @@
           size="mini"
           style="width: 140px"
         />
+        <el-date-picker
+          v-if="item.type == 'input-date'"
+          v-model="formJson.form[item.prop]"
+          placeholder="请输入"
+          size="mini"
+          style="width: 140px">
+        </el-date-picker>
         <el-select
           v-if="item.type == 'select'"
           v-model="formJson.form[item.prop]"
@@ -79,11 +86,14 @@
           </el-option>
         </el-select>
       </div>
-      <el-button type="primary" size="mini" @click="initsearch()"
-        >查询</el-button
-      >
+      <el-button type="primary" size="mini" @click="initsearch()">查询</el-button>
+      <el-button v-if="tableName == '银行数据'"  type="primary" size="mini" @click="initsearchDialog()">查询弹框</el-button>
+
+      <el-button v-if="tableName == '银行数据' || tableName == '公安数据-人员电子档案'" 
+        type="primary" size="mini" @click="handleAddInfo()">添加</el-button>
     </div>
-    <el-table
+
+    <el-table v-loading="loading"
       :data="tableList"
       width="100%"
       :height="
@@ -93,6 +103,7 @@
           ? 'calc(100% - 95px)'
           : 'calc(100% - 32px)'
       "
+      @sort-change="handleSortChange"
     >
       <el-table-column
         label="头像照片"
@@ -131,10 +142,12 @@
             :label="item.label"
             :prop="item.prop"
             min-width="200"
+            :sortable="item.sortable"
           >
             <template slot-scope="scope">
               <span v-if="setIndex != scope.$index || !item.modifiable">
-                {{ scope.row[item.prop] }}
+                <span v-if="item.type == 'time'">{{ formatTime(scope.row[item.prop]) }}</span>
+                <span v-else>{{ scope.row[item.prop] }}</span>
               </span>
               <el-input
                 v-else
@@ -149,7 +162,7 @@
         <template v-for="(item, index) in headerList">
           <el-table-column
             :label="item.label"
-            :prop="item.prop"
+            :prop="item.prop" :key="index"
             min-width="200"
           >
             <template slot-scope="scope">
@@ -206,11 +219,16 @@
         v-if="tableName == '公安数据-人员电子档案'"
       >
         <template slot-scope="scope">
-          <el-checkbox
+          <el-select size="mini" v-model="scope.row.ptype" @change="handleChangeMBR(scope.row)">
+            <el-option label="目标人" value="目标人"></el-option>
+            <el-option label="分析对象" value="分析对象"></el-option>
+            <el-option label="空" value="空"></el-option>
+          </el-select>
+          <!-- <el-checkbox
             v-model="scope.row.sfMbr"
             @change="handleChangeMBR(scope.row)"
             >设为目标人</el-checkbox
-          >
+          > -->
         </template>
       </el-table-column>
     </el-table>
@@ -335,6 +353,11 @@
         <el-button type="primary" @click="saveRowDialog"> 保 存 </el-button>
       </span>
     </el-dialog>
+
+    <add-person-dialog ref="refAddPersonDialog" :isSimple="true" @eventAdded="handleInit"></add-person-dialog>
+    <add-bank-dialog ref="refAddBankDialog" @eventAdded="handleInit"></add-bank-dialog>
+
+    <search-dialog v-for="item,inx in listDialog" :did="item.id" :key="item.id" :form="item.param" :inx="inx" @eventClose="handleCloseDialog"></search-dialog>
   </div>
 </template>
 
@@ -351,7 +374,17 @@ import {
   getRydzdaList,
 } from "@/api/public";
 import { UpdateMBR } from "@/api/project";
+import dayjs from 'dayjs'
+import AddPersonDialog from './addPersonDialog.vue'
+import AddBankDialog from './addBankDialog.vue'
+import SearchDialog from './searchDialog.vue'
+import { v4 as uuidv4 } from 'uuid'
 export default {
+  components: {
+    AddPersonDialog,
+    AddBankDialog,
+    SearchDialog
+  },
   props: {
     tableName: {
       type: String,
@@ -415,6 +448,15 @@ export default {
         form: {},
         option: {},
       },
+
+      loading: false,
+
+      listDialog: [],
+
+      orderInfo: {
+        prop: '',
+        order: ''
+      }
     };
   },
   mounted() {
@@ -426,6 +468,9 @@ export default {
     this.id = id;
     this.init(id);
 
+    this.orderInfo.prop = ''
+    this.orderInfo.order = ''
+
     // 监听回车事件
     document.onkeydown = (e) => {
       if (e.keyCode == 13) {
@@ -434,9 +479,51 @@ export default {
     };
   },
   methods: {
+    handleSortChange(column) {
+      this.orderInfo.prop = column.prop
+      this.orderInfo.order = column.order
+      this.init()
+    },
+    handleInit() {
+      this.init()
+    },
+    handleAddInfo() {
+      if (this.tableName == '公安数据-人员电子档案') {
+        this.$refs.refAddPersonDialog.dy_show(this.id)
+      } else if (this.tableName == '银行数据') {
+        this.$refs.refAddBankDialog.dy_show(this.id)
+      }
+      console.log(this.tableName, this.id)
+    },
+    formatTime(time) {
+      if(time) {
+        if (time.length == 8) {
+          return `${time.substr(0, 4)}-${time.substr(4, 2)}-${time.substr(6, 2)}`
+        } else if (time.length == 14) {
+          return `${time.substr(0, 4)}-${time.substr(4, 2)}-${time.substr(6, 2)} ${time.substr(8, 6)}00`
+        } else {
+          return time
+        }
+      }
+      return ""
+    },
     initsearch() {
       this.$set(this.pageList, "pageIndex", 1);
       this.init();
+    },
+    initsearchDialog() {
+      let form = {}
+      for (let k in this.formJson.form) {
+        form[k] = this.formJson.form[k]
+      }
+      form.pageIndex = 1
+      form.pageSize = this.pageList.pageSize
+      form.projectId = this.id
+      
+      this.listDialog.push({ param: form, id: uuidv4(), show: false })
+    },
+    handleCloseDialog(id) {
+      this.listDialog = this.listDialog.filter((v) => { return v.id != id })
     },
     saveRowDialog() {
       setList(this.rowList.setUrl, this.dialogList).then((res) => {
@@ -448,6 +535,10 @@ export default {
     },
     openRow(item, index) {
       this.dialogList = JSON.parse(JSON.stringify(item));
+      if (this.dialogList && this.dialogList.jysj) {
+        this.dialogList.jysj = this.formatTime(this.dialogList.jysj)
+      }
+      console.log(this.dialogList)
       this.setRowDialog = true;
     },
     handleSizeChange(val) {
@@ -482,12 +573,27 @@ export default {
       return isJPG;
     },
     handleSuccess(res, row) {
-      console.log(res, row);
       this.$message.success("上传成功");
       row.txzp = res.data;
     },
     async handleChangeMBR(row) {
-      await UpdateMBR(row.id, row.sfMbr);
+      if (row.ptype == "目标人") {
+        row.sfMbr = true
+        row.sfFxdx = false
+      } else if (row.ptype == "分析对象") {
+        row.sfMbr = false
+        row.sfFxdx = true
+      } else {
+        row.sfMbr = false
+        row.sfFxdx = false
+      }
+      let obj = await UpdateMBR(row.id, row.sfMbr, row.sfFxdx);
+      if (obj.success) {
+        this.$message.success("保存成功");
+        this.init()
+      } else {
+        this.$message.error(obj.msg)
+      }
     },
     init(id) {
       if (!id) {
@@ -497,9 +603,28 @@ export default {
       form.pageIndex = this.pageList.pageIndex;
       form.pageSize = this.pageList.pageSize;
       form.projectId = id;
+
+      if (this.tableName == '银行数据') {
+        form.order = this.orderInfo.order
+        form.prop = this.orderInfo.prop
+      }
+      
+      this.loading = true
       getList(this.rowList.getUrl, form).then((res) => {
         this.tableList = res.data.records;
         this.pageList.total = res.data.total;
+        this.loading = false
+        if (this.tableName == '公安数据-人员电子档案') {
+          for (let d of this.tableList) {
+            d.ptype = "空"
+            if (d.sfMbr) {
+              d.ptype = "目标人"
+            }
+            if (d.sfFxdx) {
+              d.ptype = "分析对象"
+            }
+          }
+        }
       });
       if (this.tableName == "公安数据-亲属关系") {
         getRydzdaList({ projectId: id,pageIndex:1,pageSize:100000*1000 }).then((res) => {
@@ -531,7 +656,12 @@ export default {
       form.groupId = 0;
       form.userId = 0;
       addQsgx(form, this.id).then((res) => {
-        this.init();
+        if (res.success) {
+          this.init();
+        } else {
+          this.$message.error(res.msg)
+        }
+        
       });
     },
     handleClose(done) {

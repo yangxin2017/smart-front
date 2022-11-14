@@ -1,3 +1,17 @@
+#graphContainerSELF{
+    width: 49%;
+    height: 300px;
+    border: solid 1px #fff;
+}
+.graph-container-self{
+    display: flex;
+    justify-content: space-between;
+    .table{
+        width: 49%;
+        max-height: 300px;
+        overflow: auto;
+    }
+}
 .echarts-dialog-class {
     width: auto;
     height: auto;
@@ -8,7 +22,9 @@
     box-shadow: 0 0 10px #00a8ff;
     background-color: rgba($color: #020911, $alpha: 0.7);
     color: #fff;
-    overflow: auto;
+    &.sml{
+        max-height: 2000px;
+    }
     .title {
         color: #77c5fe;
         font-size: 16px;
@@ -25,6 +41,10 @@
         // 背景渐变色
         background-image: linear-gradient(to right, rgba($color: #77c5fe, $alpha: 0.3), rgba($color: #77c5fe, $alpha: 0));
     }
+    .table-con{
+        max-height: 420px;
+        overflow: auto;
+    }
     table{
         width: 100%;height: 100%;
         margin: 10px 0 0 0;
@@ -34,6 +54,7 @@
             text-align: center;
             height: 30px;
             vertical-align: middle;
+            white-space: nowrap;
         }
         td{
             padding: 0 5px;
@@ -41,6 +62,7 @@
             height: 30px;
             vertical-align: middle;
             cursor: pointer;
+            white-space: nowrap;
         }
         tr:nth-child(odd) {
             background: rgba(255, 255, 255, 0.11);

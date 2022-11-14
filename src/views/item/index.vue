@@ -12,10 +12,10 @@
       <el-button type="primary" size="mini" @click="createClick"> 新建 </el-button>
     </div>
 
-    <el-table :data="tableList" width="100%" height="calc(100% - 70px)">
+    <el-table :data="tableList" width="100%" height="calc(100% - 70px)" v-loading="loading">
       <el-table-column label="项目名称" prop="name">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          <el-button type="text" @click="mbrxx(scope.row)">{{ scope.row.name }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="主要目标人" prop="persons"></el-table-column>
@@ -48,6 +48,9 @@
           <!-- 可视分析 -->
           <el-button type="text" size="mini" @click="fenxi(scope.row)">
             可视分析
+          </el-button>
+          <el-button type="text" size="mini" @click="fenxi2(scope.row)">
+            可视分析(精简)
           </el-button>
         </template>
       </el-table-column>
@@ -109,6 +112,7 @@ export default {
         name: "",
         persons: "",
       },
+      loading: false
     };
   },
   mounted() {
@@ -140,11 +144,13 @@ export default {
       return "--";
     },
     async initProject() {
+      this.loading = true
       this.params.pageIndex = this.pageList.pageIndex;
       this.params.pageSize = this.pageList.pageSize;
       let obj = await GetProjectList(this.params);
       this.pageList.total = obj.data.total;
       this.tableList = obj.data.data;
+      this.loading = false
     },
     async handleSave() {
       await AddProject(this.project);
@@ -199,6 +205,14 @@ export default {
       }
       query.id = row.id;
       this.$router.push({ path: "/relationship", query: query });
+    },
+    fenxi2(row) {
+      let query = {};
+      for (let q in this.$route.query) {
+        query[q] = this.$route.query[q];
+      }
+      query.id = row.id;
+      this.$router.push({ path: "/simpleShip", query: query });
     },
     mbrxx(row) {
       console.log(row);

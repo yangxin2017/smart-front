@@ -63,6 +63,11 @@ export const constantRoutes = [
     path: '/relationship',
     component: () => import('@/views/relationship/index')
   },
+  {
+    name: 'simpleShip',
+    path: '/simpleShip',
+    component: () => import('@/views/relationship/index2')
+  },
 
 
   {

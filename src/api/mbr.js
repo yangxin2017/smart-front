@@ -9,6 +9,13 @@ export function getMbrDataList(params) {
         params
     })
 }
+export function getFxdxDataList(params) {
+    return request({
+        url: '/mbrData/fxdxlist',
+        method: 'get',
+        params
+    })
+}
 
 // mbrData/allPeople
 export function getMbrDataAllPeople(params) {
@@ -23,6 +30,22 @@ export function getMbrDataAllPeople(params) {
 export function saveMbrDataMbr(data) {
     return request({
         url: `/mbrData/saveMbr`,
+        method: 'post',
+        data
+    })
+}
+
+export function saveFxdxData(data) {
+    return request({
+        url: `/mbrData/saveFxdx`,
+        method: 'post',
+        data
+    })
+}
+
+export function postRequest(url, data) {
+    return request({
+        url: url,
         method: 'post',
         data
     })
